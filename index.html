@@ -6,92 +6,34 @@
     <title>ศูนย์รวมข้อมูลรถไฟฟ้า Aion</title>
     <style>
         /* --- สไตล์สำหรับทุกอุปกรณ์ (เริ่มต้นจากมือถือ) --- */
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; 
-            margin: 0; 
-            background-color: #f4f4f9; 
-            color: #333; 
-            line-height: 1.6;
-        }
-        header { 
-            background-color: #0056b3; 
-            color: white; 
-            text-align: center; 
-            padding: 1.5em 1em;
-        }
-        nav { 
-            display: flex; 
-            flex-direction: column; /* บนมือถือ ให้เมนูเรียงเป็นแนวตั้ง */
-            background-color: #333; 
-        }
-        nav a { 
-            color: white; 
-            padding: 14px 20px; 
-            text-decoration: none; 
-            text-align: center; 
-            border-bottom: 1px solid #555;
-        }
-        nav a:hover { 
-            background-color: #ddd; 
-            color: black; 
-        }
-        main { 
-            padding: 15px; /* ลดระยะขอบสำหรับจอเล็ก */
-        }
-        section { 
-            background-color: white; 
-            margin-bottom: 20px; 
-            padding: 20px; 
-            border-radius: 8px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
-        }
-        .car-model {
-            border-bottom: 1px solid #eee;
-            padding-bottom: 20px;
-            margin-bottom: 20px;
-        }
-        .car-model:last-child {
-            border-bottom: none;
-        }
-        .car-image {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-        h1 {
-            font-size: 1.8em; /* ปรับขนาดหัวข้อใหญ่ให้พอดีกับมือถือ */
-        }
-        h2 { 
-            color: #0056b3; 
-            border-bottom: 2px solid #f4f4f9; 
-            padding-bottom: 10px; 
-        }
-        h3 {
-            color: #333;
-        }
-        ul {
-            list-style-type: disc;
-            padding-left: 20px;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; background-color: #f4f4f9; color: #333; line-height: 1.6; }
+        header { background-color: #0056b3; color: white; text-align: center; padding: 1.5em 1em; }
+        nav { display: flex; flex-direction: column; background-color: #333; }
+        nav a { color: white; padding: 14px 20px; text-decoration: none; text-align: center; border-bottom: 1px solid #555; }
+        nav a:hover { background-color: #ddd; color: black; }
+        main { padding: 15px; }
+        section { background-color: white; margin-bottom: 20px; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h1 { font-size: 1.8em; }
+        h2 { color: #0056b3; border-bottom: 2px solid #f4f4f9; padding-bottom: 10px; }
+        
+        /* --- CSS ใหม่สำหรับ Chatbot --- */
+        #chat-container { max-width: 100%; margin: auto; }
+        #chat-box { height: 300px; border: 1px solid #ccc; border-radius: 8px; padding: 10px; overflow-y: auto; margin-bottom: 10px; display: flex; flex-direction: column; }
+        .chat-message { max-width: 80%; padding: 8px 12px; margin-bottom: 8px; border-radius: 15px; }
+        .user-message { background-color: #007bff; color: white; align-self: flex-end; border-bottom-right-radius: 0; }
+        .ai-message { background-color: #e9e9eb; color: black; align-self: flex-start; border-bottom-left-radius: 0; }
+        .typing-indicator { color: #888; font-style: italic; align-self: flex-start; }
+        #chat-input-container { display: flex; }
+        #chat-input { flex-grow: 1; border: 1px solid #ccc; border-radius: 20px; padding: 10px 15px; font-size: 1em; }
+        #send-button { background-color: #007bff; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; margin-left: 10px; cursor: pointer; font-size: 1.2em; }
+        #send-button:hover { background-color: #0056b3; }
 
-        /* --- กฎพิเศษสำหรับหน้าจอที่กว้างกว่า 600px (แท็บเล็ตและคอมพิวเตอร์) --- */
+        /* --- กฎพิเศษสำหรับหน้าจอที่กว้างกว่า 600px --- */
         @media (min-width: 600px) {
-            nav {
-                flex-direction: row; /* กลับไปเรียงแนวนอนเหมือนเดิม */
-                justify-content: center;
-            }
-            nav a {
-                border-bottom: none;
-            }
-            main {
-                padding: 20px;
-                max-width: 900px; /* จำกัดความกว้างเนื้อหาสำหรับจอใหญ่ */
-                margin: auto;
-            }
-            h1 {
-                font-size: 2.5em; /* ขยายขนาดหัวข้อใหญ่สำหรับจอคอม */
-            }
+            nav { flex-direction: row; justify-content: center; }
+            nav a { border-bottom: none; }
+            main { padding: 20px; max-width: 900px; margin: auto; }
+            h1 { font-size: 2.5em; }
         }
     </style>
 </head>
@@ -110,76 +52,95 @@
     <main>
         <section id="info">
             <h2>1. ข้อมูลรถและโปรโมชัน</h2>
-            
-            <div class="car-model">
-                <h3>AION U (SUV)</h3>
-                <img src="aion-u.jpg" alt="รูปภาพรถ AION U" class="car-image">
-                <p>รถยนต์ไฟฟ้า SUV เพื่อครอบครัวยุคใหม่ ที่มาพร้อมการออกแบบที่ทันสมัยและพื้นที่ภายในกว้างขวาง</p>
-                <ul>
-                    <li><strong>ราคาเริ่มต้น:</strong> 949,900 บาท (ราคาโปรโมชัน)</li>
-                    <li><strong>มอเตอร์ไฟฟ้า:</strong> 201 แรงม้า</li>
-                    <li><strong>แบตเตอรี่:</strong> 75.3 kWh (Magazine Battery 2.0 LFP)</li>
-                    <li><strong>ระยะทางวิ่งสูงสุด:</strong> 602 กม. (มาตรฐาน NEDC)</li>
-                    <li><strong>โปรโมชัน (ตัวอย่าง):</strong> (โปรดตรวจสอบโปรโมชันล่าสุด ณ จุดขาย)</li>
-                </ul>
-            </div>
-            
-            <div class="car-model">
-                <h3>Aion Y Plus 490 (SUV)</h3>
-                <img src="aion-y.jpg" alt="รูปภาพรถ Aion Y Plus 490" class="car-image">
-                <p>รถ SUV ไฟฟ้ารุ่นยอดนิยม โดดเด่นด้วยดีไซน์ทันสมัย ห้องโดยสารกว้างขวาง และสามารถปรับเบาะเป็นเตียงนอนได้</p>
-                <ul>
-                    <li><strong>รุ่นย่อย:</strong> Elite / Premium</li>
-                    <li><strong>ราคาเริ่มต้น:</strong> 969,900 บาท (รุ่น Elite)</li>
-                    <li><strong>มอเตอร์ไฟฟ้า:</strong> 204 แรงม้า, แรงบิด 225 นิวตันเมตร</li>
-                    <li><strong>แบตเตอรี่:</strong> 63.2 kWh (Magazine Battery LFP)</li>
-                    <li><strong>ระยะทางวิ่งสูงสุด:</strong> 490 กม. (มาตรฐาน NEDC)</li>
-                    <li><strong>โปรโมชัน (ตัวอย่าง):</strong> ประกันภัยชั้น 1 นาน 1 ปี, รับประกันตัวรถ 8 ปี หรือ 160,000 กม.</li>
-                </ul>
-            </div>
-
-            <div class="car-model">
-                <h3>Aion V (SUV)</h3>
-                <img src="aion-v.jpg" alt="รูปภาพรถ Aion V" class="car-image">
-                <p>SUV ไฟฟ้าสำหรับครอบครัว มาพร้อมเทคโนโลยีและฟังก์ชันอำนวยความสะดวกที่ครบครันยิ่งขึ้น เช่น ตู้เย็นในรถ และหลังคากระจก Panoramic Roof ขนาดใหญ่</p>
-                <ul>
-                    <li><strong>ราคาเริ่มต้น:</strong> 949,900 บาท (ราคาโปรโมชัน)</li>
-                    <li><strong>มอเตอร์ไฟฟ้า:</strong> 201 แรงม้า</li>
-                    <li><strong>แบตเตอรี่:</strong> 75.3 kWh (Magazine Battery 2.0 LFP)</li>
-                    <li><strong>ระยะทางวิ่งสูงสุด:</strong> 602 กม. (มาตรฐาน NEDC)</li>
-                    <li><strong>โปรโมชัน (ตัวอย่าง):</strong> ส่วนลด 80,000 บาท, ฟรี Home Charger พร้อมติดตั้ง, บริการช่วยเหลือฉุกเฉิน 8 ปี</li>
-                </ul>
-            </div>
-
-            <div class="car-model">
-                <h3>Aion Hyper HT (Luxury SUV)</h3>
-                <img src="aion-ht.jpg" alt="รูปภาพรถ Aion Hyper HT" class="car-image">
-                <p>SUV ไฟฟ้าสุดหรูในซีรีส์ Hyper ที่เน้นสมรรถนะ ดีไซน์พรีเมียม และมีรุ่นที่มาพร้อมประตูปีกนก (Gull-Wing Doors) เป็นเอกลักษณ์</p>
-                <ul>
-                    <li><strong>รุ่นย่อย:</strong> Premium / Luxury Gull-Wing Doors</li>
-                    <li><strong>ราคาเริ่มต้น:</strong> 1,449,000 บาท (รุ่น Premium)</li>
-                    <li><strong>มอเตอร์ไฟฟ้า:</strong> 340 แรงม้า, แรงบิด 430 นิวตันเมตร</li>
-                    <li><strong>แบตเตอรี่:</strong> 83.3 kWh (Lithium-ion LFP)</li>
-                    <li><strong>ระยะทางวิ่งสูงสุด:</strong> 600 กม. (มาตรฐาน NEDC)</li>
-                    <li><strong>โปรโมชัน (ตัวอย่าง):</strong> ฟรี Lifetime OTA Firmware Update, แพ็กเกจอินเตอร์เน็ตในรถยนต์ฟรี 2 ปี</li>
-                </ul>
-            </div>
-
+            <p>ส่วนนี้คุณสามารถใส่รายละเอียดรถและโปรโมชันต่างๆ ได้เลย...</p>
         </section>
 
         <section id="ai-chat">
             <h2>2. AI ช่วยตอบคำถาม</h2>
-            <p><em>(ส่วนนี้เราจะเว้นว่างไว้ก่อน และจะนำระบบ AI Chatbot มาใส่ในภายหลัง)</em></p>
+            <div id="chat-container">
+                <div id="chat-box">
+                    <div class="chat-message ai-message">สวัสดีครับ! มีอะไรให้ผมช่วยเกี่ยวกับรถยนต์ Aion ไหมครับ?</div>
+                </div>
+                <div id="chat-input-container">
+                    <input type="text" id="chat-input" placeholder="พิมพ์คำถามของคุณที่นี่...">
+                    <button id="send-button">→</button>
+                </div>
+            </div>
         </section>
 
         <section id="contact">
             <h2>3. ข้อมูลติดต่อและนัดหมาย</h2>
-            <p><strong>ติดต่อ:</strong> [ใส่ชื่อของคุณ]</p>
-            <p><strong>เบอร์โทร:</strong> [ใส่เบอร์โทรของคุณ]</p>
-            <p><strong>แผนที่:</strong></p>
-            <p><em>(ส่วนนี้เราจะนำแผนที่จาก Google Maps และระบบนัดหมายมาใส่ในภายหลัง)</em></p>
+            <p>ส่วนนี้สำหรับใส่ข้อมูลติดต่อและแผนที่...</p>
         </section>
     </main>
 
+    <script>
+        // --- การตั้งค่า ---
+        const aiBackendUrl = 'https://line-gpt-bot-production-72e8.up.railway.app/ask-ai'; // นี่คือ URL หลังบ้านของคุณที่ Railway
+
+        // --- ดึง Element ต่างๆ จากหน้าเว็บ ---
+        const chatBox = document.getElementById('chat-box');
+        const chatInput = document.getElementById('chat-input');
+        const sendButton = document.getElementById('send-button');
+
+        // --- ฟังก์ชันหลักในการส่งและรับข้อความ ---
+        async function sendMessage() {
+            const userMessage = chatInput.value.trim();
+            if (userMessage === '') return;
+
+            // 1. แสดงข้อความของผู้ใช้บนหน้าจอ
+            addMessageToBox(userMessage, 'user');
+            chatInput.value = '';
+
+            // 2. แสดงสถานะ "กำลังพิมพ์..."
+            const typingIndicator = addMessageToBox('กำลังพิมพ์...', 'typing-indicator');
+
+            try {
+                // 3. ส่งคำถามไปที่หลังบ้าน (Railway)
+                const response = await fetch(aiBackendUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: userMessage })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                const aiReply = data.reply;
+                
+                // 4. ลบ "กำลังพิมพ์..." แล้วแสดงคำตอบของ AI
+                chatBox.removeChild(typingIndicator);
+                addMessageToBox(aiReply, 'ai');
+
+            } catch (error) {
+                // 5. กรณีเกิดข้อผิดพลาด
+                chatBox.removeChild(typingIndicator);
+                addMessageToBox('ขออภัยค่ะ ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง', 'ai');
+                console.error('Error:', error);
+            }
+        }
+        
+        // --- ฟังก์ชันเสริมสำหรับเพิ่มข้อความลงในกรอบแชท ---
+        function addMessageToBox(message, type) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('chat-message', `${type}-message`);
+            messageElement.textContent = message;
+            chatBox.appendChild(messageElement);
+            chatBox.scrollTop = chatBox.scrollHeight; // เลื่อนลงล่างสุดเสมอ
+            return messageElement;
+        }
+
+        // --- ตั้งค่าให้ปุ่ม "ส่ง" และปุ่ม Enter ทำงาน ---
+        sendButton.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+
 </body>
 </html>
+
