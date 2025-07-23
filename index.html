@@ -200,15 +200,88 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    // ===== START: UPDATED CAR DATA =====
     const carData = [
-        { id: 'ut_std', model: 'AION UT', subModel: '420 Standard', price: 499900, range: 420, hp: 136, space: 2, tags: ['city', 'value'], features: ['กรองฝุ่น PM2.5', 'ดีไซน์กะทัดรัด คล่องตัว', 'คุ้มค่าที่สุดในกลุ่ม'], colors: [{name: 'ขาว', hex: '#FFFFFF'}, {name: 'ดำ', hex: '#2d2d2d'}, {name: 'เทา', hex: '#a1a1a1'}] },
-        { id: 'ut_prem', model: 'AION UT', subModel: '500 Premium', price: 649900, range: 500, hp: 204, space: 2, tags: ['city', 'value', 'long_trip', 'performance'], features: ['กรองฝุ่น PM2.5', 'มอเตอร์แรงขึ้น ขับสนุก', 'วิ่งได้ไกลขึ้น'], colors: [{name: 'ขาว', hex: '#FFFFFF'}, {name: 'ดำ', hex: '#2d2d2d'}, {name: 'เทา', hex: '#a1a1a1'}] },
-        { id: 'y_410', model: 'AION Y Plus', subModel: '410 Premium', price: 769900, range: 410, hp: 204, space: 4, tags: ['city', 'family', 'value', 'space'], features: ['กรองฝุ่น PM2.5', 'ห้องโดยสารกว้างที่สุดในคลาส', 'เบาะปรับนอนได้ (Camping Mode)'], colors: [{name: 'เขียว', hex: '#c4d6a7'}, {name: 'ขาว', hex: '#FFFFFF'}, {name: 'ดำ', hex: '#2d2d2d'}, {name: 'เงิน', hex: '#d3d3d3'}, {name: 'เหลือง', hex: '#f1c40f'}] },
-        { id: 'y_490', model: 'AION Y Plus', subModel: '490 Premium', price: 829900, range: 490, hp: 204, space: 4, tags: ['family', 'long_trip', 'space'], features: ['กรองฝุ่น PM2.5', 'หลังคากระจก Panoramic', 'วิ่งไกล เหมาะกับครอบครัว'], colors: [{name: 'เขียว', hex: '#c4d6a7'}, {name: 'ขาว', hex: '#FFFFFF'}, {name: 'ดำ', hex: '#2d2d2d'}, {name: 'เงิน', hex: '#d3d3d3'}, {name: 'เหลือง', hex: '#f1c40f'}] },
-        { id: 'v_620', model: 'AION V', subModel: '620 Luxury', price: 999900, range: 602, hp: 224, space: 5, tags: ['family', 'long_trip', 'tech', 'space', 'camping'], features: ['กรองฝุ่น PM2.5', 'เบาะนวดไฟฟ้าคู่หน้า', 'มีตู้เย็นในตัว (Cool box)', 'SUV ขนาดใหญ่ ออปชั่นครบ'], colors: [{name: 'ดำ', hex: '#2d2d2d'}, {name: 'ขาว', hex: '#FFFFFF'}, {name: 'เทาเข้ม', hex: '#555555'}, {name: 'แชมเปญ', hex: '#f7e7ce'}] },
-        { id: 'ht_prem', model: 'HYPTEC HT', subModel: '620 Premium', price: 1449000, range: 620, hp: 340, space: 5, tags: ['performance', 'long_trip', 'family', 'tech', 'design', 'business'], features: ['กรองฝุ่น PM2.5', 'สมรรถนะสูง 340 แรงม้า', 'เทคโนโลยีความปลอดภัยเต็มรูปแบบ'], colors: [{name: 'ขาว', hex: '#FFFFFF'}, {name: 'เทา', hex: '#a1a1a1'}, {name: 'ดำ', hex: '#2d2d2d'}, {name: 'ฟ้า', hex: '#3498db'}] },
-        { id: 'ht_lux', model: 'HYPTEC HT', subModel: '620 Luxury (Gull-Wing)', price: 1749000, range: 620, hp: 340, space: 5, tags: ['performance', 'long_trip', 'family', 'tech', 'design', 'business'], features: ['กรองฝุ่น PM2.5', 'ประตูปีกนก (Gull-Wing Doors)', 'ภาพลักษณ์หรูหรา โดดเด่น'], colors: [{name: 'ขาว', hex: '#FFFFFF'}, {name: 'เทา', hex: '#a1a1a1'}, {name: 'ส้ม', hex: '#e67e22'}, {name: 'ฟ้า', hex: '#3498db'}] }
+        { 
+            id: 'ut_std', model: 'AION UT', subModel: '420 Standard', price: 499900, range: 420, hp: 136, space: 2, 
+            tags: ['city', 'value'], 
+            features: ['กรองฝุ่น PM2.5', 'ดีไซน์กะทัดรัด คล่องตัว', 'คุ้มค่าที่สุดในกลุ่ม'], 
+            colors: [
+                {name: 'Rococo White', hex: '#F8F8F8'}, 
+                {name: 'Seine Silver', hex: '#C0C0C0'}, 
+                {name: 'Champs Beige', hex: '#F5F5DC'}, 
+                {name: 'Emerald Green', hex: '#009B77'}
+            ] 
+        },
+        { 
+            id: 'ut_prem', model: 'AION UT', subModel: '500 Premium', price: 649900, range: 500, hp: 204, space: 2, 
+            tags: ['city', 'value', 'long_trip', 'performance'], 
+            features: ['กรองฝุ่น PM2.5', 'มอเตอร์แรงขึ้น ขับสนุก', 'วิ่งได้ไกลขึ้น'], 
+            colors: [
+                {name: 'Rococo White', hex: '#F8F8F8'}, 
+                {name: 'Seine Silver', hex: '#C0C0C0'}, 
+                {name: 'Champs Beige', hex: '#F5F5DC'}, 
+                {name: 'Emerald Green', hex: '#009B77'}
+            ] 
+        },
+        { 
+            id: 'y_plus', model: 'AION Y Plus', subModel: '490 Premium', price: 829900, range: 490, hp: 204, space: 4, 
+            tags: ['family', 'long_trip', 'space', 'value', 'camping'], 
+            features: ['กรองฝุ่น PM2.5', 'ห้องโดยสารกว้างที่สุดในคลาส', 'เบาะปรับนอนได้ (Camping Mode)', 'หลังคากระจก Panoramic'], 
+            colors: [
+                {name: 'Lucky Gold', hex: '#FFD700'},
+                {name: 'Vitality Green', hex: '#4CAF50'},
+                {name: 'Speedy Silver', hex: '#BCC6CC'},
+                {name: 'Liberty Ash', hex: '#95A5A6'},
+                {name: 'Elegant Gray', hex: '#808080'},
+                {name: 'Pure White', hex: '#FFFFFF'},
+                {name: 'Glamour Black', hex: '#000000'},
+                {name: 'Lucky Gold with Black Roof', hex: '#FFD700'},
+                {name: 'Vitality Green with Black Roof', hex: '#4CAF50'},
+                {name: 'Pure White with Black Roof', hex: '#FFFFFF'}
+            ] 
+        },
+        { 
+            id: 'v_620', model: 'AION V', subModel: '620 Luxury', price: 999900, range: 602, hp: 224, space: 5, 
+            tags: ['family', 'long_trip', 'tech', 'space', 'camping', 'business'], 
+            features: ['กรองฝุ่น PM2.5', 'เบาะนวดไฟฟ้าคู่หน้า', 'มีตู้เย็นในตัว (Cool box)', 'SUV ขนาดใหญ่ ออปชั่นครบ'], 
+            colors: [
+                {name: 'Alpine White', hex: '#F0F8FF'},
+                {name: 'Onyx Black', hex: '#000000'},
+                {name: 'Sahara Sand', hex: '#D2B48C'},
+                {name: 'Aurora Silver', hex: '#E5E4E2'},
+                {name: 'Iceland Grey', hex: '#607D8B'},
+                {name: 'Volcano Orange', hex: '#FF4500'},
+                {name: 'Volcano Orange with White Roof', hex: '#FF4500'}
+            ] 
+        },
+        { 
+            id: 'ht_prem', model: 'HYPTEC HT', subModel: '620 Premium', price: 1449000, range: 620, hp: 340, space: 5, 
+            tags: ['performance', 'long_trip', 'family', 'tech', 'design', 'business'], 
+            features: ['กรองฝุ่น PM2.5', 'สมรรถนะสูง 340 แรงม้า', 'เทคโนโลยีความปลอดภัยเต็มรูปแบบ'], 
+            colors: [
+                {name: 'Apline White', hex: '#F0F8FF'},
+                {name: 'Crystal Silver', hex: '#E5E4E2'},
+                {name: 'Spinel Gray', hex: '#5D5D5D'},
+                {name: 'Onyx Black', hex: '#000000'}
+            ] 
+        },
+        { 
+            id: 'ht_lux', model: 'HYPTEC HT', subModel: '620 Luxury (Gull-Wing)', price: 1749000, range: 620, hp: 340, space: 5, 
+            tags: ['performance', 'long_trip', 'family', 'tech', 'design', 'business'], 
+            features: ['กรองฝุ่น PM2.5', 'ประตูปีกนก (Gull-Wing Doors)', 'ภาพลักษณ์หรูหรา โดดเด่น', 'สมรรถนะสูง 340 แรงม้า'], 
+            colors: [
+                {name: 'Apline White', hex: '#F0F8FF'},
+                {name: 'Crystal Silver', hex: '#E5E4E2'},
+                {name: 'Spinel Gray', hex: '#5D5D5D'},
+                {name: 'Onyx Black', hex: '#000000'},
+                {name: 'Star Rose', hex: '#E0B0FF'},
+                {name: 'Inferno Orange', hex: '#FF4500'}
+            ] 
+        }
     ];
+    // ===== END: UPDATED CAR DATA =====
+
     const specialProfessions = ['government_officer', 'doctor', 'pilot'];
     const auspiciousColors = {
         sunday: { good: ['สีเขียว', 'สีดำ']}, monday: { good: ['สีเขียว', 'สีส้ม']}, tuesday: { good: ['สีส้ม', 'สีดำ']}, wednesday: { good: ['สีเทา', 'สีฟ้า']}, wednesday_night: { good: ['สีขาว', 'สีม่วง']}, thursday: { good: ['สีฟ้า', 'สีแดง']}, friday: { good: ['สีเขียว', 'สีชมพู']}, saturday: { good: ['สีแดง', 'สีฟ้า']}
