@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AION Advisor (ฉบับสมบูรณ์)</title>
+    <title>AION Advisor (อัปเดตล่าสุด)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
@@ -31,6 +31,7 @@
             border-radius: 16px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.08);
             padding: 20px 40px;
+            box-sizing: border-box;
         }
         h1, h2, h3 {
             color: var(--primary-color);
@@ -49,6 +50,8 @@
             font-weight: 600;
             border-bottom: 4px solid transparent;
             transition: all 0.3s ease;
+            text-align: center;
+            flex-grow: 1;
         }
         .nav-tab:hover {
             color: var(--secondary-color);
@@ -66,7 +69,7 @@
         /* Form Styles */
         .form-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 25px;
             margin-bottom: 25px;
         }
@@ -83,6 +86,7 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 16px;
+            box-sizing: border-box;
         }
         /* Button */
         .action-button {
@@ -156,7 +160,8 @@
 <body>
 
     <div class="container">
-        <h1>🚗 AION Advisor (ฉบับสมบูรณ์)</h1>
+        <h1>🚗 AION Advisor</h1>
+        <p style="text-align:center; margin-top:-10px; margin-bottom:20px; color:#666;">ข้อมูลอัปเดตล่าสุด ณ วันที่ 25 กรกฎาคม 2568</p>
 
         <div class="nav-tabs">
             <div class="nav-tab active" data-view="wizard-view">1. ค้นหารถที่ใช่</div>
@@ -188,10 +193,10 @@
             <div class="form-group">
                 <label>ลักษณะการใช้งานหลัก</label>
                 <select id="primary-use">
-                    <option value="city">เน้นขับในเมือง คล่องตัว</option>
-                    <option value="long_trip">เดินทางไกลบ่อยๆ</option>
-                    <option value="family">รถสำหรับครอบครัว</option>
-                    <option value="performance">เน้นสมรรถนะ ความแรง</option>
+                    <option value="city">เน้นขับในเมือง คล่องตัว ประหยัด</option>
+                    <option value="long_trip">เดินทางไกลบ่อยๆ วิ่งได้เยอะ</option>
+                    <option value="family">รถสำหรับครอบครัว พื้นที่กว้าง</option>
+                    <option value="performance">เน้นสมรรถนะ ความแรง เทคโนโลยี</option>
                 </select>
             </div>
             <button id="recommend-btn" class="action-button">ค้นหารถที่ใช่สำหรับคุณ!</button>
@@ -210,16 +215,16 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     
-    // --- DATABASE ---
+    // --- DATABASE (อัปเดต 25 ก.ค. 2568) ---
     const carData = [
-        { id: 'ut_std', model: 'AION UT', subModel: '420 Standard', price: 499900, range: 420, hp: 136, type: 'hatchback', tags: ['city', 'value'] },
-        { id: 'ut_prem', model: 'AION UT', subModel: '500 Premium', price: 649900, range: 500, hp: 204, type: 'hatchback', tags: ['city', 'value', 'long_trip'] },
-        { id: 'y_410', model: 'AION Y Plus', subModel: '410 Premium', price: 769900, range: 410, hp: 204, type: 'crossover', tags: ['city', 'family', 'value'] },
-        { id: 'y_490', model: 'AION Y Plus', subModel: '490 Premium', price: 829900, range: 490, hp: 204, type: 'crossover', tags: ['family', 'long_trip'] },
-        { id: 'es_taxi', model: 'AION ES', subModel: 'Sedan', price: 846000, range: 442, hp: 136, type: 'sedan', tags: ['value', 'city'] },
-        { id: 'v_620', model: 'AION V', subModel: '620 Luxury', price: 999900, range: 602, hp: 204, type: 'suv', tags: ['family', 'long_trip', 'tech'] },
-        { id: 'ht_prem', model: 'HYPTEC HT', subModel: '620 Premium', price: 1449000, range: 620, hp: 340, type: 'suv', tags: ['performance', 'long_trip', 'family', 'tech'] },
-        { id: 'ht_lux', model: 'HYPTEC HT', subModel: '620 Luxury (Gull-Wing)', price: 1749000, range: 620, hp: 340, type: 'suv', tags: ['performance', 'long_trip', 'family', 'tech', 'style'] }
+        { id: 'ut_std', model: 'AION UT', subModel: '420 Standard', price: 499900, range: 420, hp: 136, type: 'Hatchback', tags: ['city', 'value'] },
+        { id: 'ut_prem', model: 'AION UT', subModel: '500 Premium', price: 649900, range: 500, hp: 204, type: 'Hatchback', tags: ['city', 'value', 'long_trip'] },
+        { id: 'y_410', model: 'AION Y Plus', subModel: '410 Premium', price: 769900, range: 410, hp: 204, type: 'Crossover', tags: ['city', 'family', 'value'] },
+        { id: 'y_490', model: 'AION Y Plus', subModel: '490 Premium', price: 829900, range: 490, hp: 204, type: 'Crossover', tags: ['family', 'long_trip'] },
+        { id: 'es_taxi', model: 'AION ES', subModel: 'Sedan', price: 846000, range: 442, hp: 136, type: 'Sedan', tags: ['value', 'city', 'fleet'] },
+        { id: 'v_620', model: 'AION V', subModel: '620 Luxury', price: 999900, range: 602, hp: 224, type: 'SUV', tags: ['family', 'long_trip', 'tech'] },
+        { id: 'ht_prem', model: 'HYPTEC HT', subModel: '620 Premium', price: 1449000, range: 620, hp: 340, type: 'SUV', tags: ['performance', 'long_trip', 'family', 'tech'] },
+        { id: 'ht_lux', model: 'HYPTEC HT', subModel: '620 Luxury (Gull-Wing)', price: 1749000, range: 620, hp: 340, type: 'SUV', tags: ['performance', 'long_trip', 'family', 'tech', 'style'] }
     ];
 
     const auspiciousColors = {
@@ -237,32 +242,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const navTabs = document.querySelectorAll('.nav-tab');
     const views = document.querySelectorAll('.view');
     const resultsContainer = document.getElementById('results-container');
-
-    // Wizard View Elements
     const budgetSlider = document.getElementById('budget');
     const budgetValue = document.getElementById('budget-value');
     const birthDaySelect = document.getElementById('birth-day');
     const useSelect = document.getElementById('primary-use');
     const recommendBtn = document.getElementById('recommend-btn');
-
-    // Comparison View Elements
     const compareOptionsContainer = document.getElementById('car-options-compare');
     const compareBtn = document.getElementById('compare-btn');
 
     // --- INITIALIZATION ---
     function init() {
-        // Setup Navigation
-        navTabs.forEach(tab => {
-            tab.addEventListener('click', () => switchView(tab.dataset.view));
-        });
-
-        // Setup Wizard
+        navTabs.forEach(tab => tab.addEventListener('click', () => switchView(tab.dataset.view)));
         budgetSlider.addEventListener('input', () => {
             budgetValue.textContent = `${Number(budgetSlider.value).toLocaleString('th-TH')} บาท`;
         });
         recommendBtn.addEventListener('click', handleRecommendation);
-
-        // Setup Comparison
         carData.forEach(car => {
             const label = document.createElement('label');
             label.className = 'option';
@@ -276,7 +270,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function switchView(viewId) {
         navTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.view === viewId));
         views.forEach(view => view.classList.toggle('active', view.id === viewId));
-        resultsContainer.innerHTML = ''; // Clear results when switching views
+        resultsContainer.innerHTML = ''; 
     }
 
     // --- WIZARD LOGIC ---
@@ -285,26 +279,21 @@ document.addEventListener('DOMContentLoaded', function () {
         const use = useSelect.value;
         const day = birthDaySelect.value;
 
-        // Scoring algorithm
         let recommendations = carData.map(car => {
             let score = 0;
             if (car.price <= budget) {
-                score += 5; // Base score for being in budget
-                score += (budget - car.price) / 100000; // Bonus points for being cheaper
+                score += 5;
+                score += ((budget - car.price) / 100000) * 2;
             } else {
-                return { ...car, score: -1 }; // Disqualify if over budget
+                return { ...car, score: -1 };
             }
-
-            if (use === 'city' && (car.tags.includes('city') || car.type === 'hatchback')) score += 5;
+            if (use === 'city' && car.tags.includes('value')) score += 5;
             if (use === 'long_trip' && car.tags.includes('long_trip')) score += 5;
-            if (use === 'family' && (car.tags.includes('family') || car.type === 'suv' || car.type === 'crossover')) score += 5;
+            if (use === 'family' && car.tags.includes('family')) score += 5;
             if (use === 'performance' && car.tags.includes('performance')) score += 5;
-
             return { ...car, score };
         });
-
         recommendations = recommendations.filter(car => car.score > 0).sort((a, b) => b.score - a.score);
-        
         renderWizardResults(recommendations.slice(0, 3), auspiciousColors[day]);
     }
 
@@ -313,7 +302,6 @@ document.addEventListener('DOMContentLoaded', function () {
             resultsContainer.innerHTML = '<h3>ไม่พบรถที่ตรงกับความต้องการของคุณ</h3><p>ลองปรับงบประมาณหรือลักษณะการใช้งานดูนะครับ</p>';
             return;
         }
-
         let html = `<h2>ผลลัพธ์ที่ใช่สำหรับคุณ</h2>`;
         cars.forEach((car, index) => {
             html += `
@@ -322,18 +310,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     <h2>${car.model} ${car.subModel}</h2>
                     <p><strong>ราคา:</strong> ${car.price.toLocaleString('th-TH')} บาท</p>
                     <p><strong>วิ่งได้ไกล:</strong> ${car.range} กม.</p>
-                    <p><strong>ทำไมถึงเหมาะกับคุณ:</strong> ${getReason(car, useSelect.value)}</p>
+                    <p><strong>เหตุผล:</strong> ${getReason(car, useSelect.value)}</p>
                     ${index === 0 ? renderColorSection(colors) : ''}
-                </div>
-            `;
+                </div>`;
         });
         resultsContainer.innerHTML = html;
     }
 
     function getReason(car, use) {
-        if (use === 'city' || use === 'value') return 'คล่องตัวในเมืองและราคาคุ้มค่ามาก';
+        if (use === 'city') return 'คล่องตัวในเมืองและราคาคุ้มค่ามาก';
         if (use === 'long_trip') return `วิ่งได้ไกลถึง ${car.range} กม. เหมาะกับการเดินทางไกล`;
-        if (use === 'family') return `พื้นที่ใช้สอยกว้างขวาง เหมาะสำหรับครอบครัว`;
+        if (use === 'family') return 'พื้นที่ใช้สอยกว้างขวาง เหมาะสำหรับครอบครัว';
         if (use === 'performance') return `สมรรถนะสูงถึง ${car.hp} แรงม้า ตอบโจทย์คนรักความเร็ว`;
         return 'เป็นรถยนต์ไฟฟ้าที่ทันสมัยและคุ้มค่า';
     }
@@ -348,8 +335,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <p><strong>สีที่ควรเลี่ยง:</strong> 
                     ${colors.bad.map((color, i) => `<span class="color-box" style="background-color:${colors.css.bad[i]};"></span>${color}`).join(' ')}
                 </p>
-            </div>
-        `;
+            </div>`;
     }
 
     // --- COMPARISON LOGIC ---
@@ -375,8 +361,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <tr><td>กำลัง (แรงม้า)</td>${cars.map(car => `<td>${car.hp}</td>`).join('')}</tr>
                 <tr><td>ประเภทรถ</td>${cars.map(car => `<td>${car.type}</td>`).join('')}</tr>
                 <tr><td>ความคุ้มค่า (บาท/กม.)</td>${cars.map(car => `<td>${Math.round(car.price / car.range).toLocaleString('th-TH')}</td>`).join('')}</tr>
-                </tbody></table></div>
-        `;
+                </tbody></table></div>`;
         resultsContainer.innerHTML = tableHTML;
     }
 
