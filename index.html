@@ -71,9 +71,13 @@
         .action-button.loading .btn-text { display: none; }
         @keyframes spin { to { transform: rotate(360deg); } }
         #results-container, #comparison-results-container { margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px; }
-        .result-card, .contact-card {
+        .result-card {
             border: 1px solid var(--border-color); border-radius: 8px; padding: 20px;
-            margin-bottom: 20px; background-color: var(--white-bg);
+            background-color: var(--white-bg);
+        }
+        .contact-card {
+            border: 1px solid var(--border-color); border-radius: 8px; padding: 20px;
+            margin-top: -10px; margin-bottom: 20px; background-color: #f0f2f5;
         }
         .special-privilege {
             margin-top: 15px; padding: 15px; border: 1px solid var(--special-border);
@@ -98,7 +102,6 @@
         #comparison-table-container th {
             background-color: #e8eaf6; color: var(--primary-color);
         }
-        .contact-card { margin-top: 30px; text-align: center; }
         .contact-buttons {
             display: flex; justify-content: center; gap: 20px; margin-top: 20px; flex-wrap: wrap;
         }
@@ -362,6 +365,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const resultsContainer = document.getElementById('results-container');
         if (cars.length === 0) {
             resultsContainer.innerHTML = '<h3>ไม่พบรถที่ตรงกับความต้องการของคุณ</h3><p>ลองปรับเงื่อนไขต่างๆ เช่น เพิ่มงบประมาณ หรือปรับลักษณะการใช้งานดูนะครับ</p>';
+            resultsContainer.innerHTML += renderContactCard(); // Add contact card even if no results
             return;
         }
         const isSpecialProfession = specialProfessions.includes(inputs.profession);
@@ -383,8 +387,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 .map(c => c.name);
 
             html += `<div class="result-card"><h3>${index === 0 ? '✨ แนะนำอันดับ 1' : `✔️ ตัวเลือกที่น่าสนใจอันดับ ${index + 1}`}</h3><h2>${car.model} ${car.subModel}</h2><p><strong>ราคา:</strong> ${car.price.toLocaleString('th-TH')} บาท</p><p><strong>วิ่งได้ไกล:</strong> ${car.range} กม.</p><h4>ฟีเจอร์เด่น</h4><ul class="features-list">${car.features.map(f => `<li>${f}</li>`).join('')}</ul>${renderAvailableColors(car.colors, auspiciousMatchesForThisCar)}${ (index === 0 && isSpecialProfession) ? renderSpecialPrivilege() : '' }</div>`;
+            
+            // Add contact card under each result card
+            html += renderContactCard();
         });
-        html += renderContactCard();
         resultsContainer.innerHTML = html;
     }
     
