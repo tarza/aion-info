@@ -17,7 +17,7 @@
         button:hover { background-color: #0056b3; }
         #result-display { display: none; background-color: white; padding: 2em; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
         #result-display img { max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 1em; }
-        #result-color { padding: 0.5em 1em; border-radius: 20px; color: white; display: inline-block; margin-top: 1em; }
+        #result-color { padding: 0.5em 1em; border-radius: 20px; color: white; display: inline-block; margin-top: 1em; border: 1px solid #ddd; }
     </style>
 </head>
 <body>
@@ -34,16 +34,16 @@
                 <select id="passengers">
                     <option value="1-2">1 - 2 คน (ใช้งานคนเดียวหรือเป็นคู่)</option>
                     <option value="3-4">3 - 4 คน (ครอบครัวเล็ก)</option>
-                    <option value="5+">5 คนขึ้นไป (ครอบครัวใหญ่ หรือมีเพื่อนร่วมทางบ่อย)</option>
+                    <option value="5">5 คน (ครอบครัว หรือมีเพื่อนร่วมทางบ่อย)</option>
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="distance">ปกติขับรถเฉลี่ยวันละกี่กิโลเมตร?</label>
                 <select id="distance">
-                    <option value="low">น้อยกว่า 30 กม. (ขับในเมืองระยะสั้น)</option>
-                    <option value="medium">30 - 80 กม. (เดินทางไป-กลับที่ทำงาน)</option>
-                    <option value="high">มากกว่า 80 กม. (เดินทางไกลทุกวัน)</option>
+                    <option value="low">น้อยกว่า 50 กม. (ขับในเมืองเป็นหลัก)</option>
+                    <option value="medium">50 - 100 กม. (เดินทางไป-กลับที่ทำงานไกล)</option>
+                    <option value="high">มากกว่า 100 กม. (เดินทางไกลทุกวัน)</option>
                 </select>
             </div>
 
@@ -59,10 +59,10 @@
             <div class="form-group">
                 <label for="lifestyle">ไลฟ์สไตล์การใช้งานหลักของคุณคืออะไร?</label>
                 <select id="lifestyle">
-                    <option value="city">เน้นขับในเมือง, ไปทำงาน, ช้อปปิ้ง</option>
-                    <option value="family">เน้นกิจกรรมครอบครัว, เดินทางพร้อมกันหลายคน</option>
-                    <option value="performance">ชอบความเร็ว, ดีไซน์สปอร์ต, เทคโนโลยีล้ำสมัย</option>
-                    <option value="luxury">ชอบความหรูหรา, ความสบายระดับพรีเมียม, ภาพลักษณ์</option>
+                    <option value="city">เน้นความคล่องตัว, ประหยัด, ใช้งานในเมือง</option>
+                    <option value="family">เน้นพื้นที่, ความสบาย, กิจกรรมครอบครัว</option>
+                    <option value="performance">ชอบความเร็ว, อัตราเร่ง, การขับขี่ที่สนุก</option>
+                    <option value="luxury">ชอบความหรูหรา, เทคโนโลยีล้ำสมัย, ภาพลักษณ์</option>
                 </select>
             </div>
 
@@ -97,29 +97,36 @@
     </div>
 
     <script>
-        // --- ฐานข้อมูลรถยนต์และสี ---
+        // --- ฐานข้อมูลรถยนต์และสี (อัปเดตตามข้อมูลจริง) ---
         const cars = {
-            'Aion U': { score: 0, image: 'aion-u.jpg', description: 'SUV ไฟฟ้าอัจฉริยะสำหรับครอบครัวยุคใหม่ พื้นที่กว้างขวาง นั่งสบาย เหมาะกับการใช้งานหลากหลาย' },
-            'Aion Y Plus 490': { score: 0, image: 'aion-y.jpg', description: 'SUV ไฟฟ้ายอดนิยม ดีไซน์โดดเด่น ภายในกว้างขวางปรับเปลี่ยนได้หลากหลาย เหมาะกับไลฟ์สไตล์คนเมืองและครอบครัวเล็ก' },
-            'Aion V': { score: 0, image: 'aion-v.jpg', description: 'SUV ไฟฟ้าไซส์ใหญ่สำหรับครอบครัวโดยเฉพาะ มาพร้อมฟังก์ชันอำนวยความสะดวกครบครัน เดินทางไกลได้สบาย' },
-            'Aion Hyper HT': { score: 0, image: 'aion-ht.jpg', description: 'Luxury SUV ไฟฟ้าที่มอบประสบการณ์ระดับพรีเมียม ดีไซน์หรูหรา สมรรถนะสูง และมีรุ่นประตูปีกนกที่เป็นเอกลักษณ์' }
+            'AION U Standard': { score: 0, image: 'aion-u.jpg', description: 'SUV สำหรับครอบครัวเริ่มต้น วิ่งได้ 400 กม. เหมาะกับการใช้งานหลากหลายในราคาที่คุ้มค่า', range: 400, performance: 1, family: 4, luxury: 2, city: 3, availableColors: ['Green', 'Beige', 'White', 'Silver'] },
+            'AION U Premium': { score: 0, image: 'aion-u.jpg', description: 'อัปเกรดสมรรถนะและระยะทาง วิ่งได้ไกลถึง 500 กม. พร้อมมอเตอร์ที่แรงขึ้น ตอบโจทย์การเดินทางไกล', range: 500, performance: 2, family: 5, luxury: 3, city: 3, availableColors: ['Green', 'Beige', 'White', 'Silver'] },
+            'AION Y Plus 490': { score: 0, image: 'aion-y.jpg', description: 'SUV ยอดนิยมสำหรับคนเมืองและครอบครัวเล็ก โดดเด่นด้วยดีไซน์และสีสันที่หลากหลาย ภายในกว้างขวางปรับเปลี่ยนได้', range: 490, performance: 3, family: 4, luxury: 2, city: 5, availableColors: ['White', 'Gray', 'Black', 'Ash', 'Gold', 'Silver', 'Green'] },
+            'AION V': { score: 0, image: 'aion-v.jpg', description: 'ที่สุดของ SUV ครอบครัว วิ่งได้ไกลถึง 602 กม. ชาร์จเร็วที่สุด พร้อมฟีเจอร์อำนวยความสะดวกครบครันเช่นตู้เย็นและเบาะนวด', range: 602, performance: 4, family: 10, luxury: 5, city: 2, availableColors: ['White', 'Black', 'Sand', 'Silver', 'Grey', 'Orange'] },
+            'HYPTEC HT Premium': { score: 0, image: 'aion-ht.jpg', description: 'Luxury SUV สมรรถนะสูง วิ่งไกล 620 กม. อัตราเร่งเร้าใจ มอบประสบการณ์ขับขี่ระดับพรีเมียม', range: 620, performance: 8, family: 3, luxury: 9, city: 1, availableColors: ['White', 'Silver', 'Gray', 'Black'] },
+            'HYPTEC HT Luxury Gull-wing': { score: 0, image: 'aion-ht.jpg', description: 'รุ่นท็อปสุดหรูหราพร้อมประตูปีกนก (Gull-wing) อัตราเร่งดีที่สุด 0-100 ใน 5.8 วินาทีและเทคโนโลยีครบครัน', range: 620, performance: 10, family: 3, luxury: 10, city: 1, availableColors: ['White', 'Silver', 'Gray', 'Black', 'Rose', 'Orange'] }
         };
 
         const luckyColors = {
-            'Sunday': { color: 'สีแดง', name: 'Red', description: 'เสริมด้านอำนาจ บารมี และความเป็นผู้นำ' },
-            'Monday': { color: 'สีเหลือง หรือ สีขาว', name: 'Yellow', description: 'เสริมด้านเสน่ห์ เมตตามหานิยม และการเงิน' },
-            'Tuesday': { color: 'สีชมพู', name: 'Pink', description: 'เสริมด้านความเมตตา และทำให้คนรักใคร่เอ็นดู' },
-            'Wednesday': { color: 'สีเขียว', name: 'Green', description: 'เสริมด้านการเจรจาต่อรอง และโชคลาภ' },
-            'Thursday': { color: 'สีส้ม หรือ สีแสด', name: 'Orange', description: 'เสริมด้านบารมี และความเจริญรุ่งเรือง' },
-            'Friday': { color: 'สีฟ้า หรือ สีน้ำเงิน', name: 'Blue', description: 'เสริมด้านความสุข ความสำเร็จ และความรัก' },
-            'Saturday': { color: 'สีม่วง หรือ สีดำ', name: 'Purple', description: 'เสริมด้านความหนักแน่น มั่นคง และความสำเร็จในหน้าที่การงาน' }
+            'Sunday': [{ name: 'Red', th: 'สีแดง', desc: 'เสริมอำนาจ บารมี' }, { name: 'Green', th: 'สีเขียว', desc: 'เสริมเมตตา' }],
+            'Monday': [{ name: 'White', th: 'สีขาว', desc: 'เสริมเสน่ห์' }, { name: 'Yellow', th: 'สีเหลือง', desc: 'เสริมการเงิน' }, { name: 'Green', th: 'สีเขียว', desc: 'เสริมอำนาจ' }],
+            'Tuesday': [{ name: 'Pink', th: 'สีชมพู', desc: 'เสริมเมตตา' }, { name: 'Rose', th: 'สีโรสโกลด์', desc: 'เสริมเมตตา' }, { name: 'Orange', th: 'สีส้ม', desc: 'เสริมพลัง' }],
+            'Wednesday': [{ name: 'Green', th: 'สีเขียว', desc: 'เสริมโชคลาภ' }, { name: 'Gray', th: 'สีเทา', desc: 'เสริมความมั่นคง' }],
+            'Thursday': [{ name: 'Orange', th: 'สีส้ม', desc: 'เสริมบารมี' }, { name: 'Beige', th: 'สีเบจ', desc: 'เสริมการเงิน' }],
+            'Friday': [{ name: 'Blue', th: 'สีฟ้า/น้ำเงิน', desc: 'เสริมความสำเร็จ' }, { name: 'White', th: 'สีขาว', desc: 'เสริมความสุข' }, { name: 'Silver', th: 'สีเงิน', desc: 'เสริมความมั่นคง' }],
+            'Saturday': [{ name: 'Purple', th: 'สีม่วง', desc: 'เสริมความสำเร็จ' }, { name: 'Black', th: 'สีดำ', desc: 'เสริมอำนาจ' }, { name: 'Gray', th: 'สีเทา', desc: 'เสริมความมั่นคง' }]
+        };
+        
+        // Map friendly names to CSS colors
+        const colorMap = {
+             'Green': '#2E8B57', 'Beige': '#F5F5DC', 'White': '#FFFFFF', 'Silver': '#C0C0C0', 'Gray': '#808080', 
+             'Black': '#000000', 'Gold': '#FFD700', 'Orange': '#FFA500', 'Rose': '#E0BFB8', 'Red': '#DC143C',
+             'Yellow': '#FFFF00', 'Pink': '#FFC0CB', 'Blue': '#1E90FF', 'Purple': '#800080', 'Sand': '#C2B280'
         };
 
         function calculateResult() {
             // --- รีเซ็ตคะแนน ---
-            for (let car in cars) {
-                cars[car].score = 0;
-            }
+            for (let car in cars) { cars[car].score = 0; }
 
             // --- อ่านค่าจากฟอร์ม ---
             const passengers = document.getElementById('passengers').value;
@@ -128,40 +135,22 @@
             const lifestyle = document.getElementById('lifestyle').value;
             const birthDay = document.getElementById('birth-day').value;
 
-            // --- ตรรกะการให้คะแนน (คุณสามารถปรับแก้กฎตรงนี้ได้) ---
-            // 1. ตามจำนวนผู้โดยสาร
-            if (passengers === '3-4') {
-                cars['Aion Y Plus 490'].score += 2;
-                cars['Aion U'].score += 2;
-                cars['Aion V'].score += 3;
-            } else if (passengers === '5+') {
-                cars['Aion V'].score += 5;
-                cars['Aion U'].score += 3;
-            }
-            
-            // 2. ตามระยะทางวิ่ง
-            if (distance === 'medium' || distance === 'high') {
-                cars['Aion V'].score += 2;
-                cars['Aion U'].score += 2;
-                cars['Aion Hyper HT'].score += 1;
-            }
-            if(trips === 'occasionally' || trips === 'frequently'){
-                 cars['Aion V'].score += 3;
-                 cars['Aion U'].score += 3;
-                 cars['Aion Hyper HT'].score += 2;
-            }
-
-            // 3. ตามไลฟ์สไตล์
-            if (lifestyle === 'family') {
-                cars['Aion V'].score += 5;
-                cars['Aion U'].score += 4;
-                cars['Aion Y Plus 490'].score += 3;
-            } else if (lifestyle === 'performance') {
-                cars['Aion Hyper HT'].score += 5;
-            } else if (lifestyle === 'luxury') {
-                cars['Aion Hyper HT'].score += 5;
-            } else if (lifestyle === 'city') {
-                cars['Aion Y Plus 490'].score += 3;
+            // --- ตรรกะการให้คะแนน (อัปเดตใหม่) ---
+            for (let carKey in cars) {
+                const car = cars[carKey];
+                // 1. Lifestyle
+                car.score += car[lifestyle] || 0;
+                
+                // 2. Passengers
+                if (passengers === '3-4' && car.family >= 4) car.score += 2;
+                if (passengers === '5' && car.family >= 5) car.score += 3;
+                if (passengers === '5' && car.family >= 10) car.score += 2; // Extra for AION V
+                
+                // 3. Distance & Trips
+                if (distance === 'medium' && car.range >= 500) car.score += 2;
+                if (distance === 'high' && car.range >= 600) car.score += 3;
+                if (trips === 'occasionally' && car.range >= 500) car.score += 2;
+                if (trips === 'frequently' && car.range >= 600) car.score += 3;
             }
 
             // --- ค้นหารถที่คะแนนสูงสุด ---
@@ -174,23 +163,40 @@
                 }
             }
             
+            // --- ค้นหาสีที่เหมาะสม ---
+            let recommendedColor = null;
+            let colorDesc = '';
+            const carColors = cars[bestCar].availableColors;
+            const preferredColors = luckyColors[birthDay];
+            
+            for(let prefColor of preferredColors) {
+                if (carColors.includes(prefColor.name)) {
+                    recommendedColor = prefColor;
+                    colorDesc = `สีมงคลหลักของคุณคือ ${recommendedColor.th} ซึ่งช่วย${recommendedColor.desc} และมีให้เลือกในรถรุ่นนี้ครับ`;
+                    break;
+                }
+            }
+            // Fallback if no primary/secondary color is found
+            if (!recommendedColor) {
+                 recommendedColor = { name: carColors[0], th: carColors[0], desc: 'ตามสีมาตรฐานของรุ่น' };
+                 colorDesc = `เนื่องจากสีมงคลของคุณไม่มีในรถรุ่นนี้ เราขอแนะนำสีมาตรฐานของรุ่นคือ ${recommendedColor.th} ครับ`;
+            }
+
             // --- แสดงผลลัพธ์ ---
             document.getElementById('result-car-name').innerText = bestCar;
             document.getElementById('result-car-image').src = cars[bestCar].image;
             document.getElementById('result-car-description').innerText = cars[bestCar].description;
             
-            const colorInfo = luckyColors[birthDay];
-            document.getElementById('result-color-description').innerText = colorInfo.description;
+            document.getElementById('result-color-description').innerText = colorDesc;
             const colorBox = document.getElementById('result-color');
-            colorBox.innerText = colorInfo.color;
-            colorBox.style.backgroundColor = colorInfo.name;
-            // ทำให้สีตัวอักษรเป็นสีขาว ถ้าพื้นหลังเป็นสีเข้ม
-            if(['Red', 'Green', 'Blue', 'Purple'].includes(colorInfo.name)){
+            colorBox.innerText = recommendedColor.th;
+            colorBox.style.backgroundColor = colorMap[recommendedColor.name] || '#dddddd';
+
+            if(['Black', 'Green', 'Blue', 'Purple', 'Red'].includes(recommendedColor.name)){
                 colorBox.style.color = 'white';
             } else {
                  colorBox.style.color = 'black';
             }
-
 
             // ซ่อนฟอร์มและแสดงผลลัพธ์
             document.getElementById('quiz-form').style.display = 'none';
@@ -202,7 +208,6 @@
             document.getElementById('result-display').style.display = 'none';
             document.getElementById('quiz-form').style.display = 'block';
         }
-
     </script>
 </body>
 </html>
