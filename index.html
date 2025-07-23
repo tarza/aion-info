@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AION Advisor (Final Corrected Version)</title>
+    <title>AION Advisor (Corrected Final Version)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
@@ -108,9 +108,11 @@
         .btn-line { background-color: var(--green-color); }
         .btn-phone { background-color: var(--secondary-color); }
         .color-box {
-            display: inline-block; width: 20px; height: 20px; margin-right: 8px;
-            border: 1px solid #ccc; border-radius: 4px; vertical-align: middle;
+            width: 24px; height: 24px; margin-right: 8px;
+            border: 1px solid #ccc; border-radius: 50%;
         }
+        .color-swatch-container { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; }
+        .color-swatch { display: flex; align-items: center; }
         @media (max-width: 768px) {
             .container { padding: 15px 20px; }
             .nav-tab { font-size: 14px; padding: 12px 5px; }
@@ -199,24 +201,17 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const carData = [
-        { id: 'ut_std', model: 'AION UT', subModel: '420 Standard', price: 499900, range: 420, hp: 136, space: 2, tags: ['city', 'value'], features: ['กรองฝุ่น PM2.5', 'ดีไซน์กะทัดรัด คล่องตัว', 'คุ้มค่าที่สุดในกลุ่ม'] },
-        { id: 'ut_prem', model: 'AION UT', subModel: '500 Premium', price: 649900, range: 500, hp: 204, space: 2, tags: ['city', 'value', 'long_trip', 'performance'], features: ['กรองฝุ่น PM2.5', 'มอเตอร์แรงขึ้น ขับสนุก', 'วิ่งได้ไกลขึ้น'] },
-        { id: 'y_410', model: 'AION Y Plus', subModel: '410 Premium', price: 769900, range: 410, hp: 204, space: 4, tags: ['city', 'family', 'value', 'space'], features: ['กรองฝุ่น PM2.5', 'ห้องโดยสารกว้างที่สุดในคลาส', 'เบาะปรับนอนได้ (Camping Mode)'] },
-        { id: 'y_490', model: 'AION Y Plus', subModel: '490 Premium', price: 829900, range: 490, hp: 204, space: 4, tags: ['family', 'long_trip', 'space'], features: ['กรองฝุ่น PM2.5', 'หลังคากระจก Panoramic', 'วิ่งไกล เหมาะกับครอบครัว'] },
-        { id: 'v_620', model: 'AION V', subModel: '620 Luxury', price: 999900, range: 602, hp: 224, space: 5, tags: ['family', 'long_trip', 'tech', 'space', 'camping'], features: ['กรองฝุ่น PM2.5', 'เบาะนวดไฟฟ้าคู่หน้า', 'มีตู้เย็นในตัว (Cool box)', 'SUV ขนาดใหญ่ ออปชั่นครบ'] },
-        { id: 'ht_prem', model: 'HYPTEC HT', subModel: '620 Premium', price: 1449000, range: 620, hp: 340, space: 5, tags: ['performance', 'long_trip', 'family', 'tech', 'design', 'business'], features: ['กรองฝุ่น PM2.5', 'สมรรถนะสูง 340 แรงม้า', 'เทคโนโลยีความปลอดภัยเต็มรูปแบบ'] },
-        { id: 'ht_lux', model: 'HYPTEC HT', subModel: '620 Luxury (Gull-Wing)', price: 1749000, range: 620, hp: 340, space: 5, tags: ['performance', 'long_trip', 'family', 'tech', 'design', 'business'], features: ['กรองฝุ่น PM2.5', 'ประตูปีกนก (Gull-Wing Doors)', 'ภาพลักษณ์หรูหรา โดดเด่น'] }
+        { id: 'ut_std', model: 'AION UT', subModel: '420 Standard', price: 499900, range: 420, hp: 136, space: 2, tags: ['city', 'value'], features: ['กรองฝุ่น PM2.5', 'ดีไซน์กะทัดรัด คล่องตัว', 'คุ้มค่าที่สุดในกลุ่ม'], colors: [{name: 'ขาว', hex: '#FFFFFF'}, {name: 'ดำ', hex: '#2d2d2d'}, {name: 'เทา', hex: '#a1a1a1'}] },
+        { id: 'ut_prem', model: 'AION UT', subModel: '500 Premium', price: 649900, range: 500, hp: 204, space: 2, tags: ['city', 'value', 'long_trip', 'performance'], features: ['กรองฝุ่น PM2.5', 'มอเตอร์แรงขึ้น ขับสนุก', 'วิ่งได้ไกลขึ้น'], colors: [{name: 'ขาว', hex: '#FFFFFF'}, {name: 'ดำ', hex: '#2d2d2d'}, {name: 'เทา', hex: '#a1a1a1'}] },
+        { id: 'y_410', model: 'AION Y Plus', subModel: '410 Premium', price: 769900, range: 410, hp: 204, space: 4, tags: ['city', 'family', 'value', 'space'], features: ['กรองฝุ่น PM2.5', 'ห้องโดยสารกว้างที่สุดในคลาส', 'เบาะปรับนอนได้ (Camping Mode)'], colors: [{name: 'เขียว', hex: '#c4d6a7'}, {name: 'ขาว', hex: '#FFFFFF'}, {name: 'ดำ', hex: '#2d2d2d'}, {name: 'เงิน', hex: '#d3d3d3'}, {name: 'เหลือง', hex: '#f1c40f'}] },
+        { id: 'y_490', model: 'AION Y Plus', subModel: '490 Premium', price: 829900, range: 490, hp: 204, space: 4, tags: ['family', 'long_trip', 'space'], features: ['กรองฝุ่น PM2.5', 'หลังคากระจก Panoramic', 'วิ่งไกล เหมาะกับครอบครัว'], colors: [{name: 'เขียว', hex: '#c4d6a7'}, {name: 'ขาว', hex: '#FFFFFF'}, {name: 'ดำ', hex: '#2d2d2d'}, {name: 'เงิน', hex: '#d3d3d3'}, {name: 'เหลือง', hex: '#f1c40f'}] },
+        { id: 'v_620', model: 'AION V', subModel: '620 Luxury', price: 999900, range: 602, hp: 224, space: 5, tags: ['family', 'long_trip', 'tech', 'space', 'camping'], features: ['กรองฝุ่น PM2.5', 'เบาะนวดไฟฟ้าคู่หน้า', 'มีตู้เย็นในตัว (Cool box)', 'SUV ขนาดใหญ่ ออปชั่นครบ'], colors: [{name: 'ดำ', hex: '#2d2d2d'}, {name: 'ขาว', hex: '#FFFFFF'}, {name: 'เทาเข้ม', hex: '#555555'}, {name: 'แชมเปญ', hex: '#f7e7ce'}] },
+        { id: 'ht_prem', model: 'HYPTEC HT', subModel: '620 Premium', price: 1449000, range: 620, hp: 340, space: 5, tags: ['performance', 'long_trip', 'family', 'tech', 'design', 'business'], features: ['กรองฝุ่น PM2.5', 'สมรรถนะสูง 340 แรงม้า', 'เทคโนโลยีความปลอดภัยเต็มรูปแบบ'], colors: [{name: 'ขาว', hex: '#FFFFFF'}, {name: 'เทา', hex: '#a1a1a1'}, {name: 'ดำ', hex: '#2d2d2d'}, {name: 'ฟ้า', hex: '#3498db'}] },
+        { id: 'ht_lux', model: 'HYPTEC HT', subModel: '620 Luxury (Gull-Wing)', price: 1749000, range: 620, hp: 340, space: 5, tags: ['performance', 'long_trip', 'family', 'tech', 'design', 'business'], features: ['กรองฝุ่น PM2.5', 'ประตูปีกนก (Gull-Wing Doors)', 'ภาพลักษณ์หรูหรา โดดเด่น'], colors: [{name: 'ขาว', hex: '#FFFFFF'}, {name: 'เทา', hex: '#a1a1a1'}, {name: 'ส้ม', hex: '#e67e22'}, {name: 'ฟ้า', hex: '#3498db'}] }
     ];
     const specialProfessions = ['government_officer', 'doctor', 'pilot'];
     const auspiciousColors = {
-        sunday: { good: ['สีเขียว', 'สีดำ'], bad: ['สีน้ำเงิน'], css: { good: ['#4CAF50','#000000'], bad: ['#2196F3']}},
-        monday: { good: ['สีเขียว', 'สีส้ม'], bad: ['สีแดง'], css: { good: ['#4CAF50','#FF9800'], bad: ['#F44336']}},
-        tuesday: { good: ['สีส้ม', 'สีดำ'], bad: ['สีขาว'], css: { good: ['#FF9800','#000000'], bad: ['#FFFFFF']}},
-        wednesday: { good: ['สีเทา', 'สีฟ้า'], bad: ['สีชมพู'], css: { good: ['#9E9E9E','#03A9F4'], bad: ['#E91E63']}},
-        wednesday_night: { good: ['สีขาว', 'สีม่วง'], bad: ['สีส้ม'], css: { good: ['#FFFFFF','#9C27B0'], bad: ['#FF9800']}},
-        thursday: { good: ['สีฟ้า', 'สีแดง'], bad: ['สีดำ'], css: { good: ['#03A9F4','#F44336'], bad: ['#000000']}},
-        friday: { good: ['สีเขียว', 'สีชมพู'], bad: ['สีเทา'], css: { good: ['#4CAF50','#E91E63'], bad: ['#9E9E9E']}},
-        saturday: { good: ['สีแดง', 'สีฟ้า'], bad: ['สีเขียว'], css: { good: ['#F44336','#03A9F4'], bad: ['#4CAF50']}}
+        sunday: { good: ['สีเขียว', 'สีดำ']}, monday: { good: ['สีเขียว', 'สีส้ม']}, tuesday: { good: ['สีส้ม', 'สีดำ']}, wednesday: { good: ['สีเทา', 'สีฟ้า']}, wednesday_night: { good: ['สีขาว', 'สีม่วง']}, thursday: { good: ['สีฟ้า', 'สีแดง']}, friday: { good: ['สีเขียว', 'สีชมพู']}, saturday: { good: ['สีแดง', 'สีฟ้า']}
     };
 
     function init() {
@@ -281,14 +276,18 @@ document.addEventListener('DOMContentLoaded', function () {
         const isSpecialProfession = specialProfessions.includes(inputs.profession);
         let html = `<h2>ผลลัพธ์ที่ใช่สำหรับคุณ</h2>`;
         cars.forEach((car, index) => {
-            html += `<div class="result-card"><h3>${index === 0 ? '✨ แนะนำอันดับ 1' : `✔️ ตัวเลือกที่น่าสนใจอันดับ ${index + 1}`}</h3><h2>${car.model} ${car.subModel}</h2><p><strong>ราคา:</strong> ${car.price.toLocaleString('th-TH')} บาท</p><p><strong>วิ่งได้ไกล:</strong> ${car.range} กม.</p><h4>ฟีเจอร์เด่น</h4><ul class="features-list">${car.features.map(f => `<li>${f}</li>`).join('')}</ul>${ (index === 0) ? renderColorSection(auspiciousColors[inputs.birthDay]) : '' }${ (index === 0 && isSpecialProfession) ? renderSpecialPrivilege() : '' }</div>`;
+            html += `<div class="result-card"><h3>${index === 0 ? '✨ แนะนำอันดับ 1' : `✔️ ตัวเลือกที่น่าสนใจอันดับ ${index + 1}`}</h3><h2>${car.model} ${car.subModel}</h2><p><strong>ราคา:</strong> ${car.price.toLocaleString('th-TH')} บาท</p><p><strong>วิ่งได้ไกล:</strong> ${car.range} กม.</p><h4>ฟีเจอร์เด่น</h4><ul class="features-list">${car.features.map(f => `<li>${f}</li>`).join('')}</ul>${renderAvailableColors(car.colors)}${ (index === 0) ? renderAuspiciousColors(auspiciousColors[inputs.birthDay]) : '' }${ (index === 0 && isSpecialProfession) ? renderSpecialPrivilege() : '' }</div>`;
         });
         html += renderContactCard();
         resultsContainer.innerHTML = html;
     }
+    
+    function renderAvailableColors(colors) {
+        return `<div style="margin-top:15px; padding-top:15px; border-top: 1px solid #eee;"><h4>สีตัวถังที่มีให้เลือก</h4><div class="color-swatch-container">${colors.map(c => `<div class="color-swatch"><span class="color-box" style="background-color:${c.hex}; border-color:${c.hex === '#FFFFFF' ? '#ddd' : c.hex};"></span>${c.name}</div>`).join('')}</div></div>`;
+    }
 
-    function renderColorSection(colors) {
-        return `<div style="margin-top:15px; padding-top:15px; border-top: 1px solid #eee;"><p><strong>🎨 สีมงคลสำหรับคุณ:</strong> ${colors.good.map((color, i) => `<span class="color-box" style="background-color:${colors.css.good[i]};"></span>${color}`).join(', ')}</p></div>`;
+    function renderAuspiciousColors(colors) {
+        return `<div style="margin-top:15px;"><p><strong>🎨 สีมงคลสำหรับคุณ:</strong> ${colors.good.join(', ')}</p></div>`;
     }
 
     function renderSpecialPrivilege() {
