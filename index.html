@@ -8,13 +8,12 @@
         :root {
             --primary-color: #0056b3;
             --secondary-color: #007bff;
-            --success-color: #28a745;
             --light-gray: #f4f4f9;
             --text-color: #333;
             --white-color: #ffffff;
         }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; background-color: var(--light-gray); color: var(--text-color); line-height: 1.6; }
-        .container { padding: 20px; max-width: 800px; margin: auto; }
+        .container { padding: 20px; max-width: 900px; margin: auto; }
         header { text-align: center; margin-bottom: 2em; }
         h1 { color: var(--primary-color); }
         .quiz-form { background-color: var(--white-color); padding: 2em; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
@@ -25,8 +24,6 @@
         select, input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1em; background-color: #fafafa; }
         button { display: block; width: 100%; padding: 15px; font-size: 1.2em; color: var(--white-color); background-color: var(--secondary-color); border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.3s; }
         button:hover { background-color: var(--primary-color); }
-        .cta-button { background-color: var(--success-color); margin-top: 1em; }
-        .cta-button:hover { background-color: #218838; }
         #result-display { display: none; margin-top: 2em; }
         .result-card { background-color: var(--white-color); padding: 2em; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; margin-bottom: 1.5em; }
         .result-card.best-match { border: 2px solid var(--primary-color); }
@@ -35,8 +32,6 @@
         .match-score { font-size: 1.5em; font-weight: bold; color: var(--primary-color); }
         .color-recommendation { margin-top: 1em; }
         #result-color { padding: 0.5em 1em; border-radius: 20px; color: white; display: inline-block; margin-top: 0.5em; border: 1px solid #ddd; }
-        .contact-info p { font-size: 1.2em; }
-        .contact-info a { color: var(--secondary-color); text-decoration: none; font-weight: bold; }
 
         @media (min-width: 768px) {
             .form-grid { grid-template-columns: 1fr 1fr; }
@@ -69,6 +64,7 @@
                         <option value="business">เจ้าของธุรกิจ / ผู้บริหาร</option>
                         <option value="freelance">ฟรีแลนซ์ / ครีเอทีฟ</option>
                         <option value="family">พ่อบ้าน / แม่บ้าน / ดูแลครอบครัว</option>
+                        <option value="other">อื่นๆ</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -97,6 +93,13 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label for="trade-in">🤝 มีรถเก่ามาแลกเปลี่ยน (Trade-in) หรือไม่?</label>
+                    <select id="trade-in">
+                        <option value="no">ไม่มี</option>
+                        <option value="yes">มี (รับข้อเสนอราคาพิเศษ)</option>
+                    </select>
+                </div>
+                 <div class="form-group">
                     <label for="birth-day">🎂 วันเกิดของคุณ</label>
                     <select id="birth-day">
                         <option value="Sunday">วันอาทิตย์</option>
@@ -143,11 +146,13 @@
         };
 
         function calculateResult() {
+            // --- อ่านค่าจากฟอร์ม ---
             const budget = parseInt(document.getElementById('budget').value);
             const occupation = document.getElementById('occupation').value;
             const passengers = document.getElementById('passengers').value;
             const distance = document.getElementById('distance').value;
             const priority = document.getElementById('priority').value;
+            const tradeIn = document.getElementById('trade-in').value;
             const birthDay = document.getElementById('birth-day').value;
 
             const eligibleCars = Object.keys(cars).filter(key => cars[key].price <= budget);
@@ -160,6 +165,7 @@
             eligibleCars.forEach(carKey => {
                 const car = cars[carKey];
                 let score = 0;
+                
                 if (car.tags.includes(priority)) score += 10;
                 if (occupation === 'business' && (car.tags.includes('luxury') || car.tags.includes('performance'))) score += 5;
                 if (occupation === 'family' && car.tags.includes('family')) score += 5;
@@ -169,6 +175,8 @@
                 if (passengers === '5' && carKey === 'AION V') score += 2;
                 if (distance === 'medium' && carKey.includes('Premium')) score += 2;
                 if (distance === 'high' && (carKey.includes('V') || carKey.includes('HT'))) score += 3;
+                if (tradeIn === 'yes' && car.tags.includes('value')) score += 4; // Bonus for Trade-in
+
                 scores[carKey] = { ...car, score };
             });
 
