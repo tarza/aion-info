@@ -3,144 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ศูนย์รวมข้อมูลรถไฟฟ้า Aion</title>
+    <title>เลือกรถ Aion ที่ใช่สำหรับคุณ</title>
     <style>
-        /* --- สไตล์สำหรับทุกอุปกรณ์ (เริ่มต้นจากมือถือ) --- */
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; background-color: #f4f4f9; color: #333; line-height: 1.6; }
-        header { background-color: #0056b3; color: white; text-align: center; padding: 1.5em 1em; }
-        nav { display: flex; flex-direction: column; background-color: #333; }
-        nav a { color: white; padding: 14px 20px; text-decoration: none; text-align: center; border-bottom: 1px solid #555; }
-        nav a:hover { background-color: #ddd; color: black; }
-        main { padding: 15px; }
-        section { background-color: white; margin-bottom: 20px; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        h1 { font-size: 1.8em; }
-        h2 { color: #0056b3; border-bottom: 2px solid #f4f4f9; padding-bottom: 10px; }
-        
-        /* --- CSS ใหม่สำหรับ Chatbot --- */
-        #chat-container { max-width: 100%; margin: auto; }
-        #chat-box { height: 300px; border: 1px solid #ccc; border-radius: 8px; padding: 10px; overflow-y: auto; margin-bottom: 10px; display: flex; flex-direction: column; }
-        .chat-message { max-width: 80%; padding: 8px 12px; margin-bottom: 8px; border-radius: 15px; }
-        .user-message { background-color: #007bff; color: white; align-self: flex-end; border-bottom-right-radius: 0; }
-        .ai-message { background-color: #e9e9eb; color: black; align-self: flex-start; border-bottom-left-radius: 0; }
-        .typing-indicator { color: #888; font-style: italic; align-self: flex-start; }
-        #chat-input-container { display: flex; }
-        #chat-input { flex-grow: 1; border: 1px solid #ccc; border-radius: 20px; padding: 10px 15px; font-size: 1em; }
-        #send-button { background-color: #007bff; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; margin-left: 10px; cursor: pointer; font-size: 1.2em; }
-        #send-button:hover { background-color: #0056b3; }
-
-        /* --- กฎพิเศษสำหรับหน้าจอที่กว้างกว่า 600px --- */
-        @media (min-width: 600px) {
-            nav { flex-direction: row; justify-content: center; }
-            nav a { border-bottom: none; }
-            main { padding: 20px; max-width: 900px; margin: auto; }
-            h1 { font-size: 2.5em; }
-        }
+        .container { padding: 20px; max-width: 800px; margin: auto; }
+        header { text-align: center; margin-bottom: 2em; }
+        h1 { color: #0056b3; }
+        .quiz-form { background-color: white; padding: 2em; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 1.5em; }
+        label { display: block; font-weight: bold; margin-bottom: 0.5em; }
+        select, input[type="number"] { width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 1em; }
+        button { display: block; width: 100%; padding: 15px; font-size: 1.2em; color: white; background-color: #007bff; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        #result-display { display: none; background-color: white; padding: 2em; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
+        #result-display img { max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 1em; }
+        #result-color { padding: 0.5em 1em; border-radius: 20px; color: white; display: inline-block; margin-top: 1em; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>ศูนย์รวมข้อมูลรถไฟฟ้า Aion</h1>
-    </header>
+    <div class="container">
+        <header>
+            <h1>เลือกรถให้เหมาะกับไลฟ์สไตล์</h1>
+            <p>และสีให้ถูกโฉลกกับวันเกิดของคุณ</p>
+        </header>
 
-    <nav>
-        <a href="#info">ข้อมูลรถ</a>
-        <a href="#ai-chat">AI ช่วยตอบ</a>
-        <a href="#contact">ติดต่อเรา</a>
-    </nav>
-
-    <main>
-        <section id="info">
-            <h2>1. ข้อมูลรถและโปรโมชัน</h2>
-            <p>ส่วนนี้คุณสามารถใส่รายละเอียดรถและโปรโมชันต่างๆ ได้เลย...</p>
-        </section>
-
-        <section id="ai-chat">
-            <h2>2. AI ช่วยตอบคำถาม</h2>
-            <div id="chat-container">
-                <div id="chat-box">
-                    <div class="chat-message ai-message">สวัสดีครับ! มีอะไรให้ผมช่วยเกี่ยวกับรถยนต์ Aion ไหมครับ?</div>
-                </div>
-                <div id="chat-input-container">
-                    <input type="text" id="chat-input" placeholder="พิมพ์คำถามของคุณที่นี่...">
-                    <button id="send-button">→</button>
-                </div>
+        <div id="quiz-form" class="quiz-form">
+            <div class="form-group">
+                <label for="passengers">ปกติแล้วมีคนนั่งรถไปกับคุณกี่คน (รวมคนขับ)?</label>
+                <select id="passengers">
+                    <option value="1-2">1 - 2 คน (ใช้งานคนเดียวหรือเป็นคู่)</option>
+                    <option value="3-4">3 - 4 คน (ครอบครัวเล็ก)</option>
+                    <option value="5+">5 คนขึ้นไป (ครอบครัวใหญ่ หรือมีเพื่อนร่วมทางบ่อย)</option>
+                </select>
             </div>
-        </section>
 
-        <section id="contact">
-            <h2>3. ข้อมูลติดต่อและนัดหมาย</h2>
-            <p>ส่วนนี้สำหรับใส่ข้อมูลติดต่อและแผนที่...</p>
-        </section>
-    </main>
+            <div class="form-group">
+                <label for="distance">ปกติขับรถเฉลี่ยวันละกี่กิโลเมตร?</label>
+                <select id="distance">
+                    <option value="low">น้อยกว่า 30 กม. (ขับในเมืองระยะสั้น)</option>
+                    <option value="medium">30 - 80 กม. (เดินทางไป-กลับที่ทำงาน)</option>
+                    <option value="high">มากกว่า 80 กม. (เดินทางไกลทุกวัน)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="trips">เดินทางข้ามจังหวัดบ่อยแค่ไหน?</label>
+                <select id="trips">
+                    <option value="rarely">นานๆ ครั้ง (ปีละ 1-2 ครั้ง)</option>
+                    <option value="occasionally">ค่อนข้างบ่อย (3-6 ครั้งต่อปี)</option>
+                    <option value="frequently">บ่อยมาก (เดือนละครั้งขึ้นไป)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="lifestyle">ไลฟ์สไตล์การใช้งานหลักของคุณคืออะไร?</label>
+                <select id="lifestyle">
+                    <option value="city">เน้นขับในเมือง, ไปทำงาน, ช้อปปิ้ง</option>
+                    <option value="family">เน้นกิจกรรมครอบครัว, เดินทางพร้อมกันหลายคน</option>
+                    <option value="performance">ชอบความเร็ว, ดีไซน์สปอร์ต, เทคโนโลยีล้ำสมัย</option>
+                    <option value="luxury">ชอบความหรูหรา, ความสบายระดับพรีเมียม, ภาพลักษณ์</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="birth-day">คุณเกิดวันอะไร?</label>
+                <select id="birth-day">
+                    <option value="Sunday">วันอาทิตย์</option>
+                    <option value="Monday">วันจันทร์</option>
+                    <option value="Tuesday">วันอังคาร</option>
+                    <option value="Wednesday">วันพุธ</option>
+                    <option value="Thursday">วันพฤหัสบดี</option>
+                    <option value="Friday">วันศุกร์</option>
+                    <option value="Saturday">วันเสาร์</option>
+                </select>
+            </div>
+
+            <button onclick="calculateResult()">ดูผลลัพธ์</button>
+        </div>
+
+        <div id="result-display">
+            <h2>รถ Aion ที่เหมาะกับคุณคือ...</h2>
+            <h3 id="result-car-name"></h3>
+            <img id="result-car-image" src="" alt="รูปภาพรถยนต์ที่แนะนำ">
+            <p id="result-car-description"></p>
+            <hr>
+            <h3>สีที่ถูกโฉลกกับวันเกิดของคุณคือ</h3>
+            <p id="result-color-description"></p>
+            <div id="result-color"></div>
+            <br><br>
+            <button onclick="resetForm()">ลองใหม่อีกครั้ง</button>
+        </div>
+    </div>
 
     <script>
-        // --- การตั้งค่า ---
-        const aiBackendUrl = 'https://line-gpt-bot-production-72e8.up.railway.app/ask-ai'; // นี่คือ URL หลังบ้านของคุณที่ Railway
+        // --- ฐานข้อมูลรถยนต์และสี ---
+        const cars = {
+            'Aion U': { score: 0, image: 'aion-u.jpg', description: 'SUV ไฟฟ้าอัจฉริยะสำหรับครอบครัวยุคใหม่ พื้นที่กว้างขวาง นั่งสบาย เหมาะกับการใช้งานหลากหลาย' },
+            'Aion Y Plus 490': { score: 0, image: 'aion-y.jpg', description: 'SUV ไฟฟ้ายอดนิยม ดีไซน์โดดเด่น ภายในกว้างขวางปรับเปลี่ยนได้หลากหลาย เหมาะกับไลฟ์สไตล์คนเมืองและครอบครัวเล็ก' },
+            'Aion V': { score: 0, image: 'aion-v.jpg', description: 'SUV ไฟฟ้าไซส์ใหญ่สำหรับครอบครัวโดยเฉพาะ มาพร้อมฟังก์ชันอำนวยความสะดวกครบครัน เดินทางไกลได้สบาย' },
+            'Aion Hyper HT': { score: 0, image: 'aion-ht.jpg', description: 'Luxury SUV ไฟฟ้าที่มอบประสบการณ์ระดับพรีเมียม ดีไซน์หรูหรา สมรรถนะสูง และมีรุ่นประตูปีกนกที่เป็นเอกลักษณ์' }
+        };
 
-        // --- ดึง Element ต่างๆ จากหน้าเว็บ ---
-        const chatBox = document.getElementById('chat-box');
-        const chatInput = document.getElementById('chat-input');
-        const sendButton = document.getElementById('send-button');
+        const luckyColors = {
+            'Sunday': { color: 'สีแดง', name: 'Red', description: 'เสริมด้านอำนาจ บารมี และความเป็นผู้นำ' },
+            'Monday': { color: 'สีเหลือง หรือ สีขาว', name: 'Yellow', description: 'เสริมด้านเสน่ห์ เมตตามหานิยม และการเงิน' },
+            'Tuesday': { color: 'สีชมพู', name: 'Pink', description: 'เสริมด้านความเมตตา และทำให้คนรักใคร่เอ็นดู' },
+            'Wednesday': { color: 'สีเขียว', name: 'Green', description: 'เสริมด้านการเจรจาต่อรอง และโชคลาภ' },
+            'Thursday': { color: 'สีส้ม หรือ สีแสด', name: 'Orange', description: 'เสริมด้านบารมี และความเจริญรุ่งเรือง' },
+            'Friday': { color: 'สีฟ้า หรือ สีน้ำเงิน', name: 'Blue', description: 'เสริมด้านความสุข ความสำเร็จ และความรัก' },
+            'Saturday': { color: 'สีม่วง หรือ สีดำ', name: 'Purple', description: 'เสริมด้านความหนักแน่น มั่นคง และความสำเร็จในหน้าที่การงาน' }
+        };
 
-        // --- ฟังก์ชันหลักในการส่งและรับข้อความ ---
-        async function sendMessage() {
-            const userMessage = chatInput.value.trim();
-            if (userMessage === '') return;
+        function calculateResult() {
+            // --- รีเซ็ตคะแนน ---
+            for (let car in cars) {
+                cars[car].score = 0;
+            }
 
-            // 1. แสดงข้อความของผู้ใช้บนหน้าจอ
-            addMessageToBox(userMessage, 'user');
-            chatInput.value = '';
+            // --- อ่านค่าจากฟอร์ม ---
+            const passengers = document.getElementById('passengers').value;
+            const distance = document.getElementById('distance').value;
+            const trips = document.getElementById('trips').value;
+            const lifestyle = document.getElementById('lifestyle').value;
+            const birthDay = document.getElementById('birth-day').value;
 
-            // 2. แสดงสถานะ "กำลังพิมพ์..."
-            const typingIndicator = addMessageToBox('กำลังพิมพ์...', 'typing-indicator');
+            // --- ตรรกะการให้คะแนน (คุณสามารถปรับแก้กฎตรงนี้ได้) ---
+            // 1. ตามจำนวนผู้โดยสาร
+            if (passengers === '3-4') {
+                cars['Aion Y Plus 490'].score += 2;
+                cars['Aion U'].score += 2;
+                cars['Aion V'].score += 3;
+            } else if (passengers === '5+') {
+                cars['Aion V'].score += 5;
+                cars['Aion U'].score += 3;
+            }
+            
+            // 2. ตามระยะทางวิ่ง
+            if (distance === 'medium' || distance === 'high') {
+                cars['Aion V'].score += 2;
+                cars['Aion U'].score += 2;
+                cars['Aion Hyper HT'].score += 1;
+            }
+            if(trips === 'occasionally' || trips === 'frequently'){
+                 cars['Aion V'].score += 3;
+                 cars['Aion U'].score += 3;
+                 cars['Aion Hyper HT'].score += 2;
+            }
 
-            try {
-                // 3. ส่งคำถามไปที่หลังบ้าน (Railway)
-                const response = await fetch(aiBackendUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: userMessage })
-                });
+            // 3. ตามไลฟ์สไตล์
+            if (lifestyle === 'family') {
+                cars['Aion V'].score += 5;
+                cars['Aion U'].score += 4;
+                cars['Aion Y Plus 490'].score += 3;
+            } else if (lifestyle === 'performance') {
+                cars['Aion Hyper HT'].score += 5;
+            } else if (lifestyle === 'luxury') {
+                cars['Aion Hyper HT'].score += 5;
+            } else if (lifestyle === 'city') {
+                cars['Aion Y Plus 490'].score += 3;
+            }
 
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
+            // --- ค้นหารถที่คะแนนสูงสุด ---
+            let bestCar = '';
+            let maxScore = -1;
+            for (let car in cars) {
+                if (cars[car].score > maxScore) {
+                    maxScore = cars[car].score;
+                    bestCar = car;
                 }
-
-                const data = await response.json();
-                const aiReply = data.reply;
-                
-                // 4. ลบ "กำลังพิมพ์..." แล้วแสดงคำตอบของ AI
-                chatBox.removeChild(typingIndicator);
-                addMessageToBox(aiReply, 'ai');
-
-            } catch (error) {
-                // 5. กรณีเกิดข้อผิดพลาด
-                chatBox.removeChild(typingIndicator);
-                addMessageToBox('ขออภัยค่ะ ระบบมีปัญหา กรุณาลองใหม่อีกครั้ง', 'ai');
-                console.error('Error:', error);
             }
-        }
-        
-        // --- ฟังก์ชันเสริมสำหรับเพิ่มข้อความลงในกรอบแชท ---
-        function addMessageToBox(message, type) {
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('chat-message', `${type}-message`);
-            messageElement.textContent = message;
-            chatBox.appendChild(messageElement);
-            chatBox.scrollTop = chatBox.scrollHeight; // เลื่อนลงล่างสุดเสมอ
-            return messageElement;
+            
+            // --- แสดงผลลัพธ์ ---
+            document.getElementById('result-car-name').innerText = bestCar;
+            document.getElementById('result-car-image').src = cars[bestCar].image;
+            document.getElementById('result-car-description').innerText = cars[bestCar].description;
+            
+            const colorInfo = luckyColors[birthDay];
+            document.getElementById('result-color-description').innerText = colorInfo.description;
+            const colorBox = document.getElementById('result-color');
+            colorBox.innerText = colorInfo.color;
+            colorBox.style.backgroundColor = colorInfo.name;
+            // ทำให้สีตัวอักษรเป็นสีขาว ถ้าพื้นหลังเป็นสีเข้ม
+            if(['Red', 'Green', 'Blue', 'Purple'].includes(colorInfo.name)){
+                colorBox.style.color = 'white';
+            } else {
+                 colorBox.style.color = 'black';
+            }
+
+
+            // ซ่อนฟอร์มและแสดงผลลัพธ์
+            document.getElementById('quiz-form').style.display = 'none';
+            document.getElementById('result-display').style.display = 'block';
         }
 
-        // --- ตั้งค่าให้ปุ่ม "ส่ง" และปุ่ม Enter ทำงาน ---
-        sendButton.addEventListener('click', sendMessage);
-        chatInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
+        function resetForm(){
+            // ซ่อนผลลัพธ์และแสดงฟอร์ม
+            document.getElementById('result-display').style.display = 'none';
+            document.getElementById('quiz-form').style.display = 'block';
+        }
+
     </script>
-
 </body>
 </html>
-
