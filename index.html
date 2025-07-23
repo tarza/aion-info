@@ -14,6 +14,9 @@
             --green-color: #25D366; --special-bg: #fffbe6; --special-border: #ffe58f;
             --auspicious-highlight-bg: #fffbe6; --auspicious-highlight-border: #ffd700;
         }
+        html {
+            scroll-behavior: smooth; /* Added for smoother scrolling on all actions */
+        }
         body {
             font-family: 'Sarabun', sans-serif; background-color: var(--light-bg);
             color: var(--text-color); margin: 0; padding: 10px; box-sizing: border-box;
@@ -358,6 +361,9 @@ document.addEventListener('DOMContentLoaded', function () {
             recommendations = recommendations.filter(car => car.score > 0).sort((a, b) => b.score - a.score);
             renderWizardResults(recommendations.slice(0, 3), inputs);
             recommendBtn.classList.remove('loading');
+            
+            // Scroll to results after rendering
+            document.getElementById('results-container').scrollIntoView({ behavior: 'smooth' });
         }, 500);
     }
 
@@ -365,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const resultsContainer = document.getElementById('results-container');
         if (cars.length === 0) {
             resultsContainer.innerHTML = '<h3>ไม่พบรถที่ตรงกับความต้องการของคุณ</h3><p>ลองปรับเงื่อนไขต่างๆ เช่น เพิ่มงบประมาณ หรือปรับลักษณะการใช้งานดูนะครับ</p>';
-            resultsContainer.innerHTML += renderContactCard(); // Add contact card even if no results
+            resultsContainer.innerHTML += renderContactCard();
             return;
         }
         const isSpecialProfession = specialProfessions.includes(inputs.profession);
@@ -388,7 +394,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             html += `<div class="result-card"><h3>${index === 0 ? '✨ แนะนำอันดับ 1' : `✔️ ตัวเลือกที่น่าสนใจอันดับ ${index + 1}`}</h3><h2>${car.model} ${car.subModel}</h2><p><strong>ราคา:</strong> ${car.price.toLocaleString('th-TH')} บาท</p><p><strong>วิ่งได้ไกล:</strong> ${car.range} กม.</p><h4>ฟีเจอร์เด่น</h4><ul class="features-list">${car.features.map(f => `<li>${f}</li>`).join('')}</ul>${renderAvailableColors(car.colors, auspiciousMatchesForThisCar)}${ (index === 0 && isSpecialProfession) ? renderSpecialPrivilege() : '' }</div>`;
             
-            // Add contact card under each result card
             html += renderContactCard();
         });
         resultsContainer.innerHTML = html;
@@ -420,6 +425,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         const selectedCars = carData.filter(car => selectedIds.includes(car.id));
         renderComparisonTable(selectedCars, resultsContainer);
+
+        // Scroll to results after rendering
+        resultsContainer.scrollIntoView({ behavior: 'smooth' });
     }
 
     function renderComparisonTable(cars, container) {
