@@ -3,42 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AION Car Comparison</title>
+    <title>AION Advisor (ฉบับสมบูรณ์)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS สำหรับตกแต่งหน้าตา */
+        :root {
+            --primary-color: #1a237e;
+            --secondary-color: #2962ff;
+            --light-bg: #f0f2f5;
+            --white-bg: #ffffff;
+            --text-color: #333;
+            --border-color: #e0e0e0;
+        }
         body {
             font-family: 'Sarabun', sans-serif;
-            background-color: #f0f2f5;
-            color: #333;
+            background-color: var(--light-bg);
+            color: var(--text-color);
             margin: 0;
             padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
         }
         .container {
             width: 100%;
-            max-width: 900px;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            padding: 30px;
+            max-width: 960px;
+            margin: auto;
+            background-color: var(--white-bg);
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            padding: 20px 40px;
         }
-        h1, h2 {
-            color: #1a237e;
+        h1, h2, h3 {
+            color: var(--primary-color);
             text-align: center;
         }
-        .selection-area {
-            margin-bottom: 25px;
-            padding-bottom: 25px;
-            border-bottom: 1px solid #e0e0e0;
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 30px;
         }
+        .nav-tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            border-bottom: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .nav-tab:hover {
+            color: var(--secondary-color);
+        }
+        .nav-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+        .view {
+            display: none;
+        }
+        .view.active {
+            display: block;
+        }
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group label {
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .form-group input, .form-group select {
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        /* Button */
+        .action-button {
+            display: block;
+            width: 100%;
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        .action-button:hover {
+            background-color: #0039cb;
+        }
+        /* Results View */
+        #results-container {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .result-card {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: var(--white-bg);
+        }
+        .color-box {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            vertical-align: middle;
+        }
+        /* Comparison View */
         .car-options {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 15px;
             margin-top: 15px;
         }
@@ -52,174 +142,246 @@
             cursor: pointer;
             transition: background-color 0.3s, border-color 0.3s;
         }
-        .option:hover {
-            background-color: #e9ecef;
-        }
-        .option input {
-            margin-right: 12px;
-            width: 18px;
-            height: 18px;
-        }
-        .button-container {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-        #compare-btn {
-            background-color: #2962ff;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        #compare-btn:hover {
-            background-color: #0039cb;
-        }
         #comparison-table-container table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+            width: 100%; border-collapse: collapse; margin-top: 20px;
         }
         #comparison-table-container th, #comparison-table-container td {
-            border: 1px solid #e0e0e0;
-            padding: 12px;
-            text-align: left;
+            border: 1px solid var(--border-color); padding: 12px; text-align: center;
         }
         #comparison-table-container th {
-            background-color: #e8eaf6;
-            color: #1a237e;
-            font-weight: bold;
+            background-color: #e8eaf6; color: var(--primary-color);
         }
-        #comparison-table-container td:first-child {
-            font-weight: bold;
-            background-color: #f9f9f9;
-        }
-        #comparison-table-container td {
-             text-align: center;
-        }
-        .gullwing {
-            color: #c51162;
-            font-weight: bold;
-        }
-
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>🚗 AION Advisor</h1>
-        <p style="text-align:center;">เลือกรุ่นรถยนต์ไฟฟ้า AION ที่คุณสนใจเพื่อดูตารางเปรียบเทียบ</p>
-        
-        <div class="selection-area">
-            <h2>เลือกรุ่นที่ต้องการเปรียบเทียบ</h2>
-            <div class="car-options" id="car-options">
+        <h1>🚗 AION Advisor (ฉบับสมบูรณ์)</h1>
+
+        <div class="nav-tabs">
+            <div class="nav-tab active" data-view="wizard-view">1. ค้นหารถที่ใช่</div>
+            <div class="nav-tab" data-view="comparison-view">2. เปรียบเทียบสเปค</div>
+        </div>
+
+        <div id="wizard-view" class="view active">
+            <h2>บอกความต้องการของคุณ</h2>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="budget">งบประมาณสูงสุด</label>
+                    <input type="range" id="budget" min="400000" max="2000000" step="50000" value="1000000">
+                    <span id="budget-value">1,000,000 บาท</span>
                 </div>
-        </div>
-
-        <div class="button-container">
-            <button id="compare-btn">เปรียบเทียบเลย!</button>
-        </div>
-
-        <div id="comparison-table-container">
+                <div class="form-group">
+                    <label for="birth-day">คุณเกิดวันอะไร (สำหรับสีมงคล)</label>
+                    <select id="birth-day">
+                        <option value="monday">วันจันทร์</option>
+                        <option value="tuesday">วันอังคาร</option>
+                        <option value="wednesday">วันพุธ (กลางวัน)</option>
+                        <option value="wednesday_night">วันพุธ (กลางคืน)</option>
+                        <option value="thursday">วันพฤหัสบดี</option>
+                        <option value="friday">วันศุกร์</option>
+                        <option value="saturday">วันเสาร์</option>
+                        <option value="sunday">วันอาทิตย์</option>
+                    </select>
+                </div>
             </div>
+            <div class="form-group">
+                <label>ลักษณะการใช้งานหลัก</label>
+                <select id="primary-use">
+                    <option value="city">เน้นขับในเมือง คล่องตัว</option>
+                    <option value="long_trip">เดินทางไกลบ่อยๆ</option>
+                    <option value="family">รถสำหรับครอบครัว</option>
+                    <option value="performance">เน้นสมรรถนะ ความแรง</option>
+                </select>
+            </div>
+            <button id="recommend-btn" class="action-button">ค้นหารถที่ใช่สำหรับคุณ!</button>
+        </div>
+
+        <div id="comparison-view" class="view">
+            <h2>เลือกรุ่นที่ต้องการเปรียบเทียบ</h2>
+            <div class="car-options" id="car-options-compare"></div>
+            <button id="compare-btn" class="action-button">เปรียบเทียบเลย!</button>
+        </div>
+        
+        <div id="results-container"></div>
+
     </div>
 
 <script>
-// JavaScript สำหรับจัดการข้อมูลและการเปรียบเทียบ
 document.addEventListener('DOMContentLoaded', function () {
     
-    // ฐานข้อมูลรถยนต์ AION (ฉบับอัปเดตล่าสุด)
+    // --- DATABASE ---
     const carData = [
-        { id: 'ut_std', model: 'AION UT', subModel: 'Standard', price: 499900, range: 420, status: 'ราคาจากข่าวสาร' },
-        { id: 'ut_prem', model: 'AION UT', subModel: 'Premium', price: 649900, range: 500, status: 'ราคาจากข่าวสาร' },
-        { id: 'y_410', model: 'AION Y Plus', subModel: '410 Premium', price: 769900, range: 410, status: 'ราคาทางการ' },
-        { id: 'y_490', model: 'AION Y Plus', subModel: '490 Premium', price: 829900, range: 490, status: 'ราคาทางการ' },
-        { id: 'v_620', model: 'AION V', subModel: '620 Luxury', price: 949900, range: 602, status: 'ราคาโปรโมชัน' },
-        { id: 'ht_prem', model: 'HYPTEC HT', subModel: '620 Premium', price: 1449000, range: 620, status: 'ราคาทางการ' },
-        { id: 'ht_lux', model: 'HYPTEC HT', subModel: '620 Luxury (Gull-Wing)', price: 1749000, range: 620, status: 'ราคาทางการ' },
-        { id: 'es_taxi', model: 'AION ES', subModel: 'Taxi EV', price: 850000, range: 442, status: 'ราคาเฉพาะกลุ่ม' }
+        { id: 'ut_std', model: 'AION UT', subModel: '420 Standard', price: 499900, range: 420, hp: 136, type: 'hatchback', tags: ['city', 'value'] },
+        { id: 'ut_prem', model: 'AION UT', subModel: '500 Premium', price: 649900, range: 500, hp: 204, type: 'hatchback', tags: ['city', 'value', 'long_trip'] },
+        { id: 'y_410', model: 'AION Y Plus', subModel: '410 Premium', price: 769900, range: 410, hp: 204, type: 'crossover', tags: ['city', 'family', 'value'] },
+        { id: 'y_490', model: 'AION Y Plus', subModel: '490 Premium', price: 829900, range: 490, hp: 204, type: 'crossover', tags: ['family', 'long_trip'] },
+        { id: 'es_taxi', model: 'AION ES', subModel: 'Sedan', price: 846000, range: 442, hp: 136, type: 'sedan', tags: ['value', 'city'] },
+        { id: 'v_620', model: 'AION V', subModel: '620 Luxury', price: 999900, range: 602, hp: 204, type: 'suv', tags: ['family', 'long_trip', 'tech'] },
+        { id: 'ht_prem', model: 'HYPTEC HT', subModel: '620 Premium', price: 1449000, range: 620, hp: 340, type: 'suv', tags: ['performance', 'long_trip', 'family', 'tech'] },
+        { id: 'ht_lux', model: 'HYPTEC HT', subModel: '620 Luxury (Gull-Wing)', price: 1749000, range: 620, hp: 340, type: 'suv', tags: ['performance', 'long_trip', 'family', 'tech', 'style'] }
     ];
 
-    const optionsContainer = document.getElementById('car-options');
+    const auspiciousColors = {
+        sunday: { good: ['สีเขียว', 'สีบรอนซ์', 'สีดำ'], bad: ['สีน้ำเงิน', 'สีฟ้า'], css: { good: ['#4CAF50', '#CD7F32', '#000000'], bad: ['#2196F3', '#03A9F4'] } },
+        monday: { good: ['สีเขียว', 'สีม่วง', 'สีส้ม'], bad: ['สีแดง'], css: { good: ['#4CAF50', '#9C27B0', '#FF9800'], bad: ['#F44336'] } },
+        tuesday: { good: ['สีม่วง', 'สีส้ม', 'สีบรอนซ์'], bad: ['สีขาว', 'สีเหลือง'], css: { good: ['#9C27B0', '#FF9800', '#CD7F32'], bad: ['#FFFFFF', '#FFEB3B'] } },
+        wednesday: { good: ['สีบรอนซ์', 'สีเทา', 'สีฟ้า'], bad: ['สีชมพู', 'สีแสด'], css: { good: ['#CD7F32', '#9E9E9E', '#03A9F4'], bad: ['#E91E63', '#FF5722'] } },
+        wednesday_night: { good: ['สีขาว', 'สีม่วง', 'สีดำ'], bad: ['สีส้ม', 'สีทอง'], css: { good: ['#FFFFFF', '#9C27B0', '#000000'], bad: ['#FF9800', '#FFD700'] } },
+        thursday: { good: ['สีฟ้า', 'สีแดง', 'สีส้ม'], bad: ['สีดำ', 'สีม่วง'], css: { good: ['#03A9F4', '#F44336', '#FF9800'], bad: ['#000000', '#9C27B0'] } },
+        friday: { good: ['สีเขียว', 'สีชมพู', 'สีแดง'], bad: ['สีเทา', 'สีบรอนซ์'], css: { good: ['#4CAF50', '#E91E63', '#F44336'], bad: ['#9E9E9E', '#CD7F32'] } },
+        saturday: { good: ['สีแดง', 'สีฟ้า', 'สีน้ำเงิน'], bad: ['สีเขียว', 'สีแสด'], css: { good: ['#F44336', '#03A9F4', '#2196F3'], bad: ['#4CAF50', '#FF5722'] } }
+    };
+
+    // --- DOM ELEMENTS ---
+    const navTabs = document.querySelectorAll('.nav-tab');
+    const views = document.querySelectorAll('.view');
+    const resultsContainer = document.getElementById('results-container');
+
+    // Wizard View Elements
+    const budgetSlider = document.getElementById('budget');
+    const budgetValue = document.getElementById('budget-value');
+    const birthDaySelect = document.getElementById('birth-day');
+    const useSelect = document.getElementById('primary-use');
+    const recommendBtn = document.getElementById('recommend-btn');
+
+    // Comparison View Elements
+    const compareOptionsContainer = document.getElementById('car-options-compare');
     const compareBtn = document.getElementById('compare-btn');
-    const tableContainer = document.getElementById('comparison-table-container');
 
-    // สร้าง Checkbox ตัวเลือกจากฐานข้อมูล
-    carData.forEach(car => {
-        const label = document.createElement('label');
-        label.className = 'option';
-        label.innerHTML = `
-            <input type="checkbox" name="car-select" value="${car.id}">
-            <span>${car.model} ${car.subModel}</span>
-        `;
-        optionsContainer.appendChild(label);
-    });
+    // --- INITIALIZATION ---
+    function init() {
+        // Setup Navigation
+        navTabs.forEach(tab => {
+            tab.addEventListener('click', () => switchView(tab.dataset.view));
+        });
 
-    // เมื่อกดปุ่ม "เปรียบเทียบ"
-    compareBtn.addEventListener('click', function () {
-        const selectedIds = Array.from(document.querySelectorAll('input[name="car-select"]:checked')).map(cb => cb.value);
+        // Setup Wizard
+        budgetSlider.addEventListener('input', () => {
+            budgetValue.textContent = `${Number(budgetSlider.value).toLocaleString('th-TH')} บาท`;
+        });
+        recommendBtn.addEventListener('click', handleRecommendation);
+
+        // Setup Comparison
+        carData.forEach(car => {
+            const label = document.createElement('label');
+            label.className = 'option';
+            label.innerHTML = `<input type="checkbox" name="car-select" value="${car.id}"> <span>${car.model} ${car.subModel}</span>`;
+            compareOptionsContainer.appendChild(label);
+        });
+        compareBtn.addEventListener('click', handleComparison);
+    }
+    
+    // --- VIEW SWITCHING ---
+    function switchView(viewId) {
+        navTabs.forEach(tab => tab.classList.toggle('active', tab.dataset.view === viewId));
+        views.forEach(view => view.classList.toggle('active', view.id === viewId));
+        resultsContainer.innerHTML = ''; // Clear results when switching views
+    }
+
+    // --- WIZARD LOGIC ---
+    function handleRecommendation() {
+        const budget = Number(budgetSlider.value);
+        const use = useSelect.value;
+        const day = birthDaySelect.value;
+
+        // Scoring algorithm
+        let recommendations = carData.map(car => {
+            let score = 0;
+            if (car.price <= budget) {
+                score += 5; // Base score for being in budget
+                score += (budget - car.price) / 100000; // Bonus points for being cheaper
+            } else {
+                return { ...car, score: -1 }; // Disqualify if over budget
+            }
+
+            if (use === 'city' && (car.tags.includes('city') || car.type === 'hatchback')) score += 5;
+            if (use === 'long_trip' && car.tags.includes('long_trip')) score += 5;
+            if (use === 'family' && (car.tags.includes('family') || car.type === 'suv' || car.type === 'crossover')) score += 5;
+            if (use === 'performance' && car.tags.includes('performance')) score += 5;
+
+            return { ...car, score };
+        });
+
+        recommendations = recommendations.filter(car => car.score > 0).sort((a, b) => b.score - a.score);
         
-        if (selectedIds.length < 1) {
-            alert('กรุณาเลือกรุ่นรถยนต์อย่างน้อย 1 รุ่นเพื่อดูข้อมูล');
-            return;
-        }
+        renderWizardResults(recommendations.slice(0, 3), auspiciousColors[day]);
+    }
 
-        const selectedCars = carData.filter(car => selectedIds.includes(car.id));
-        generateComparisonTable(selectedCars);
-    });
-
-    // ฟังก์ชันสร้างตารางเปรียบเทียบ
-    function generateComparisonTable(cars) {
+    function renderWizardResults(cars, colors) {
         if (cars.length === 0) {
-            tableContainer.innerHTML = '';
+            resultsContainer.innerHTML = '<h3>ไม่พบรถที่ตรงกับความต้องการของคุณ</h3><p>ลองปรับงบประมาณหรือลักษณะการใช้งานดูนะครับ</p>';
             return;
         }
 
-        // สร้าง Header ของตาราง
+        let html = `<h2>ผลลัพธ์ที่ใช่สำหรับคุณ</h2>`;
+        cars.forEach((car, index) => {
+            html += `
+                <div class="result-card">
+                    <h3>${index === 0 ? '✨ แนะนำอันดับ 1' : `✔️ ตัวเลือกที่น่าสนใจอันดับ ${index + 1}`}</h3>
+                    <h2>${car.model} ${car.subModel}</h2>
+                    <p><strong>ราคา:</strong> ${car.price.toLocaleString('th-TH')} บาท</p>
+                    <p><strong>วิ่งได้ไกล:</strong> ${car.range} กม.</p>
+                    <p><strong>ทำไมถึงเหมาะกับคุณ:</strong> ${getReason(car, useSelect.value)}</p>
+                    ${index === 0 ? renderColorSection(colors) : ''}
+                </div>
+            `;
+        });
+        resultsContainer.innerHTML = html;
+    }
+
+    function getReason(car, use) {
+        if (use === 'city' || use === 'value') return 'คล่องตัวในเมืองและราคาคุ้มค่ามาก';
+        if (use === 'long_trip') return `วิ่งได้ไกลถึง ${car.range} กม. เหมาะกับการเดินทางไกล`;
+        if (use === 'family') return `พื้นที่ใช้สอยกว้างขวาง เหมาะสำหรับครอบครัว`;
+        if (use === 'performance') return `สมรรถนะสูงถึง ${car.hp} แรงม้า ตอบโจทย์คนรักความเร็ว`;
+        return 'เป็นรถยนต์ไฟฟ้าที่ทันสมัยและคุ้มค่า';
+    }
+
+    function renderColorSection(colors) {
+        return `
+            <div>
+                <h4>🎨 สีมงคลเสริมดวงสำหรับคุณ</h4>
+                <p><strong>สีที่แนะนำ:</strong> 
+                    ${colors.good.map((color, i) => `<span class="color-box" style="background-color:${colors.css.good[i]};"></span>${color}`).join(' ')}
+                </p>
+                <p><strong>สีที่ควรเลี่ยง:</strong> 
+                    ${colors.bad.map((color, i) => `<span class="color-box" style="background-color:${colors.css.bad[i]};"></span>${color}`).join(' ')}
+                </p>
+            </div>
+        `;
+    }
+
+    // --- COMPARISON LOGIC ---
+    function handleComparison() {
+        const selectedIds = Array.from(document.querySelectorAll('input[name="car-select"]:checked')).map(cb => cb.value);
+        if (selectedIds.length < 2) {
+            alert('กรุณาเลือกรุ่นรถยนต์อย่างน้อย 2 รุ่นเพื่อเปรียบเทียบ');
+            return;
+        }
+        const selectedCars = carData.filter(car => selectedIds.includes(car.id));
+        renderComparisonTable(selectedCars);
+    }
+
+    function renderComparisonTable(cars) {
         let tableHTML = `
             <h2>ตารางเปรียบเทียบ</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>คุณสมบัติ</th>
-                        ${cars.map(car => `<th>${car.model}<br><small>${car.subModel}</small></th>`).join('')}
-                    </tr>
-                </thead>
-                <tbody>
+            <div id="comparison-table-container"><table>
+                <thead><tr><th>คุณสมบัติ</th>
+                ${cars.map(car => `<th>${car.model}<br><small>${car.subModel}</small></th>`).join('')}
+                </tr></thead><tbody>
+                <tr><td>ราคา (บาท)</td>${cars.map(car => `<td>${car.price.toLocaleString('th-TH')}</td>`).join('')}</tr>
+                <tr><td>ระยะทางวิ่ง (กม.)</td>${cars.map(car => `<td>${car.range}</td>`).join('')}</tr>
+                <tr><td>กำลัง (แรงม้า)</td>${cars.map(car => `<td>${car.hp}</td>`).join('')}</tr>
+                <tr><td>ประเภทรถ</td>${cars.map(car => `<td>${car.type}</td>`).join('')}</tr>
+                <tr><td>ความคุ้มค่า (บาท/กม.)</td>${cars.map(car => `<td>${Math.round(car.price / car.range).toLocaleString('th-TH')}</td>`).join('')}</tr>
+                </tbody></table></div>
         `;
-
-        // สร้างแถวข้อมูล
-        const formatPrice = (price) => new Intl.NumberFormat('th-TH').format(price);
-
-        tableHTML += `
-            <tr>
-                <td>ราคา (บาท)</td>
-                ${cars.map(car => `<td>${formatPrice(car.price)}</td>`).join('')}
-            </tr>
-            <tr>
-                <td>ระยะทางวิ่ง (กม.)</td>
-                ${cars.map(car => `<td>${car.range}</td>`).join('')}
-            </tr>
-            <tr>
-                <td>สถานะราคา</td>
-                 ${cars.map(car => `<td>${car.status}</td>`).join('')}
-            </tr>
-             <tr>
-                <td>ความคุ้มค่า (บาท/กม.)</td>
-                 ${cars.map(car => `<td>${formatPrice(Math.round(car.price / car.range))}</td>`).join('')}
-            </tr>
-        `;
-
-        tableHTML += `
-                </tbody>
-            </table>
-        `;
-        
-        tableContainer.innerHTML = tableHTML;
+        resultsContainer.innerHTML = tableHTML;
     }
+
+    // --- START THE APP ---
+    init();
 });
 </script>
 
