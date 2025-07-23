@@ -8,12 +8,13 @@
         :root {
             --primary-color: #0056b3;
             --secondary-color: #007bff;
+            --success-color: #28a745;
             --light-gray: #f4f4f9;
             --text-color: #333;
             --white-color: #ffffff;
         }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; background-color: var(--light-gray); color: var(--text-color); line-height: 1.6; }
-        .container { padding: 20px; max-width: 900px; margin: auto; }
+        .container { padding: 20px; max-width: 800px; margin: auto; }
         header { text-align: center; margin-bottom: 2em; }
         h1 { color: var(--primary-color); }
         .quiz-form { background-color: var(--white-color); padding: 2em; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
@@ -24,6 +25,8 @@
         select, input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1em; background-color: #fafafa; }
         button { display: block; width: 100%; padding: 15px; font-size: 1.2em; color: var(--white-color); background-color: var(--secondary-color); border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.3s; }
         button:hover { background-color: var(--primary-color); }
+        .cta-button { background-color: var(--success-color); margin-top: 1em; }
+        .cta-button:hover { background-color: #218838; }
         #result-display { display: none; margin-top: 2em; }
         .result-card { background-color: var(--white-color); padding: 2em; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; margin-bottom: 1.5em; }
         .result-card.best-match { border: 2px solid var(--primary-color); }
@@ -32,6 +35,8 @@
         .match-score { font-size: 1.5em; font-weight: bold; color: var(--primary-color); }
         .color-recommendation { margin-top: 1em; }
         #result-color { padding: 0.5em 1em; border-radius: 20px; color: white; display: inline-block; margin-top: 0.5em; border: 1px solid #ddd; }
+        .contact-info p { font-size: 1.2em; }
+        .contact-info a { color: var(--secondary-color); text-decoration: none; font-weight: bold; }
 
         @media (min-width: 768px) {
             .form-grid { grid-template-columns: 1fr 1fr; }
@@ -109,15 +114,14 @@
         </div>
 
         <div id="result-display">
-            <button onclick="resetForm()">ลองใหม่อีกครั้ง</button>
-        </div>
+            </div>
     </div>
 
     <script>
         const cars = {
             'AION U Standard': { price: 949900, image: 'aion-u.jpg', description: 'SUV สำหรับครอบครัวเริ่มต้น วิ่งได้ 400 กม. เหมาะกับการใช้งานหลากหลายในราคาที่คุ้มค่า', tags: ['value', 'family', 'city'], availableColors: ['Green', 'Beige', 'White', 'Silver'] },
             'AION Y Plus 490': { price: 969900, image: 'aion-y.jpg', description: 'SUV ยอดนิยมสำหรับคนเมืองและครอบครัวเล็ก โดดเด่นด้วยดีไซน์และสีสันที่หลากหลาย ภายในกว้างขวางปรับเปลี่ยนได้', tags: ['city', 'value', 'family'], availableColors: ['White', 'Gray', 'Black', 'Ash', 'Gold', 'Silver', 'Green'] },
-            'AION V': { price: 1000000, image: 'aion-v.jpg', description: 'ที่สุดของ SUV ครอบครัว วิ่งได้ไกลถึง 602 กม. ชาร์จเร็วที่สุด พร้อมฟีเจอร์อำนวยความสะดวกครบครันเช่นตู้เย็นและเบาะนวด', tags: ['family', 'space'], availableColors: ['White', 'Black', 'Sand', 'Silver', 'Grey', 'Orange'] },
+            'AION V': { price: 1000000, image: 'aion-v.jpg', description: 'ที่สุดของ SUV ครอบครัว วิ่งได้ไกลถึง 602 กม. ชาร์จเร็วที่สุด พร้อมฟังก์ชันอำนวยความสะดวกครบครันเช่นตู้เย็นและเบาะนวด', tags: ['family', 'space'], availableColors: ['White', 'Black', 'Sand', 'Silver', 'Grey', 'Orange'] },
             'HYPTEC HT Premium': { price: 1449000, image: 'aion-ht.jpg', description: 'Luxury SUV สมรรถนะสูง วิ่งไกล 620 กม. อัตราเร่งเร้าใจ มอบประสบการณ์ขับขี่ระดับพรีเมียม', tags: ['luxury', 'performance'], availableColors: ['White', 'Silver', 'Gray', 'Black'] },
             'HYPTEC HT Luxury Gull-wing': { price: 1800000, image: 'aion-ht.jpg', description: 'รุ่นท็อปสุดหรูหราพร้อมประตูปีกนก (Gull-wing) อัตราเร่งดีที่สุด 0-100 ใน 5.8 วินาทีและเทคโนโลยีครบครัน', tags: ['luxury', 'performance'], availableColors: ['White', 'Silver', 'Gray', 'Black', 'Rose', 'Orange'] }
         };
@@ -139,7 +143,6 @@
         };
 
         function calculateResult() {
-            // --- อ่านค่าจากฟอร์ม ---
             const budget = parseInt(document.getElementById('budget').value);
             const occupation = document.getElementById('occupation').value;
             const passengers = document.getElementById('passengers').value;
@@ -147,53 +150,37 @@
             const priority = document.getElementById('priority').value;
             const birthDay = document.getElementById('birth-day').value;
 
-            // --- กรองรถตามงบประมาณก่อน ---
             const eligibleCars = Object.keys(cars).filter(key => cars[key].price <= budget);
             if (eligibleCars.length === 0) {
                  alert("ขออภัยครับ ไม่มีรถรุ่นที่ตรงกับงบประมาณของคุณในขณะนี้");
                  return;
             }
 
-            // --- คำนวณคะแนน ---
             const scores = {};
             eligibleCars.forEach(carKey => {
                 const car = cars[carKey];
                 let score = 0;
-                
-                // 1. ให้คะแนนจาก Priority หลัก
-                if (car.tags.includes(priority)) {
-                    score += 10;
-                }
-                
-                // 2. ให้คะแนนจากอาชีพ
+                if (car.tags.includes(priority)) score += 10;
                 if (occupation === 'business' && (car.tags.includes('luxury') || car.tags.includes('performance'))) score += 5;
                 if (occupation === 'family' && car.tags.includes('family')) score += 5;
                 if (occupation === 'freelance' && car.tags.includes('city')) score += 3;
-
-                // 3. ให้คะแนนจากผู้โดยสาร
                 if (passengers === '3-4' && car.tags.includes('family')) score += 3;
                 if (passengers === '5' && car.tags.includes('family')) score += 5;
-                if (passengers === '5' && carKey === 'AION V') score += 2; // Bonus for the biggest car
-
-                // 4. ให้คะแนนจากระยะทาง
+                if (passengers === '5' && carKey === 'AION V') score += 2;
                 if (distance === 'medium' && carKey.includes('Premium')) score += 2;
                 if (distance === 'high' && (carKey.includes('V') || carKey.includes('HT'))) score += 3;
-
                 scores[carKey] = { ...car, score };
             });
 
-            // --- จัดลำดับรถที่คะแนนสูงสุด ---
             const sortedCars = Object.keys(scores).sort((a, b) => scores[b].score - scores[a].score);
             const top2 = sortedCars.slice(0, 2);
             
-            // --- สร้าง HTML สำหรับแสดงผล ---
-            let resultHtml = '';
+            let resultHtml = '<h2>ผลลัพธ์สำหรับคุณ</h2>';
             top2.forEach((carKey, index) => {
                 const car = scores[carKey];
-                const maxScore = scores[top2[0]].score; // Base score on the top car
+                const maxScore = scores[top2[0]].score;
                 const matchPercentage = maxScore > 0 ? Math.min(Math.round((car.score / maxScore) * 100), 100) : 0;
 
-                // Color logic
                 let recommendedColor = null;
                 let colorDesc = '';
                 for(let prefColor of luckyColors[birthDay]) {
@@ -211,8 +198,8 @@
 
                 resultHtml += `
                     <div class="result-card ${index === 0 ? 'best-match' : ''}">
-                        <h2>${index === 0 ? 'รถที่เหมาะกับคุณที่สุดคือ' : 'อีกหนึ่งตัวเลือกที่ยอดเยี่ยม'}</h2>
-                        <h3>${carKey}</h3>
+                        <h3>${index === 0 ? 'รถที่เหมาะกับคุณที่สุดคือ' : 'อีกหนึ่งตัวเลือกที่ยอดเยี่ยม'}</h3>
+                        <h2>${carKey}</h2>
                         <p class="match-score">ความเหมาะสม ${matchPercentage}%</p>
                         <img src="${car.image}" alt="รูปภาพรถ ${carKey}">
                         <p>${car.description}</p>
@@ -220,22 +207,40 @@
                             <p>${colorDesc.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</p>
                             ${colorBoxHtml}
                         </div>
+                        <button class="cta-button" onclick="showContactInfo('${carKey}')">สนใจรุ่นนี้ / ติดต่อเซลล์</button>
                     </div>
                 `;
             });
             
-            // --- แสดงผลลัพธ์ ---
+            resultHtml += '<button onclick="resetForm()">วิเคราะห์ใหม่อีกครั้ง</button>';
             const resultDisplay = document.getElementById('result-display');
-            resultDisplay.innerHTML = resultHtml + '<button onclick="resetForm()">ลองใหม่อีกครั้ง</button>';
+            resultDisplay.innerHTML = resultHtml;
             document.getElementById('quiz-form').style.display = 'none';
             resultDisplay.style.display = 'block';
+        }
+
+        function showContactInfo(carName) {
+            const resultDisplay = document.getElementById('result-display');
+            const salesPhoneNumber = '0817003057';
+            const salesLineId = 'admin.454';
+            resultDisplay.innerHTML = `
+                <div class="result-card contact-info">
+                    <h2>ติดต่อสอบถาม</h2>
+                    <p>ยอดเยี่ยมเลยครับ! กรุณาติดต่อเซลล์ของเราสำหรับข้อมูลเพิ่มเติมและนัดหมายทดลองขับ ${carName} ได้เลยครับ</p>
+                    <hr>
+                    <p><strong>เบอร์โทรศัพท์:</strong> <a href="tel:${salesPhoneNumber}">${salesPhoneNumber}</a></p>
+                    <p><strong>LINE ID:</strong> <a href="https://line.me/ti/p/~${salesLineId}" target="_blank">${salesLineId}</a> (กดเพื่อเพิ่มเพื่อน)</p>
+                    <br>
+                    <button onclick="resetForm()">กลับไปหน้าแรก</button>
+                </div>
+            `;
         }
 
         function resetForm(){
             const resultDisplay = document.getElementById('result-display');
             document.getElementById('quiz-form').style.display = 'block';
             resultDisplay.style.display = 'none';
-            resultDisplay.innerHTML = ''; // Clear old results
+            resultDisplay.innerHTML = '';
         }
     </script>
 </body>
