@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เลือกรถ Aion ที่ใช่สำหรับคุณ</title>
+    <title>ศูนย์รวมข้อมูลรถไฟฟ้า Aion</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; background-color: #f4f4f9; color: #333; line-height: 1.6; }
         .container { padding: 20px; max-width: 800px; margin: auto; }
@@ -18,6 +18,14 @@
         #result-display { display: none; background-color: white; padding: 2em; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
         #result-display img { max-width: 100%; height: auto; border-radius: 8px; margin-bottom: 1em; }
         #result-color { padding: 0.5em 1em; border-radius: 20px; color: white; display: inline-block; margin-top: 1em; border: 1px solid #ddd; }
+        main { padding: 15px; }
+        section { background-color: white; margin-bottom: 20px; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h2 { color: #0056b3; border-bottom: 2px solid #f4f4f9; padding-bottom: 10px; }
+        .map-container { overflow:hidden; padding-bottom:56.25%; position:relative; height:0; }
+        .map-container iframe { left:0; top:0; height:100%; width:100%; position:absolute; border:0; }
+        @media (min-width: 600px) {
+            main { padding: 20px; max-width: 900px; margin: auto; }
+        }
     </style>
 </head>
 <body>
@@ -29,7 +37,7 @@
         </header>
 
         <div id="quiz-form" class="quiz-form">
-            <div class="form-group">
+             <div class="form-group">
                 <label for="passengers">ปกติแล้วมีคนนั่งรถไปกับคุณกี่คน (รวมคนขับ)?</label>
                 <select id="passengers">
                     <option value="1-2">1 - 2 คน (ใช้งานคนเดียวหรือเป็นคู่)</option>
@@ -37,7 +45,6 @@
                     <option value="5">5 คน (ครอบครัว หรือมีเพื่อนร่วมทางบ่อย)</option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label for="distance">ปกติขับรถเฉลี่ยวันละกี่กิโลเมตร?</label>
                 <select id="distance">
@@ -46,7 +53,6 @@
                     <option value="high">มากกว่า 100 กม. (เดินทางไกลทุกวัน)</option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label for="trips">เดินทางข้ามจังหวัดบ่อยแค่ไหน?</label>
                 <select id="trips">
@@ -55,7 +61,6 @@
                     <option value="frequently">บ่อยมาก (เดือนละครั้งขึ้นไป)</option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label for="lifestyle">ไลฟ์สไตล์การใช้งานหลักของคุณคืออะไร?</label>
                 <select id="lifestyle">
@@ -65,7 +70,6 @@
                     <option value="luxury">ชอบความหรูหรา, เทคโนโลยีล้ำสมัย, ภาพลักษณ์</option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label for="birth-day">คุณเกิดวันอะไร?</label>
                 <select id="birth-day">
@@ -78,12 +82,11 @@
                     <option value="Saturday">วันเสาร์</option>
                 </select>
             </div>
-
             <button onclick="calculateResult()">ดูผลลัพธ์</button>
         </div>
 
         <div id="result-display">
-            <h2>รถ Aion ที่เหมาะกับคุณคือ...</h2>
+             <h2>รถ Aion ที่เหมาะกับคุณคือ...</h2>
             <h3 id="result-car-name"></h3>
             <img id="result-car-image" src="" alt="รูปภาพรถยนต์ที่แนะนำ">
             <p id="result-car-description"></p>
@@ -94,19 +97,31 @@
             <br><br>
             <button onclick="resetForm()">ลองใหม่อีกครั้ง</button>
         </div>
+
+        <section id="contact">
+            <h2>ข้อมูลติดต่อและนัดหมาย</h2>
+            <p><strong>โชว์รูม:</strong> AION รัชดา-ท่าพระ</p>
+            <p><strong>ที่อยู่:</strong> 154/1 ถนนรัชดาภิเษก แขวงดาวคะนอง เขตธนบุรี กรุงเทพมหานคร 10600</p>
+            <p><strong>ฝ่ายขาย:</strong> <a href="tel:021143332">02-114-3332</a></p>
+            <p><strong>ฝ่ายบริการ:</strong> <a href="tel:0944575777">094-457-5777</a></p>
+            <p><strong>แผนที่การเดินทาง:</strong></p>
+            <div class="map-container">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3876.291771147814!2d100.48510837589252!3d13.700140798227607!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e2988110290e2d%3A0xe54333737b88e1a1!2sAION%20Ratchada-Thapra!5e0!3m2!1sth!2sth!4v1721741121711!5m2!1sth!2sth" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <p style="margin-top: 1em;"><em>(ส่วนระบบนัดหมายเราจะมาเพิ่มเติมในภายหลัง)</em></p>
+        </section>
     </div>
 
     <script>
-        // --- ฐานข้อมูลรถยนต์และสี (อัปเดตตามข้อมูลจริง) ---
+        // --- เนื้อหา JavaScript ทั้งหมดจะอยู่ที่นี่ (เหมือนเดิมทุกประการ) ---
         const cars = {
             'AION U Standard': { score: 0, image: 'aion-u.jpg', description: 'SUV สำหรับครอบครัวเริ่มต้น วิ่งได้ 400 กม. เหมาะกับการใช้งานหลากหลายในราคาที่คุ้มค่า', range: 400, performance: 1, family: 4, luxury: 2, city: 3, availableColors: ['Green', 'Beige', 'White', 'Silver'] },
             'AION U Premium': { score: 0, image: 'aion-u.jpg', description: 'อัปเกรดสมรรถนะและระยะทาง วิ่งได้ไกลถึง 500 กม. พร้อมมอเตอร์ที่แรงขึ้น ตอบโจทย์การเดินทางไกล', range: 500, performance: 2, family: 5, luxury: 3, city: 3, availableColors: ['Green', 'Beige', 'White', 'Silver'] },
             'AION Y Plus 490': { score: 0, image: 'aion-y.jpg', description: 'SUV ยอดนิยมสำหรับคนเมืองและครอบครัวเล็ก โดดเด่นด้วยดีไซน์และสีสันที่หลากหลาย ภายในกว้างขวางปรับเปลี่ยนได้', range: 490, performance: 3, family: 4, luxury: 2, city: 5, availableColors: ['White', 'Gray', 'Black', 'Ash', 'Gold', 'Silver', 'Green'] },
-            'AION V': { score: 0, image: 'aion-v.jpg', description: 'ที่สุดของ SUV ครอบครัว วิ่งได้ไกลถึง 602 กม. ชาร์จเร็วที่สุด พร้อมฟีเจอร์อำนวยความสะดวกครบครันเช่นตู้เย็นและเบาะนวด', range: 602, performance: 4, family: 10, luxury: 5, city: 2, availableColors: ['White', 'Black', 'Sand', 'Silver', 'Grey', 'Orange'] },
+            'AION V': { score: 0, image: 'aion-v.jpg', description: 'ที่สุดของ SUV ครอบครัว วิ่งได้ไกลถึง 602 กม. ชาร์จเร็วที่สุด พร้อมฟังก์ชันอำนวยความสะดวกครบครันเช่นตู้เย็นและเบาะนวด', range: 602, performance: 4, family: 10, luxury: 5, city: 2, availableColors: ['White', 'Black', 'Sand', 'Silver', 'Grey', 'Orange'] },
             'HYPTEC HT Premium': { score: 0, image: 'aion-ht.jpg', description: 'Luxury SUV สมรรถนะสูง วิ่งไกล 620 กม. อัตราเร่งเร้าใจ มอบประสบการณ์ขับขี่ระดับพรีเมียม', range: 620, performance: 8, family: 3, luxury: 9, city: 1, availableColors: ['White', 'Silver', 'Gray', 'Black'] },
             'HYPTEC HT Luxury Gull-wing': { score: 0, image: 'aion-ht.jpg', description: 'รุ่นท็อปสุดหรูหราพร้อมประตูปีกนก (Gull-wing) อัตราเร่งดีที่สุด 0-100 ใน 5.8 วินาทีและเทคโนโลยีครบครัน', range: 620, performance: 10, family: 3, luxury: 10, city: 1, availableColors: ['White', 'Silver', 'Gray', 'Black', 'Rose', 'Orange'] }
         };
-
         const luckyColors = {
             'Sunday': [{ name: 'Red', th: 'สีแดง', desc: 'เสริมอำนาจ บารมี' }, { name: 'Green', th: 'สีเขียว', desc: 'เสริมเมตตา' }],
             'Monday': [{ name: 'White', th: 'สีขาว', desc: 'เสริมเสน่ห์' }, { name: 'Yellow', th: 'สีเหลือง', desc: 'เสริมการเงิน' }, { name: 'Green', th: 'สีเขียว', desc: 'เสริมอำนาจ' }],
@@ -116,44 +131,29 @@
             'Friday': [{ name: 'Blue', th: 'สีฟ้า/น้ำเงิน', desc: 'เสริมความสำเร็จ' }, { name: 'White', th: 'สีขาว', desc: 'เสริมความสุข' }, { name: 'Silver', th: 'สีเงิน', desc: 'เสริมความมั่นคง' }],
             'Saturday': [{ name: 'Purple', th: 'สีม่วง', desc: 'เสริมความสำเร็จ' }, { name: 'Black', th: 'สีดำ', desc: 'เสริมอำนาจ' }, { name: 'Gray', th: 'สีเทา', desc: 'เสริมความมั่นคง' }]
         };
-        
-        // Map friendly names to CSS colors
         const colorMap = {
              'Green': '#2E8B57', 'Beige': '#F5F5DC', 'White': '#FFFFFF', 'Silver': '#C0C0C0', 'Gray': '#808080', 
              'Black': '#000000', 'Gold': '#FFD700', 'Orange': '#FFA500', 'Rose': '#E0BFB8', 'Red': '#DC143C',
              'Yellow': '#FFFF00', 'Pink': '#FFC0CB', 'Blue': '#1E90FF', 'Purple': '#800080', 'Sand': '#C2B280'
         };
-
         function calculateResult() {
-            // --- รีเซ็ตคะแนน ---
             for (let car in cars) { cars[car].score = 0; }
-
-            // --- อ่านค่าจากฟอร์ม ---
             const passengers = document.getElementById('passengers').value;
             const distance = document.getElementById('distance').value;
             const trips = document.getElementById('trips').value;
             const lifestyle = document.getElementById('lifestyle').value;
             const birthDay = document.getElementById('birth-day').value;
-
-            // --- ตรรกะการให้คะแนน (อัปเดตใหม่) ---
             for (let carKey in cars) {
                 const car = cars[carKey];
-                // 1. Lifestyle
                 car.score += car[lifestyle] || 0;
-                
-                // 2. Passengers
                 if (passengers === '3-4' && car.family >= 4) car.score += 2;
                 if (passengers === '5' && car.family >= 5) car.score += 3;
-                if (passengers === '5' && car.family >= 10) car.score += 2; // Extra for AION V
-                
-                // 3. Distance & Trips
+                if (passengers === '5' && car.family >= 10) car.score += 2;
                 if (distance === 'medium' && car.range >= 500) car.score += 2;
                 if (distance === 'high' && car.range >= 600) car.score += 3;
                 if (trips === 'occasionally' && car.range >= 500) car.score += 2;
                 if (trips === 'frequently' && car.range >= 600) car.score += 3;
             }
-
-            // --- ค้นหารถที่คะแนนสูงสุด ---
             let bestCar = '';
             let maxScore = -1;
             for (let car in cars) {
@@ -162,13 +162,10 @@
                     bestCar = car;
                 }
             }
-            
-            // --- ค้นหาสีที่เหมาะสม ---
             let recommendedColor = null;
             let colorDesc = '';
             const carColors = cars[bestCar].availableColors;
             const preferredColors = luckyColors[birthDay];
-            
             for(let prefColor of preferredColors) {
                 if (carColors.includes(prefColor.name)) {
                     recommendedColor = prefColor;
@@ -176,35 +173,26 @@
                     break;
                 }
             }
-            // Fallback if no primary/secondary color is found
             if (!recommendedColor) {
                  recommendedColor = { name: carColors[0], th: carColors[0], desc: 'ตามสีมาตรฐานของรุ่น' };
                  colorDesc = `เนื่องจากสีมงคลของคุณไม่มีในรถรุ่นนี้ เราขอแนะนำสีมาตรฐานของรุ่นคือ ${recommendedColor.th} ครับ`;
             }
-
-            // --- แสดงผลลัพธ์ ---
             document.getElementById('result-car-name').innerText = bestCar;
             document.getElementById('result-car-image').src = cars[bestCar].image;
             document.getElementById('result-car-description').innerText = cars[bestCar].description;
-            
             document.getElementById('result-color-description').innerText = colorDesc;
             const colorBox = document.getElementById('result-color');
             colorBox.innerText = recommendedColor.th;
             colorBox.style.backgroundColor = colorMap[recommendedColor.name] || '#dddddd';
-
             if(['Black', 'Green', 'Blue', 'Purple', 'Red'].includes(recommendedColor.name)){
                 colorBox.style.color = 'white';
             } else {
                  colorBox.style.color = 'black';
             }
-
-            // ซ่อนฟอร์มและแสดงผลลัพธ์
             document.getElementById('quiz-form').style.display = 'none';
             document.getElementById('result-display').style.display = 'block';
         }
-
         function resetForm(){
-            // ซ่อนผลลัพธ์และแสดงฟอร์ม
             document.getElementById('result-display').style.display = 'none';
             document.getElementById('quiz-form').style.display = 'block';
         }
