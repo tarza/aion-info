@@ -73,21 +73,33 @@
 
     <script>
         const cars = {
-            'AION UT Standard': { price: 949900, image: 'aion-u.jpg', description: 'SUV สำหรับครอบครัวเริ่มต้น วิ่งได้ 400 กม.', tags: ['value', 'family', 'city'], range: 400, performance: '12.0s' },
-            'AION UT Premium': { price: 1100000, image: 'aion-u.jpg', description: 'อัปเกรดสมรรถนะและระยะทาง วิ่งได้ไกลถึง 500 กม.', tags: ['value', 'family'], range: 500, performance: '8.3s' },
-            'AION Y Plus 490': { price: 969900, image: 'aion-y.jpg', description: 'SUV ยอดนิยมสำหรับคนเมืองและครอบครัวเล็ก โดดเด่นด้วยดีไซน์และสีสัน', tags: ['city', 'value', 'family'], range: 490, performance: '8.5s' },
-            'AION V': { price: 1000000, image: 'aion-v.jpg', description: 'ที่สุดของ SUV ครอบครัว วิ่งได้ไกลถึง 602 กม. ชาร์จเร็วที่สุด', tags: ['family', 'space'], range: 602, performance: '7.9s' },
-            'HYPTEC HT Premium': { price: 1449000, image: 'aion-ht.jpg', description: 'Luxury SUV สมรรถนะสูง วิ่งไกล 620 กม. มอบประสบการณ์ขับขี่ระดับพรีเมียม', tags: ['luxury', 'performance'], range: 620, performance: '5.8s' },
-            'HYPTEC HT Luxury Gull-wing': { price: 1800000, image: 'aion-ht.jpg', description: 'รุ่นท็อปสุดหรูหราพร้อมประตูปีกนก (Gull-wing) อัตราเร่งดีที่สุด', tags: ['luxury', 'performance'], range: 620, performance: '5.8s' }
+            'AION UT Standard': { price: 949900, image: 'aion-u.jpg', description: 'SUV สำหรับครอบครัวเริ่มต้น วิ่งได้ 400 กม.', tags: ['value', 'family', 'city'], range: 400, performance: '12.0s', availableColors: ['Green', 'Beige', 'White', 'Silver'] },
+            'AION UT Premium': { price: 1100000, image: 'aion-u.jpg', description: 'อัปเกรดสมรรถนะและระยะทาง วิ่งได้ไกลถึง 500 กม.', tags: ['value', 'family'], range: 500, performance: '8.3s', availableColors: ['Green', 'Beige', 'White', 'Silver'] },
+            'AION Y Plus 490': { price: 969900, image: 'aion-y.jpg', description: 'SUV ยอดนิยมสำหรับคนเมืองและครอบครัวเล็ก โดดเด่นด้วยดีไซน์และสีสัน', tags: ['city', 'value', 'family'], range: 490, performance: '8.5s', availableColors: ['White', 'Gray', 'Black', 'Ash', 'Gold', 'Silver', 'Green'] },
+            'AION V': { price: 1000000, image: 'aion-v.jpg', description: 'ที่สุดของ SUV ครอบครัว วิ่งได้ไกลถึง 602 กม. ชาร์จเร็วที่สุด', tags: ['family', 'space'], range: 602, performance: '7.9s', availableColors: ['White', 'Black', 'Sand', 'Silver', 'Grey', 'Orange'] },
+            'HYPTEC HT Premium': { price: 1449000, image: 'aion-ht.jpg', description: 'Luxury SUV สมรรถนะสูง วิ่งไกล 620 กม. มอบประสบการณ์ขับขี่ระดับพรีเมียม', tags: ['luxury', 'performance'], range: 620, performance: '5.8s', availableColors: ['White', 'Silver', 'Gray', 'Black'] },
+            'HYPTEC HT Luxury Gull-wing': { price: 1800000, image: 'aion-ht.jpg', description: 'รุ่นท็อปสุดหรูหราพร้อมประตูปีกนก (Gull-wing) อัตราเร่งดีที่สุด', tags: ['luxury', 'performance'], range: 620, performance: '5.8s', availableColors: ['White', 'Silver', 'Gray', 'Black', 'Rose', 'Orange'] }
         };
 
-        const luckyColors = { /* Data remains the same */ };
-        const colorMap = { /* Data remains the same */ };
+        const luckyColors = {
+            'Sunday': [{ name: 'Red', th: 'สีแดง', desc: 'เสริมอำนาจ บารมี' }, { name: 'Green', th: 'สีเขียว', desc: 'เสริมเมตตา' }],
+            'Monday': [{ name: 'White', th: 'สีขาว', desc: 'เสริมเสน่ห์' }, { name: 'Yellow', th: 'สีเหลือง', desc: 'เสริมการเงิน' }, { name: 'Green', th: 'สีเขียว', desc: 'เสริมอำนาจ' }],
+            'Tuesday': [{ name: 'Pink', th: 'สีชมพู', desc: 'เสริมเมตตา' }, { name: 'Rose', th: 'สีโรสโกลด์', desc: 'เสริมเมตตา' }, { name: 'Orange', th: 'สีส้ม', desc: 'เสริมพลัง' }],
+            'Wednesday': [{ name: 'Green', th: 'สีเขียว', desc: 'เสริมโชคลาภ' }, { name: 'Gray', th: 'สีเทา', desc: 'เสริมความมั่นคง' }],
+            'Thursday': [{ name: 'Orange', th: 'สีส้ม', desc: 'เสริมบารมี' }, { name: 'Beige', th: 'สีเบจ', desc: 'เสริมการเงิน' }],
+            'Friday': [{ name: 'Blue', th: 'สีฟ้า/น้ำเงิน', desc: 'เสริมความสำเร็จ' }, { name: 'White', th: 'สีขาว', desc: 'เสริมความสุข' }, { name: 'Silver', th: 'สีเงิน', desc: 'เสริมความมั่นคง' }],
+            'Saturday': [{ name: 'Purple', th: 'สีม่วง', desc: 'เสริมความสำเร็จ' }, { name: 'Black', th: 'สีดำ', desc: 'เสริมอำนาจ' }, { name: 'Gray', th: 'สีเทา', desc: 'เสริมความมั่นคง' }]
+        };
+        
+        const colorMap = {
+             'Green': '#2E8B57', 'Beige': '#F5F5DC', 'White': '#FFFFFF', 'Silver': '#C0C0C0', 'Gray': '#808080', 
+             'Black': '#000000', 'Gold': '#FFD700', 'Orange': '#FFA500', 'Rose': '#E0BFB8', 'Red': '#DC143C',
+             'Yellow': '#FFFF00', 'Pink': '#FFC0CB', 'Blue': '#1E90FF', 'Purple': '#800080', 'Sand': '#C2B280'
+        };
 
-        let top2Cars = []; // Store top 2 cars globally for comparison
+        let top2Cars = []; 
 
         function calculateResult() {
-            // Logic for reading form and calculating scores remains the same...
             const budget = parseInt(document.getElementById('budget').value);
             const occupation = document.getElementById('occupation').value;
             const passengers = document.getElementById('passengers').value;
@@ -115,11 +127,10 @@
             });
 
             const sortedCars = Object.keys(scores).sort((a, b) => scores[b].score - scores[a].score);
-            top2Cars = sortedCars.slice(0, 2); // Save the top 2 car keys
+            top2Cars = sortedCars.slice(0, 2); 
             
             let resultHtml = '<h2>ผลลัพธ์สำหรับคุณ</h2>';
             top2Cars.forEach((carKey, index) => {
-                // Logic for building result cards remains the same...
                 const car = scores[carKey];
                 const maxScore = scores[top2Cars[0]].score;
                 const matchPercentage = maxScore > 0 ? Math.min(Math.round((car.score / maxScore) * 100), 100) : 0;
@@ -152,7 +163,6 @@
                 `;
             });
             
-            // --- เพิ่มปุ่มเปรียบเทียบ ---
             if (top2Cars.length > 1) {
                 resultHtml += `<button onclick="showComparison()">เปรียบเทียบ 2 รุ่นนี้</button>`;
             }
@@ -164,7 +174,6 @@
             resultDisplay.style.display = 'block';
         }
 
-        // --- ฟังก์ชันใหม่สำหรับแสดงตารางเปรียบเทียบ ---
         function showComparison() {
             if (top2Cars.length < 2) return;
             const car1 = cars[top2Cars[0]];
@@ -212,8 +221,28 @@
             resultDisplay.innerHTML = comparisonHtml;
         }
 
-        function showContactInfo(carName) { /* Function remains the same */ }
-        function resetForm(){ /* Function remains the same */ }
+        function showContactInfo(carName) {
+            const resultDisplay = document.getElementById('result-display');
+            const salesPhoneNumber = '0817003057';
+            const salesLineId = 'admin.454';
+            resultDisplay.innerHTML = `
+                <div class="result-card contact-info">
+                    <h2>ติดต่อสอบถาม</h2>
+                    <p>ยอดเยี่ยมเลยครับ! กรุณาติดต่อเซลล์ของเราสำหรับข้อมูลเพิ่มเติมและนัดหมายทดลองขับ ${carName} ได้เลยครับ</p>
+                    <hr>
+                    <p><strong>เบอร์โทรศัพท์:</strong> <a href="tel:${salesPhoneNumber}">${salesPhoneNumber}</a></p>
+                    <p><strong>LINE ID:</strong> <a href="https://line.me/ti/p/~${salesLineId}" target="_blank">${salesLineId}</a> (กดเพื่อเพิ่มเพื่อน)</p>
+                    <br>
+                    <button onclick="resetForm()">กลับไปหน้าแรก</button>
+                </div>
+            `;
+        }
+        function resetForm(){
+            const resultDisplay = document.getElementById('result-display');
+            document.getElementById('quiz-form').style.display = 'block';
+            resultDisplay.style.display = 'none';
+            resultDisplay.innerHTML = '';
+        }
     </script>
 </body>
 </html>
