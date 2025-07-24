@@ -3,20 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AION Advisor (Corrected Final Version)</title>
+    <title>AION Advisor (Updated Version)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #1a237e; --secondary-color: #2962ff; --light-bg: #f0f2f5;
+            --primary-color: #002d62; --secondary-color: #2962ff; --light-bg: #f0f2f5;
             --white-bg: #ffffff; --text-color: #333; --border-color: #e0e0e0;
             --green-color: #25D366; --special-bg: #fffbe6; --special-border: #ffe58f;
-            --auspicious-highlight-bg: #fffbe6; --auspicious-highlight-border: #ffd700;
         }
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
         body {
             font-family: 'Sarabun', sans-serif; background-color: var(--light-bg);
             color: var(--text-color); margin: 0; padding: 10px; box-sizing: border-box;
@@ -76,11 +73,11 @@
         #results-container, #comparison-results-container { margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px; }
         .result-card {
             border: 1px solid var(--border-color); border-radius: 8px; padding: 20px;
-            background-color: var(--white-bg);
+            background-color: var(--white-bg); margin-bottom: 20px;
         }
         .contact-card {
             border: 1px solid var(--border-color); border-radius: 8px; padding: 20px;
-            margin-top: -10px; margin-bottom: 20px; background-color: #f0f2f5;
+            margin-top: 20px; background-color: #f0f2f5;
         }
         .special-privilege {
             margin-top: 15px; padding: 15px; border: 1px solid var(--special-border);
@@ -126,17 +123,14 @@
         .color-swatch-container { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 10px; }
         .color-swatch { display: flex; align-items: center; }
         .auspicious { 
-            background-color: var(--auspicious-highlight-bg);
-            border: 1px solid var(--auspicious-highlight-border);
-            border-radius: 6px;
-            padding: 2px 8px;
+            background-color: #fffbe6; border: 1px solid #ffd700;
+            border-radius: 6px; padding: 2px 8px;
         }
         @media (max-width: 768px) {
             .container { padding: 15px 20px; }
             .nav-tab { font-size: 14px; padding: 12px 5px; }
             .form-grid { grid-template-columns: 1fr; }
-            h1 { font-size: 24px; }
-            h2 { font-size: 20px; }
+            h1 { font-size: 24px; } h2 { font-size: 20px; }
         }
     </style>
 </head>
@@ -152,7 +146,7 @@
         </div>
 
         <div id="wizard-view" class="view active">
-             <h4>ส่วนที่ 1: ข้อมูลส่วนตัวของคุณ</h4>
+            <h4>ส่วนที่ 1: ข้อมูลส่วนตัวของคุณ</h4>
             <div class="form-grid">
                 <div class="form-group">
                     <label for="profession">อาชีพ</label>
@@ -171,7 +165,7 @@
             <div class="form-grid">
                 <div class="form-group">
                     <label for="budget">งบประมาณสูงสุด</label>
-                    <input type="range" id="budget" min="400000" max="2000000" step="50000" value="1200000">
+                    <input type="range" id="budget" min="400000" max="2500000" step="50000" value="1200000">
                     <span id="budget-value">1,200,000 บาท</span>
                 </div>
                 <div class="form-group">
@@ -227,30 +221,41 @@
                 </p>
             </div>
         </div>
-
     </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // ===== START: CAR DATA WITH NEW SPECS =====
+    // ===== START: UPDATED CAR DATA =====
     const carData = [
         { 
-            id: 'ut_std', model: 'AION UT', subModel: '420 Standard', price: 499900, range: 420, hp: 136, space: 2, 
+            id: 'ut_std', model: 'AION UT', subModel: '420 Standard', price: 499900, range: 420, hp: 136, space: 2,
+            acceleration_0_100: null,
             tags: ['city', 'value'], 
-            features: ['กรองฝุ่น PM2.5', 'ดีไซน์กะทัดรัด คล่องตัว', 'คุ้มค่าที่สุดในกลุ่ม'], 
+            features: ['ดีไซน์กะทัดรัด คล่องตัว', 'คุ้มค่าที่สุดในกลุ่ม', 'ระบบกรองฝุ่น PM2.5'], 
             colors: [
                 {name: 'Rococo White', hex: '#F8F8F8'}, {name: 'Seine Silver', hex: '#C0C0C0'}, 
                 {name: 'Champs Beige', hex: '#F5F5DC'}, {name: 'Emerald Green', hex: '#009B77'}
             ],
-            battery_kwh: 51.9,
-            dc_charge_speed: '~ 40 นาที',
-            dimensions: '4,410 x 1,820 x 1,666',
-            wheel_size: 17
+            battery_kwh: 51.9, dc_charge_speed: '~ 40 นาที', dimensions: '4,410 x 1,820 x 1,666', wheel_size: 16
         },
         { 
-            id: 'y_plus', model: 'AION Y Plus', subModel: '490 Premium', price: 829900, range: 490, hp: 204, space: 4, 
-            tags: ['family', 'long_trip', 'space', 'value', 'camping'], 
-            features: ['กรองฝุ่น PM2.5', 'ห้องโดยสารกว้างที่สุดในคลาส', 'เบาะปรับนอนได้ (Camping Mode)', 'หลังคากระจก Panoramic'], 
+            id: 'y_plus_410', model: 'AION Y Plus', subModel: '410 Elite', price: 799900, range: 410, hp: 204, space: 4,
+            acceleration_0_100: 8.5,
+            tags: ['family', 'space', 'value', 'camping'], 
+            features: ['ห้องโดยสารกว้างขวาง', 'จอสัมผัส 14.6 นิ้ว', 'เบาะปรับนอนได้ (Camping Mode)'], 
+            colors: [ // Assuming same colors as 490
+                {name: 'Lucky Gold', hex: '#FFD700'}, {name: 'Vitality Green', hex: '#4CAF50'},
+                {name: 'Speedy Silver', hex: '#BCC6CC'}, {name: 'Liberty Ash', hex: '#95A5A6'},
+                {name: 'Elegant Gray', hex: '#808080'}, {name: 'Pure White', hex: '#FFFFFF'},
+                {name: 'Glamour Black', hex: '#000000'}
+            ],
+            battery_kwh: 50.66, dc_charge_speed: '~ 40 นาที', dimensions: '4,535 x 1,870 x 1,650', wheel_size: 18
+        },
+        { 
+            id: 'y_plus_490', model: 'AION Y Plus', subModel: '490 Premium', price: 899900, range: 490, hp: 204, space: 4,
+            acceleration_0_100: 8.5,
+            tags: ['family', 'long_trip', 'space', 'value', 'camping', 'tech'], 
+            features: ['ห้องโดยสารกว้างที่สุดในคลาส', 'หลังคากระจก Panoramic', 'เบาะปรับนอนได้ (Camping Mode)'], 
             colors: [
                 {name: 'Lucky Gold', hex: '#FFD700'}, {name: 'Vitality Green', hex: '#4CAF50'},
                 {name: 'Speedy Silver', hex: '#BCC6CC'}, {name: 'Liberty Ash', hex: '#95A5A6'},
@@ -258,55 +263,46 @@ document.addEventListener('DOMContentLoaded', function () {
                 {name: 'Glamour Black', hex: '#000000'}, {name: 'Lucky Gold with Black Roof', hex: '#FFD700'},
                 {name: 'Vitality Green with Black Roof', hex: '#4CAF50'}, {name: 'Pure White with Black Roof', hex: '#FFFFFF'}
             ],
-            battery_kwh: 63.2,
-            dc_charge_speed: '~ 45 นาที',
-            dimensions: '4,535 x 1,870 x 1,650',
-            wheel_size: 17
+            battery_kwh: 63.2, dc_charge_speed: '~ 45 นาที', dimensions: '4,535 x 1,870 x 1,650', wheel_size: 18
         },
         { 
-            id: 'v_620', model: 'AION V', subModel: '620 Luxury', price: 999900, range: 602, hp: 224, space: 5, 
+            id: 'v_620', model: 'AION V', subModel: '620 Luxury', price: 1299900, range: 602, hp: 224, space: 5, 
+            acceleration_0_100: 7.6,
             tags: ['family', 'long_trip', 'tech', 'space', 'camping', 'business'], 
-            features: ['กรองฝุ่น PM2.5', 'เบาะนวดไฟฟ้าคู่หน้า', 'มีตู้เย็นในตัว (Cool box)', 'SUV ขนาดใหญ่ ออปชั่นครบ'], 
+            features: ['SUV ขนาดใหญ่ ออปชั่นครบ', 'เบาะนวดไฟฟ้าคู่หน้า', 'มีตู้เย็นในตัว (Cool box)'], 
             colors: [
                 {name: 'Alpine White', hex: '#F0F8FF'}, {name: 'Onyx Black', hex: '#000000'},
                 {name: 'Sahara Sand', hex: '#D2B48C'}, {name: 'Aurora Silver', hex: '#E5E4E2'},
                 {name: 'Iceland Grey', hex: '#607D8B'}, {name: 'Volcano Orange', hex: '#FF4500'},
                 {name: 'Volcano Orange with White Roof', hex: '#FF4500'}
             ],
-            battery_kwh: 72.3,
-            dc_charge_speed: '~ 35 นาที',
-            dimensions: '4,650 x 1,920 x 1,720',
-            wheel_size: 19
+            battery_kwh: 72.3, dc_charge_speed: '~ 35 นาที', dimensions: '4,650 x 1,920 x 1,720', wheel_size: 19
         },
         { 
-            id: 'ht_prem', model: 'HYPTEC HT', subModel: '620 Premium', price: 1449000, range: 620, hp: 340, space: 5, 
+            id: 'ht_prem', model: 'HYPTEC HT', subModel: '620 Premium', price: 1899000, range: 620, hp: 340, space: 5, 
+            acceleration_0_100: 4.9,
             tags: ['performance', 'long_trip', 'family', 'tech', 'design', 'business'], 
-            features: ['กรองฝุ่น PM2.5', 'สมรรถนะสูง 340 แรงม้า', 'เทคโนโลยีความปลอดภัยเต็มรูปแบบ'], 
+            features: ['สมรรถนะสูง 340 แรงม้า', 'เทคโนโลยีความปลอดภัยเต็มรูปแบบ', 'ดีไซน์หรูหรา โฉบเฉี่ยว'], 
             colors: [
                 {name: 'Apline White', hex: '#F0F8FF'}, {name: 'Crystal Silver', hex: '#E5E4E2'},
                 {name: 'Spinel Gray', hex: '#5D5D5D'}, {name: 'Onyx Black', hex: '#000000'}
             ],
-            battery_kwh: 80.0,
-            dc_charge_speed: '~ 22 นาที',
-            dimensions: '4,935 x 1,920 x 1,700',
-            wheel_size: 19
+            battery_kwh: 80.0, dc_charge_speed: '~ 22 นาที', dimensions: '4,935 x 1,920 x 1,700', wheel_size: 20
         },
         { 
-            id: 'ht_lux', model: 'HYPTEC HT', subModel: '620 Luxury (Gull-Wing)', price: 1749000, range: 620, hp: 340, space: 5, 
+            id: 'ht_lux', model: 'HYPTEC HT', subModel: '620 Luxury (Gull-Wing)', price: 2299000, range: 620, hp: 340, space: 5, 
+            acceleration_0_100: 4.9,
             tags: ['performance', 'long_trip', 'family', 'tech', 'design', 'business'], 
-            features: ['กรองฝุ่น PM2.5', 'ประตูปีกนก (Gull-Wing Doors)', 'ภาพลักษณ์หรูหรา โดดเด่น', 'สมรรถนะสูง 340 แรงม้า'], 
+            features: ['ประตูปีกนก (Gull-Wing Doors)', 'ภาพลักษณ์หรูหรา โดดเด่น', 'สมรรถนะสูง 340 แรงม้า'], 
             colors: [
                 {name: 'Apline White', hex: '#F0F8FF'}, {name: 'Crystal Silver', hex: '#E5E4E2'},
                 {name: 'Spinel Gray', hex: '#5D5D5D'}, {name: 'Onyx Black', hex: '#000000'},
                 {name: 'Star Rose', hex: '#E0B0FF'}, {name: 'Inferno Orange', hex: '#FF4500'}
             ],
-            battery_kwh: 80.0,
-            dc_charge_speed: '~ 22 นาที',
-            dimensions: '4,935 x 1,920 x 1,700',
-            wheel_size: 20
+            battery_kwh: 80.0, dc_charge_speed: '~ 22 นาที', dimensions: '4,935 x 1,920 x 1,700', wheel_size: 20
         }
     ];
-    // ===== END: CAR DATA WITH NEW SPECS =====
+    // ===== END: UPDATED CAR DATA =====
 
     const specialProfessions = ['government_officer', 'doctor', 'pilot'];
     const auspiciousColors = {
@@ -394,9 +390,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 .map(c => c.name);
 
             html += `<div class="result-card"><h3>${index === 0 ? '✨ แนะนำอันดับ 1' : `✔️ ตัวเลือกที่น่าสนใจอันดับ ${index + 1}`}</h3><h2>${car.model} ${car.subModel}</h2><p><strong>ราคา:</strong> ${car.price.toLocaleString('th-TH')} บาท</p><p><strong>วิ่งได้ไกล:</strong> ${car.range} กม.</p><h4>ฟีเจอร์เด่น</h4><ul class="features-list">${car.features.map(f => `<li>${f}</li>`).join('')}</ul>${renderAvailableColors(car.colors, auspiciousMatchesForThisCar)}${ (index === 0 && isSpecialProfession) ? renderSpecialPrivilege() : '' }</div>`;
-            
-            html += renderContactCard();
         });
+        html += renderContactCard();
         resultsContainer.innerHTML = html;
     }
     
@@ -426,7 +421,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         const selectedCars = carData.filter(car => selectedIds.includes(car.id));
         renderComparisonTable(selectedCars, resultsContainer);
-
         resultsContainer.scrollIntoView({ behavior: 'smooth' });
     }
 
@@ -443,6 +437,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <tr><td>ราคา (บาท)</td>${cars.map(car => `<td>${car.price.toLocaleString('th-TH')}</td>`).join('')}</tr>
                 <tr><td>ระยะทางวิ่ง (กม.)</td>${cars.map(car => `<td>${car.range}</td>`).join('')}</tr>
                 <tr><td>กำลัง (แรงม้า)</td>${cars.map(car => `<td>${car.hp}</td>`).join('')}</tr>
+                <tr><td>อัตราเร่ง 0-100 กม./ชม.</td>${cars.map(car => `<td>${car.acceleration_0_100 ? `${car.acceleration_0_100} วินาที` : 'N/A'}</td>`).join('')}</tr>
                 <tr><td>ความจุแบตเตอรี่ (kWh)</td>${cars.map(car => `<td>${car.battery_kwh}</td>`).join('')}</tr>
                 <tr><td>ชาร์จเร็ว DC (30-80%)</td>${cars.map(car => `<td>${car.dc_charge_speed}</td>`).join('')}</tr>
                 <tr><td>ขนาดล้อ (นิ้ว)</td>${cars.map(car => `<td>${car.wheel_size}</td>`).join('')}</tr>
