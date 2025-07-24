@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AION Advisor (Final Complete Version)</title>
+    <title>AION Advisor (Final Version)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
@@ -128,40 +128,52 @@
             border-radius: 6px; padding: 2px 8px;
         }
         
-        /* Finance Calculator Styles */
         .promo-banner {
-            background: linear-gradient(45deg, #ffd700, #ffc107);
-            border: 1px solid #ffc107;
-            border-radius: 8px; padding: 20px; margin-bottom: 25px;
-            text-align: center; font-size: 20px; font-weight: 700;
-            color: #493800;
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
-            animation: pulse-gold 2s infinite;
+            background: linear-gradient(45deg, #ffc107, #ff9800);
+            border: none;
+            border-radius: 10px; padding: 20px; margin-bottom: 25px;
+            text-align: center;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 20px rgba(255, 152, 0, 0.4);
+            animation: breathe 2.5s infinite ease-in-out;
+            cursor: default;
+            transition: transform 0.3s ease;
         }
-        @keyframes pulse-gold {
-            0% { box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
-            50% { box-shadow: 0 4px 25px rgba(255, 215, 0, 0.5); }
-            100% { box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
+        .promo-banner:hover {
+            transform: scale(1.02);
         }
+        .promo-banner .main-text {
+            font-size: 24px; font-weight: 700;
+            display: block;
+        }
+        .promo-banner .sub-text {
+            font-size: 16px; opacity: 0.9;
+            display: block;
+        }
+        @keyframes breathe {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.015); }
+            100% { transform: scale(1); }
+        }
+
         .finance-info-box {
             display: flex; justify-content: space-between; padding: 15px;
             background-color: var(--info-bg); border-radius: 8px; margin-bottom: 20px;
         }
         .finance-info-box div { flex: 1; text-align: center; }
-        .finance-info-box span { display: block; }
         .finance-info-box .label { font-size: 14px; color: #555; }
         .finance-info-box .value { font-size: 20px; font-weight: 700; color: var(--primary-color); }
         
         .down-payment-options { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px; }
         .down-payment-options .btn {
             flex-grow: 1; padding: 10px; border-radius: 6px; border: 1px solid var(--border-color);
-            background-color: #f8f9fa; cursor: pointer; text-align: center;
+            background-color: #f8f9fa; cursor: pointer; text-align: center; font-weight: 600;
         }
         .down-payment-options .btn.active {
             background-color: var(--primary-color); color: white; border-color: var(--primary-color);
         }
 
-        /* Modal (Popup) Styles */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0;
             width: 100%; height: 100%;
@@ -192,7 +204,6 @@
         @media (max-width: 768px) {
             .container { padding: 15px 20px; }
             .form-grid { grid-template-columns: 1fr; }
-            .finance-info-box { flex-direction: column; gap: 10px; }
         }
     </style>
 </head>
@@ -330,8 +341,8 @@
         <div class="modal-content">
             <span id="modal-close-btn" class="modal-close">&times;</span>
             <h3>ผลการคำนวณค่างวด</h3>
-            <div class="result-value" id="modal-monthly-payment"></div>
-            <div class="result-details" id="modal-finance-summary"></div>
+            <div id="modal-monthly-payment" class="result-value"></div>
+            <div id="modal-finance-summary" class="result-details"></div>
             <div style="margin-top: 25px;">
                 <p style="font-size:12px; color:#999;">*เป็นการคำนวณเบื้องต้นเท่านั้น โปรดติดต่อที่ปรึกษาการขายเพื่อข้อมูลที่แม่นยำที่สุด</p>
             </div>
@@ -340,7 +351,6 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // ===== COMPLETE CAR DATA =====
     const carData = [
         { id: 'ut_std', model: 'AION UT', subModel: 'Standard', price: 499900, range: 420, hp: 136, space: 2, acceleration_0_100: 12.0, tags: ['city', 'value', 'promo_ut'], features: ['ดีไซน์กะทัดรัด คล่องตัว', 'คุ้มค่าที่สุดในกลุ่ม', 'ระบบกรองฝุ่น PM2.5'], colors: [ {name: 'Rococo White', hex: '#F8F8F8'}, {name: 'Seine Silver', hex: '#C0C0C0'}, {name: 'Champs Beige', hex: '#F5F5DC'}, {name: 'Emerald Green', hex: '#009B77'} ], battery_kwh: 50.3, dc_charge_speed: '24 นาที', dimensions: '4,410 x 1,820 x 1,666', wheel_size: 16 },
         { id: 'ut_prem', model: 'AION UT', subModel: 'Premium', price: 649900, range: 500, hp: 204, space: 2, acceleration_0_100: 7.3, tags: ['city', 'value', 'performance', 'promo_ut'], features: ['มอเตอร์แรงขึ้น 204 แรงม้า', 'วิ่งไกลขึ้น 500 กม.', 'ซันรูฟไฟฟ้าแบบ Panoramic'], colors: [ {name: 'Rococo White', hex: '#F8F8F8'}, {name: 'Seine Silver', hex: '#C0C0C0'}, {name: 'Champs Beige', hex: '#F5F5DC'}, {name: 'Emerald Green', hex: '#009B77'} ], battery_kwh: 60.0, dc_charge_speed: '24 นาที', dimensions: '4,410 x 1,820 x 1,666', wheel_size: 17 },
@@ -353,7 +363,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const promoData = {
         promo_ut: {
-            name: "✨ โปรโมชั่นพิเศษ! ดาวน์เริ่มต้นเพียง 8,888 บาท",
+            name: "<span class='main-text'>🏆 โปรใหญ่! จัดให้!</span><span class='sub-text'>สำหรับ AION UT ทุกรุ่น</span>",
             tiers: {
                 '8888': { '48': 4.99, '60': 5.29, '72': 5.39, '84': 5.60 },
                 '5':    { '48': 4.09, '60': 4.39, '72': 4.69, '84': 4.99 },
@@ -363,13 +373,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 '25':   { '48': 1.98, '60': 2.59, '72': 2.99, '84': 3.59 },
                 '30':   { '48': 1.98, '60': 2.39, '72': 2.89, '84': 3.49 }
             },
-            presetButtons: ['8,888', '5%', '10%', '15%', '20%', '25%', '30%']
+            defaultPresetButtons: ['8,888', '5%', '10%', '15%', '20%', '25%', '30%'],
+            specialProfessionPresetButtons: ['0%', '8,888', '5%', '10%', '15%', '20%', '25%', '30%']
         }
     };
-    const specialProfessionsForDiscount = ['government_officer', 'state_enterprise_employee', 'teacher', 'doctor', 'prosecutor', 'judge'];
+    const specialProfessionsForDiscount = ['government_officer', 'state_enterprise_employee', 'doctor', 'prosecutor', 'judge', 'teacher'];
     const auspiciousColors = { sunday: { good: ['สีเขียว', 'สีดำ']}, monday: { good: ['สีเขียว', 'สีส้ม']}, tuesday: { good: ['สีส้ม', 'สีดำ']}, wednesday: { good: ['สีเทา', 'สีฟ้า']}, wednesday_night: { good: ['สีขาว', 'สีม่วง']}, thursday: { good: ['สีฟ้า', 'สีแดง']}, friday: { good: ['สีเขียว', 'สีชมพู']}, saturday: { good: ['สีแดง', 'สีฟ้า']} };
 
-    // --- Main initialization function ---
     function init() {
         setupTabs();
         setupWizardView();
@@ -386,7 +396,6 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.view').forEach(view => view.classList.toggle('active', view.id === viewId));
     }
 
-    // --- Wizard View Logic ---
     function setupWizardView() {
         const budgetSlider = document.getElementById('budget');
         if (!budgetSlider) return;
@@ -462,7 +471,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return `<div class="special-privilege"><strong>✨ สิทธิพิเศษสำหรับอาชีพของคุณ!</strong><p style="margin:5px 0 0 0;">คุณอาจได้รับอัตราดอกเบี้ยพิเศษ กรุณาติดต่อที่ปรึกษาการขายเพื่อสอบถามข้อมูลเพิ่มเติม</p></div>`;
     }
 
-    // --- Comparison View Logic ---
     function setupComparisonView() {
         const compareOptionsContainer = document.getElementById('car-options-compare');
         if (!compareOptionsContainer) return;
@@ -502,7 +510,6 @@ document.addEventListener('DOMContentLoaded', function () {
         container.innerHTML = tableHTML;
     }
 
-    // --- Finance View Logic ---
     function setupFinanceView() {
         const financeCarSelect = document.getElementById('finance-car-select');
         const professionSelect = document.getElementById('finance-profession');
@@ -560,6 +567,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         document.getElementById('finance-car-price').textContent = `${selectedCar.price.toLocaleString('th-TH')} บาท`;
         
+        const profession = document.getElementById('finance-profession').value;
+        const isSpecialProfession = specialProfessions.includes(profession);
+        
         const promoBanner = document.getElementById('finance-promo-banner');
         const downPaymentPresetsContainer = document.getElementById('down-payment-presets');
         downPaymentPresetsContainer.innerHTML = '';
@@ -568,9 +578,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const currentPromo = currentPromoKey ? promoData[currentPromoKey] : null;
 
         if (currentPromo) {
-            promoBanner.textContent = currentPromo.name;
+            promoBanner.innerHTML = currentPromo.name;
             promoBanner.style.display = 'block';
-            currentPromo.presetButtons.forEach(tier => {
+            const presetButtons = isSpecialProfession ? currentPromo.specialProfessionPresetButtons : currentPromo.defaultPresetButtons;
+            presetButtons.forEach(tier => {
                 const btn = document.createElement('button');
                 btn.type = 'button'; btn.className = 'btn'; btn.textContent = tier;
                 btn.dataset.tier = tier.replace('%', '').replace(',', '');
@@ -578,7 +589,8 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         } else {
             promoBanner.style.display = 'none';
-            ['15%', '20%', '25%', '30%'].forEach(tier => {
+            const defaultButtons = isSpecialProfession ? ['0%', '15%', '20%', '25%', '30%'] : ['15%', '20%', '25%', '30%'];
+            defaultButtons.forEach(tier => {
                 const btn = document.createElement('button');
                 btn.type = 'button'; btn.className = 'btn'; btn.textContent = tier;
                 btn.dataset.tier = tier.replace('%', '');
@@ -592,7 +604,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 e.target.classList.add('active');
                 
                 const tier = e.target.dataset.tier;
-                let downPaymentAmount = (tier === '8888') ? 8888 : Math.round(selectedCar.price * (Number(tier) / 100));
+                let downPaymentAmount = 0;
+                if (tier === '8888') { downPaymentAmount = 8888; }
+                else if (tier === '0') { downPaymentAmount = 0; }
+                else { downPaymentAmount = Math.round(selectedCar.price * (Number(tier) / 100)); }
+                
                 document.getElementById('finance-downpayment-amount').value = downPaymentAmount;
                 updateFinanceUI();
             }
@@ -600,32 +616,43 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const term = document.getElementById('finance-term').value;
         const downPaymentAmount = Number(document.getElementById('finance-downpayment-amount').value) || 0;
-        const profession = document.getElementById('finance-profession').value;
         let interestRate = null;
 
         if (currentPromo) {
             const activePreset = document.querySelector('#down-payment-presets .btn.active');
             let tierKey = null;
+
             if (activePreset) {
                 tierKey = activePreset.dataset.tier;
-            } else if (downPaymentAmount > 0) {
+            } else if (downPaymentAmount >= 0) {
                  if (downPaymentAmount === 8888) { tierKey = '8888'; }
                  else {
                     const downPercent = (downPaymentAmount / selectedCar.price) * 100;
-                    const tiers = Object.keys(currentPromo.tiers).filter(t => t !== '8888').map(Number).sort((a,b) => a - b);
-                    for (let i = tiers.length - 1; i >= 0; i--) {
-                        if (downPercent >= tiers[i]) { tierKey = tiers[i].toString(); break; }
+                    // For special professions, allow 0% to map to the 10% tier.
+                    if (isSpecialProfession && downPercent < 5) {
+                        tierKey = '0';
+                    } else {
+                         const tiers = Object.keys(currentPromo.tiers).filter(t => t !== '8888').map(Number).sort((a,b) => a - b);
+                         for (let i = tiers.length - 1; i >= 0; i--) {
+                            if (downPercent >= tiers[i]) { tierKey = tiers[i].toString(); break; }
+                        }
                     }
                  }
             }
-            if (tierKey && currentPromo.tiers[tierKey] && currentPromo.tiers[tierKey][term]) {
-                interestRate = currentPromo.tiers[tierKey][term];
+            
+            let lookupTierKey = tierKey;
+            if (tierKey === '0' && isSpecialProfession) {
+                lookupTierKey = '10'; 
+            }
+
+            if (lookupTierKey && currentPromo.tiers[lookupTierKey] && currentPromo.tiers[lookupTierKey][term]) {
+                interestRate = currentPromo.tiers[lookupTierKey][term];
             }
         } else {
             interestRate = 5.5; 
         }
 
-        if (interestRate !== null && specialProfessionsForDiscount.includes(profession)) {
+        if (interestRate !== null && isSpecialProfession) {
             interestRate -= 0.20;
         }
 
