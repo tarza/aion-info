@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AION Advisor (Bug Fix Version)</title>
+    <title>AION Advisor (Final Touches Version)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
@@ -173,6 +173,11 @@
         .down-payment-options .btn.active {
             background-color: var(--primary-color); color: white; border-color: var(--primary-color);
         }
+        .down-payment-options .btn.promo-highlight {
+            background: var(--special-bg);
+            border-color: var(--special-border);
+            color: #c28b00;
+        }
 
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0;
@@ -303,6 +308,8 @@
                         <option value="teacher">ครู / อาจารย์</option>
                         <option value="doctor">แพทย์ / พยาบาล</option>
                         <option value="prosecutor">อัยการ / ผู้พิพากษา</option>
+                        <option value="pilot">นักบิน / พนักงานสายการบิน</option>
+                        <option value="engineer">วิศวกร / สถาปนิก</option>
                         <option value="freelance">ฟรีแลนซ์ / อาชีพอิสระ</option>
                         <option value="other">อื่นๆ</option>
                     </select>
@@ -343,9 +350,7 @@
             <h3>ผลการคำนวณค่างวด</h3>
             <div id="modal-monthly-payment" class="result-value"></div>
             <div id="modal-finance-summary" class="result-details"></div>
-            <div style="margin-top: 25px;">
-                <p style="font-size:12px; color:#999;">*เป็นการคำนวณเบื้องต้นเท่านั้น โปรดติดต่อที่ปรึกษาการขายเพื่อข้อมูลที่แม่นยำที่สุด</p>
-            </div>
+            <div id="modal-contact-section"></div>
         </div>
     </div>
 
@@ -363,7 +368,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const promoData = {
         promo_ut: {
-            name: "<span class='main-text'>🏆 โปรใหญ่! จัดให้!</span><span class='sub-text'>สำหรับ AION UT ทุกรุ่น</span>",
+            name: "<span class='main-text'>🏆 โปรใหญ่! จัดให้!</span><span class='sub-text'>ดาวน์เริ่มต้นเพียง 8,888 บาท</span>",
             tiers: {
                 '8888': { '48': 4.99, '60': 5.29, '72': 5.39, '84': 5.60 },
                 '5':    { '48': 4.09, '60': 4.39, '72': 4.69, '84': 4.99 },
@@ -373,11 +378,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 '25':   { '48': 1.98, '60': 2.59, '72': 2.99, '84': 3.59 },
                 '30':   { '48': 1.98, '60': 2.39, '72': 2.89, '84': 3.49 }
             },
-            defaultPresetButtons: ['8,888', '5%', '10%', '15%', '20%', '25%', '30%'],
-            specialProfessionPresetButtons: ['0%', '8,888', '5%', '10%', '15%', '20%', '25%', '30%']
+            defaultPresetButtons: ['ดาวน์ 8,888', '5%', '10%', '15%', '20%', '25%', '30%'],
+            specialProfessionPresetButtons: ['ดาวน์ 0%', 'ดาวน์ 8,888', '5%', '10%', '15%', '20%', '25%', '30%']
         }
     };
-    const specialProfessionsForDiscount = ['government_officer', 'state_enterprise_employee', 'doctor', 'prosecutor', 'judge', 'teacher'];
+    const specialProfessionsForDiscount = ['government_officer', 'state_enterprise_employee', 'doctor', 'prosecutor', 'judge', 'teacher', 'pilot', 'engineer'];
     const auspiciousColors = { sunday: { good: ['สีเขียว', 'สีดำ']}, monday: { good: ['สีเขียว', 'สีส้ม']}, tuesday: { good: ['สีส้ม', 'สีดำ']}, wednesday: { good: ['สีเทา', 'สีฟ้า']}, wednesday_night: { good: ['สีขาว', 'สีม่วง']}, thursday: { good: ['สีฟ้า', 'สีแดง']}, friday: { good: ['สีเขียว', 'สีชมพู']}, saturday: { good: ['สีแดง', 'สีฟ้า']} };
 
     function init() {
@@ -583,13 +588,20 @@ document.addEventListener('DOMContentLoaded', function () {
             const presetButtons = isSpecialProfession ? currentPromo.specialProfessionPresetButtons : currentPromo.defaultPresetButtons;
             presetButtons.forEach(tier => {
                 const btn = document.createElement('button');
-                btn.type = 'button'; btn.className = 'btn'; btn.textContent = tier;
-                btn.dataset.tier = tier.replace('%', '').replace(',', '');
+                btn.type = 'button';
+                btn.className = 'btn';
+                btn.textContent = tier;
+                if (tier === 'ดาวน์ 8,888') {
+                    btn.classList.add('promo-highlight');
+                    btn.dataset.tier = '8888';
+                } else {
+                    btn.dataset.tier = tier.replace('%', '');
+                }
                 downPaymentPresetsContainer.appendChild(btn);
             });
         } else {
             promoBanner.style.display = 'none';
-            const defaultButtons = isSpecialProfession ? ['0%', '15%', '20%', '25%', '30%'] : ['15%', '20%', '25%', '30%'];
+            const defaultButtons = isSpecialProfession ? ['ดาวน์ 0%', '15%', '20%', '25%', '30%'] : ['15%', '20%', '25%', '30%'];
             defaultButtons.forEach(tier => {
                 const btn = document.createElement('button');
                 btn.type = 'button'; btn.className = 'btn'; btn.textContent = tier;
@@ -648,12 +660,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 interestRate = currentPromo.tiers[lookupTierKey][term];
             }
         } else {
-            // For non-promo cars, a generic logic can be applied
             const downPercent = (downPaymentAmount / selectedCar.price) * 100;
-            if (downPercent >= 25) interestRate = 3.5;
+            if (isSpecialProfession && downPaymentAmount === 0) interestRate = 4.5; // Example for special 0% down on non-promo cars
+            else if (downPercent >= 25) interestRate = 3.5;
             else if (downPercent >= 20) interestRate = 4.5;
             else if (downPercent >= 15) interestRate = 5.5;
-            else interestRate = null; // Or some default
+            else interestRate = null;
         }
 
         if (interestRate !== null && isSpecialProfession) {
@@ -665,6 +677,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function handleFinanceCalculation() {
         const modalOverlay = document.getElementById('finance-result-modal');
+        const modalContactSection = document.getElementById('modal-contact-section');
         const carId = document.getElementById('finance-car-select').value;
         const car = carData.find(c => c.id === carId);
         if (!car) { alert('กรุณาเลือกรุ่นรถยนต์'); return; }
@@ -694,6 +707,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ดอกเบี้ยทั้งหมด: <b>${Math.ceil(totalInterest).toLocaleString('th-TH')}</b> บาท (โดยประมาณ)
         `;
         
+        modalContactSection.innerHTML = renderContactCard('สนใจรับข้อเสนอพิเศษนี้ ติดต่อเราเลย!');
         modalOverlay.classList.add('active');
     }
 
