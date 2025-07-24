@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AION Advisor (Final Version)</title>
+    <title>AION Advisor (Bug Fix Version)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
@@ -568,7 +568,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('finance-car-price').textContent = `${selectedCar.price.toLocaleString('th-TH')} บาท`;
         
         const profession = document.getElementById('finance-profession').value;
-        const isSpecialProfession = specialProfessions.includes(profession);
+        const isSpecialProfession = specialProfessionsForDiscount.includes(profession);
         
         const promoBanner = document.getElementById('finance-promo-banner');
         const downPaymentPresetsContainer = document.getElementById('down-payment-presets');
@@ -628,8 +628,7 @@ document.addEventListener('DOMContentLoaded', function () {
                  if (downPaymentAmount === 8888) { tierKey = '8888'; }
                  else {
                     const downPercent = (downPaymentAmount / selectedCar.price) * 100;
-                    // For special professions, allow 0% to map to the 10% tier.
-                    if (isSpecialProfession && downPercent < 5) {
+                    if (isSpecialProfession && downPaymentAmount === 0) {
                         tierKey = '0';
                     } else {
                          const tiers = Object.keys(currentPromo.tiers).filter(t => t !== '8888').map(Number).sort((a,b) => a - b);
@@ -649,7 +648,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 interestRate = currentPromo.tiers[lookupTierKey][term];
             }
         } else {
-            interestRate = 5.5; 
+            // For non-promo cars, a generic logic can be applied
+            const downPercent = (downPaymentAmount / selectedCar.price) * 100;
+            if (downPercent >= 25) interestRate = 3.5;
+            else if (downPercent >= 20) interestRate = 4.5;
+            else if (downPercent >= 15) interestRate = 5.5;
+            else interestRate = null; // Or some default
         }
 
         if (interestRate !== null && isSpecialProfession) {
