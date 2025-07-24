@@ -129,6 +129,20 @@
         }
         
         /* Finance Calculator Styles */
+        .promo-banner {
+            background: linear-gradient(45deg, #ffd700, #ffc107);
+            border: 1px solid #ffc107;
+            border-radius: 8px; padding: 20px; margin-bottom: 25px;
+            text-align: center; font-size: 20px; font-weight: 700;
+            color: #493800;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            animation: pulse-gold 2s infinite;
+        }
+        @keyframes pulse-gold {
+            0% { box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 4px 25px rgba(255, 215, 0, 0.5); }
+            100% { box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
+        }
         .finance-info-box {
             display: flex; justify-content: space-between; padding: 15px;
             background-color: var(--info-bg); border-radius: 8px; margin-bottom: 20px;
@@ -147,25 +161,37 @@
             background-color: var(--primary-color); color: white; border-color: var(--primary-color);
         }
 
-        #finance-results { margin-top: 30px; padding: 20px; background-color: #f8f9fa; border-radius: 8px; text-align: center; }
-        #finance-results .result-item { margin-bottom: 15px; }
-        #finance-results .result-label { font-size: 16px; color: #555; }
-        #finance-results .result-value { font-size: 28px; font-weight: 700; color: var(--secondary-color); }
-        #finance-results .result-details { font-size: 14px; color: #777; margin-top: 5px; }
-
-        .promo-banner {
-            background-color: var(--special-bg);
-            border: 1px solid var(--special-border);
-            border-radius: 8px; padding: 15px; margin-bottom: 20px;
-            text-align: center; font-size: 18px; font-weight: 600;
-            color: #c28b00;
+        /* Modal (Popup) Styles */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 1000;
+            justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s ease;
         }
-        
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-content {
+            background: white; padding: 30px 40px; border-radius: 12px;
+            width: 90%; max-width: 500px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transform: scale(0.9); transition: transform 0.3s ease;
+        }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-close {
+            position: absolute; top: 10px; right: 15px;
+            font-size: 30px; font-weight: bold;
+            color: #aaa; cursor: pointer;
+        }
+        .modal-content .result-label { font-size: 18px; color: #555; }
+        .modal-content .result-value { font-size: 36px; font-weight: 700; color: var(--secondary-color); margin: 5px 0 15px 0; }
+        .modal-content .result-details { font-size: 16px; color: #333; line-height: 1.8; }
+
         @media (max-width: 768px) {
             .container { padding: 15px 20px; }
-            .nav-tab { font-size: 14px; padding: 12px 5px; }
             .form-grid { grid-template-columns: 1fr; }
-            h1 { font-size: 24px; } h2 { font-size: 20px; }
             .finance-info-box { flex-direction: column; gap: 10px; }
         }
     </style>
@@ -259,11 +285,14 @@
                     <label for="finance-profession">อาชีพ</label>
                     <select id="finance-profession">
                         <option value="company_employee">พนักงานบริษัท</option>
-                        <option value="government_officer">ข้าราชการ/รัฐวิสาหกิจ</option>
-                        <option value="doctor">แพทย์</option>
-                        <option value="prosecutor">อัยการ/ผู้พิพากษา</option>
-                        <option value="business_owner">เจ้าของธุรกิจ/ค้าขาย</option>
-                        <option value="freelance">ฟรีแลนซ์/อาชีพอิสระ</option>
+                        <option value="business_owner">เจ้าของกิจการ / ค้าขาย</option>
+                        <option value="government_officer">ข้าราชการ</option>
+                        <option value="state_enterprise_employee">พนักงานรัฐวิสาหกิจ</option>
+                        <option value="factory_employee">พนักงานโรงงาน</option>
+                        <option value="teacher">ครู / อาจารย์</option>
+                        <option value="doctor">แพทย์ / พยาบาล</option>
+                        <option value="prosecutor">อัยการ / ผู้พิพากษา</option>
+                        <option value="freelance">ฟรีแลนซ์ / อาชีพอิสระ</option>
                         <option value="other">อื่นๆ</option>
                     </select>
                 </div>
@@ -272,30 +301,21 @@
             <div id="other-profession-contact" style="display: none;"></div>
             
             <div class="finance-info-box">
-                <div>
-                    <span class="label">ราคารถยนต์</span>
-                    <span id="finance-car-price" class="value">-</span>
-                </div>
-                <div>
-                    <span class="label">อัตราดอกเบี้ย</span>
-                    <span id="finance-interest-rate" class="value">-</span>
-                </div>
+                <div><span class="label">ราคารถยนต์</span><span id="finance-car-price" class="value">-</span></div>
+                <div><span class="label">อัตราดอกเบี้ย</span><span id="finance-interest-rate" class="value">-</span></div>
             </div>
 
             <h4>ส่วนที่ 2: ตั้งค่าแผนการผ่อนชำระ</h4>
             <div class="form-grid">
                  <div class="form-group">
-                    <label for="finance-downpayment-amount">เงินดาวน์</label>
+                    <label>เงินดาวน์</label>
                     <div class="down-payment-options" id="down-payment-presets"></div>
                     <input type="number" id="finance-downpayment-amount" placeholder="หรือกรอกจำนวนเงิน" style="margin-top: 10px;">
                 </div>
                 <div class="form-group">
                     <label for="finance-term">ระยะเวลาผ่อน (เดือน)</label>
                     <select id="finance-term">
-                        <option value="48">48</option>
-                        <option value="60">60</option>
-                        <option value="72">72</option>
-                        <option value="84">84</option>
+                        <option value="48">48</option><option value="60">60</option><option value="72">72</option><option value="84">84</option>
                     </select>
                 </div>
             </div>
@@ -303,16 +323,17 @@
             <button id="finance-calculate-btn" class="action-button">
                 <span class="btn-text">คำนวณค่างวด</span>
             </button>
-            
-            <div id="finance-results" style="display: none;">
-                <div class="result-item">
-                    <div class="result-label">ค่างวดต่อเดือน</div>
-                    <div id="monthly-payment" class="result-value"></div>
-                </div>
-                <div class="result-item">
-                    <div class="result-label">รายละเอียด</div>
-                    <div id="finance-summary" class="result-details"></div>
-                </div>
+        </div>
+    </div>
+
+    <div id="finance-result-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span id="modal-close-btn" class="modal-close">&times;</span>
+            <h3>ผลการคำนวณค่างวด</h3>
+            <div class="result-value" id="modal-monthly-payment"></div>
+            <div class="result-details" id="modal-finance-summary"></div>
+            <div style="margin-top: 25px;">
+                <p style="font-size:12px; color:#999;">*เป็นการคำนวณเบื้องต้นเท่านั้น โปรดติดต่อที่ปรึกษาการขายเพื่อข้อมูลที่แม่นยำที่สุด</p>
             </div>
         </div>
     </div>
@@ -330,9 +351,8 @@ document.addEventListener('DOMContentLoaded', function () {
         { id: 'ht_lux', model: 'HYPTEC HT', subModel: 'Luxury (Gull-Wing)', price: 1749000, range: 620, hp: 340, space: 5, acceleration_0_100: 5.8, tags: ['performance', 'long_trip', 'family', 'tech', 'design', 'business'], features: ['ประตูปีกนก (Gull-Wing Doors)', 'ภาพลักษณ์หรูหรา โดดเด่น', 'สมรรถนะสูง 340 แรงม้า'], colors: [ {name: 'Apline White', hex: '#F0F8FF'}, {name: 'Crystal Silver', hex: '#E5E4E2'}, {name: 'Spinel Gray', hex: '#5D5D5D'}, {name: 'Onyx Black', hex: '#000000'}, {name: 'Star Rose', hex: '#E0B0FF'}, {name: 'Inferno Orange', hex: '#FF4500'} ], battery_kwh: 83.3, dc_charge_speed: '15 นาที', dimensions: '4,935 x 1,920 x 1,700', wheel_size: 20 }
     ];
 
-    // ===== FINANCE PROMOTION DATA =====
     const promoData = {
-        promo_ut: { // Key matches the tag in carData
+        promo_ut: {
             name: "✨ โปรโมชั่นพิเศษ! ดาวน์เริ่มต้นเพียง 8,888 บาท",
             tiers: {
                 '8888': { '48': 4.99, '60': 5.29, '72': 5.39, '84': 5.60 },
@@ -346,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function () {
             presetButtons: ['8,888', '5%', '10%', '15%', '20%', '25%', '30%']
         }
     };
-    const specialProfessionsForDiscount = ['government_officer', 'doctor', 'prosecutor', 'judge'];
+    const specialProfessionsForDiscount = ['government_officer', 'state_enterprise_employee', 'teacher', 'doctor', 'prosecutor', 'judge'];
     const auspiciousColors = { sunday: { good: ['สีเขียว', 'สีดำ']}, monday: { good: ['สีเขียว', 'สีส้ม']}, tuesday: { good: ['สีส้ม', 'สีดำ']}, wednesday: { good: ['สีเทา', 'สีฟ้า']}, wednesday_night: { good: ['สีขาว', 'สีม่วง']}, thursday: { good: ['สีฟ้า', 'สีแดง']}, friday: { good: ['สีเขียว', 'สีชมพู']}, saturday: { good: ['สีแดง', 'สีฟ้า']} };
 
     // --- Main initialization function ---
@@ -369,7 +389,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- Wizard View Logic ---
     function setupWizardView() {
         const budgetSlider = document.getElementById('budget');
-        if (!budgetSlider) return; // Guard clause
+        if (!budgetSlider) return;
         budgetSlider.addEventListener('input', () => { document.getElementById('budget-value').textContent = `${Number(budgetSlider.value).toLocaleString('th-TH')} บาท`; });
         document.getElementById('recommend-btn').addEventListener('click', handleRecommendation);
     }
@@ -377,7 +397,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function handleRecommendation() {
         const recommendBtn = document.getElementById('recommend-btn');
         recommendBtn.classList.add('loading');
-        
         setTimeout(() => {
             const inputs = {
                 profession: document.getElementById('profession').value,
@@ -397,8 +416,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 if ((car.range / inputs.dailyKm) < 4 && inputs.dailyKm > 60) score -= 5;
                 if (inputs.longTrip === 'monthly' && car.range < 500) score -= 5;
                 if (inputs.longTrip === 'weekly' && car.range < 600) score -= 10;
-                inputs.activities.forEach(activity => { if (car.tags && car.tags.includes(activity)) score += 5; });
-                inputs.priorities.forEach(priority => { if (car.tags && car.tags.includes(priority)) score += 5; });
+                if (car.tags) {
+                    inputs.activities.forEach(activity => { if (car.tags.includes(activity)) score += 5; });
+                    inputs.priorities.forEach(priority => { if (car.tags.includes(priority)) score += 5; });
+                }
                 return { ...car, score };
             });
             recommendations = recommendations.filter(car => car.score > 0).sort((a, b) => b.score - a.score);
@@ -411,15 +432,13 @@ document.addEventListener('DOMContentLoaded', function () {
     function renderWizardResults(cars, inputs) {
         const resultsContainer = document.getElementById('results-container');
         if (cars.length === 0) {
-            resultsContainer.innerHTML = '<h3>ไม่พบรถที่ตรงกับความต้องการของคุณ</h3><p>ลองปรับเงื่อนไขต่างๆ เช่น เพิ่มงบประมาณ หรือปรับลักษณะการใช้งานดูนะครับ</p>';
-            resultsContainer.innerHTML += renderContactCard('ปรึกษาที่ปรึกษาการขายโดยตรง');
+            resultsContainer.innerHTML = '<h3>ไม่พบรถที่ตรงกับความต้องการของคุณ</h3><p>ลองปรับเงื่อนไขต่างๆ เช่น เพิ่มงบประมาณ หรือปรับลักษณะการใช้งานดูนะครับ</p>' + renderContactCard('ปรึกษาที่ปรึกษาการขายโดยตรง');
             return;
         }
         const isSpecialProfession = ['government_officer', 'doctor', 'pilot'].includes(inputs.profession);
         const colorMap = { 'สีเขียว': ['green'], 'สีดำ': ['black'], 'สีส้ม': ['orange'], 'สีเทา': ['gray', 'grey', 'ash', 'silver'], 'สีฟ้า': ['blue'], 'สีขาว': ['white'], 'สีม่วง': ['purple', 'rose'], 'สีแดง': ['red'], 'สีชมพู': ['pink', 'rose'] };
         const userAuspiciousThai = auspiciousColors[inputs.birthDay].good;
         const userAuspiciousKeywords = userAuspiciousThai.flatMap(thaiColor => colorMap[thaiColor] || []);
-
         let html = `<h2>ผลลัพธ์ที่ใช่สำหรับคุณ</h2>`;
         cars.forEach((car, index) => {
             const auspiciousMatches = car.colors.filter(c => userAuspiciousKeywords.some(keyword => c.name.toLowerCase().includes(keyword))).map(c => c.name);
@@ -446,7 +465,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // --- Comparison View Logic ---
     function setupComparisonView() {
         const compareOptionsContainer = document.getElementById('car-options-compare');
-        if (!compareOptionsContainer) return; // Guard clause
+        if (!compareOptionsContainer) return;
         carData.forEach(car => {
             const label = document.createElement('label');
             label.className = 'option';
@@ -458,10 +477,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function handleComparison() {
         const resultsContainer = document.getElementById('comparison-results-container');
-        const selectedIds = Array.from(document.querySelectorAll('input[name="car-select"]:checked')).map(cb => cb.value);
-        if (selectedIds.length < 2) {
-            alert('กรุณาเลือกรุ่นรถยนต์อย่างน้อย 2 รุ่นเพื่อเปรียบเทียบ'); return;
-        }
+        const selectedIds = Array.from(document.querySelectorAll('#car-options-compare input:checked')).map(cb => cb.value);
+        if (selectedIds.length < 2) { alert('กรุณาเลือกรุ่นรถยนต์อย่างน้อย 2 รุ่นเพื่อเปรียบเทียบ'); return; }
         const selectedCars = carData.filter(car => selectedIds.includes(car.id));
         renderComparisonTable(selectedCars, resultsContainer);
         resultsContainer.scrollIntoView({ behavior: 'smooth' });
@@ -489,7 +506,11 @@ document.addEventListener('DOMContentLoaded', function () {
     function setupFinanceView() {
         const financeCarSelect = document.getElementById('finance-car-select');
         const professionSelect = document.getElementById('finance-profession');
-        if (!financeCarSelect) return; // Guard clause
+        const calculateBtn = document.getElementById('finance-calculate-btn');
+        const modalOverlay = document.getElementById('finance-result-modal');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+
+        if (!financeCarSelect) return;
 
         carData.forEach(car => {
             const option = document.createElement('option');
@@ -502,15 +523,22 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('finance-term').addEventListener('change', updateFinanceUI);
         professionSelect.addEventListener('change', () => {
             handleProfessionChange();
-            updateFinanceUI(); // Recalculate interest on profession change
+            updateFinanceUI();
         });
         document.getElementById('finance-downpayment-amount').addEventListener('input', () => {
              document.querySelectorAll('#down-payment-presets .btn').forEach(b => b.classList.remove('active'));
              updateFinanceUI();
         });
-        document.getElementById('finance-calculate-btn').addEventListener('click', handleFinanceCalculation);
         
-        handleProfessionChange(); // Initial setup
+        calculateBtn.addEventListener('click', handleFinanceCalculation);
+        modalCloseBtn.addEventListener('click', () => modalOverlay.classList.remove('active'));
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                modalOverlay.classList.remove('active');
+            }
+        });
+        
+        handleProfessionChange();
         updateFinanceUI(); 
     }
     
@@ -518,7 +546,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const profession = document.getElementById('finance-profession').value;
         const contactContainer = document.getElementById('other-profession-contact');
         if (profession === 'other') {
-            contactContainer.innerHTML = renderContactCard('สำหรับอาชีพอื่นๆ กรุณาติดต่อที่ปรึกษาการขายเพื่อรับการประเมินและข้อเสนอพิเศษ');
+            contactContainer.innerHTML = renderContactCard('สำหรับอาชีพพิเศษ กรุณาติดต่อที่ปรึกษาการขายเพื่อรับการประเมินและข้อเสนอที่ดีที่สุด');
             contactContainer.style.display = 'block';
         } else {
             contactContainer.style.display = 'none';
@@ -536,8 +564,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const downPaymentPresetsContainer = document.getElementById('down-payment-presets');
         downPaymentPresetsContainer.innerHTML = '';
         
-        let currentPromoKey = selectedCar.tags?.find(tag => promoData[tag]);
-        let currentPromo = currentPromoKey ? promoData[currentPromoKey] : null;
+        const currentPromoKey = selectedCar.tags?.find(tag => promoData[tag]);
+        const currentPromo = currentPromoKey ? promoData[currentPromoKey] : null;
 
         if (currentPromo) {
             promoBanner.textContent = currentPromo.name;
@@ -594,7 +622,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 interestRate = currentPromo.tiers[tierKey][term];
             }
         } else {
-            interestRate = 5.5; // Default generic rate for non-promo cars
+            interestRate = 5.5; 
         }
 
         if (interestRate !== null && specialProfessionsForDiscount.includes(profession)) {
@@ -602,11 +630,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         document.getElementById('finance-interest-rate').textContent = interestRate ? `${interestRate.toFixed(2)}%` : '-';
-        document.getElementById('finance-results').style.display = 'none';
     }
 
     function handleFinanceCalculation() {
-        const resultsContainer = document.getElementById('finance-results');
+        const modalOverlay = document.getElementById('finance-result-modal');
         const carId = document.getElementById('finance-car-select').value;
         const car = carData.find(c => c.id === carId);
         if (!car) { alert('กรุณาเลือกรุ่นรถยนต์'); return; }
@@ -629,15 +656,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const monthlyPayment = principal * (monthlyRate * Math.pow(1 + monthlyRate, term)) / (Math.pow(1 + monthlyRate, term) - 1);
         const totalInterest = (monthlyPayment * term) - principal;
 
-        document.getElementById('monthly-payment').textContent = `฿ ${Math.ceil(monthlyPayment).toLocaleString('th-TH')}`;
-        document.getElementById('finance-summary').innerHTML = `
-            ยอดจัดไฟแนนซ์: ${principal.toLocaleString('th-TH')} บาท<br>
-            ดอกเบี้ยทั้งหมด: ${Math.ceil(totalInterest).toLocaleString('th-TH')} บาท (โดยประมาณ)
+        document.getElementById('modal-monthly-payment').textContent = `฿ ${Math.ceil(monthlyPayment).toLocaleString('th-TH')}`;
+        document.getElementById('modal-finance-summary').innerHTML = `
+            ยอดจัดไฟแนนซ์: <b>${principal.toLocaleString('th-TH')}</b> บาท<br>
+            ผ่อนชำระ: <b>${term}</b> เดือน<br>
+            ดอกเบี้ยทั้งหมด: <b>${Math.ceil(totalInterest).toLocaleString('th-TH')}</b> บาท (โดยประมาณ)
         `;
-        resultsContainer.style.display = 'block';
+        
+        modalOverlay.classList.add('active');
     }
 
-    // --- Helper functions (shared across views) ---
     function renderContactCard(title) {
         return `<div class="contact-card">
                     <h3 style="text-align:center;">${title}</h3>
@@ -648,7 +676,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>`;
     }
     
-    // Run the app
     init();
 });
 </script>
