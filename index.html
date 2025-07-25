@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AION Advisor (Final Version)</title>
+    <title>AION Advisor (Final Complete Version)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
@@ -414,8 +414,6 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     const specialProfessionsForDiscount = ['government_officer', 'state_enterprise_employee', 'doctor', 'prosecutor', 'judge', 'teacher'];
     
-    // --- All functions are below ---
-    
     function init() {
         setupTabs();
         setupWizardView();
@@ -439,10 +437,74 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('recommend-btn').addEventListener('click', handleRecommendation);
     }
 
-    function handleRecommendation() { /* Full function code is here */ }
-    function renderWizardResults(cars, inputs) { /* Full function code is here */ }
-    function renderAvailableColors(colors, auspiciousMatches = []) { /* Full function code is here */ }
-    function renderSpecialPrivilege() { /* Full function code is here */ }
+    function handleRecommendation() {
+        const recommendBtn = document.getElementById('recommend-btn');
+        recommendBtn.classList.add('loading');
+        setTimeout(() => {
+            const inputs = {
+                profession: document.getElementById('profession').value,
+                birthDay: document.getElementById('birth-day').value,
+                budget: Number(document.getElementById('budget').value),
+                dailyKm: Number(document.getElementById('daily-km').value),
+                passengers: Number(document.getElementById('passengers').value),
+                longTrip: document.getElementById('long-trip').value,
+                activities: Array.from(document.querySelectorAll('#activities input:checked')).map(el => el.value),
+                priorities: Array.from(document.querySelectorAll('#priorities input:checked')).map(el => el.value)
+            };
+            let recommendations = carData.map(car => {
+                let score = 0;
+                if (car.price > inputs.budget) return { ...car, score: -1 };
+                score += 10 + ((inputs.budget - car.price) / 50000);
+                if (car.space >= inputs.passengers) score += 5; else score -= 5;
+                if ((car.range / inputs.dailyKm) < 4 && inputs.dailyKm > 60) score -= 5;
+                if (inputs.longTrip === 'monthly' && car.range < 500) score -= 5;
+                if (inputs.longTrip === 'weekly' && car.range < 600) score -= 10;
+                if (car.tags) {
+                    inputs.activities.forEach(activity => { if (car.tags.includes(activity)) score += 5; });
+                    inputs.priorities.forEach(priority => { if (car.tags.includes(priority)) score += 5; });
+                }
+                return { ...car, score };
+            });
+            recommendations = recommendations.filter(car => car.score > 0).sort((a, b) => b.score - a.score);
+            renderWizardResults(recommendations.slice(0, 3), inputs);
+            recommendBtn.classList.remove('loading');
+            document.getElementById('results-container').scrollIntoView({ behavior: 'smooth' });
+        }, 500);
+    }
+
+    function renderWizardResults(cars, inputs) {
+        const resultsContainer = document.getElementById('results-container');
+        if (cars.length === 0) {
+            resultsContainer.innerHTML = '<h3>ไม่พบรถที่ตรงกับความต้องการของคุณ</h3><p>ลองปรับเงื่อนไขต่างๆ เช่น เพิ่มงบประมาณ หรือปรับลักษณะการใช้งานดูนะครับ</p>' + renderContactCard('ปรึกษาที่ปรึกษาการขายโดยตรง');
+            return;
+        }
+        const isSpecialProfession = ['government_officer', 'doctor', 'pilot'].includes(inputs.profession);
+        const auspiciousColors = { sunday: { good: ['สีเขียว', 'สีดำ']}, monday: { good: ['สีเขียว', 'สีส้ม']}, tuesday: { good: ['สีส้ม', 'สีดำ']}, wednesday: { good: ['สีเทา', 'สีฟ้า']}, wednesday_night: { good: ['สีขาว', 'สีม่วง']}, thursday: { good: ['สีฟ้า', 'สีแดง']}, friday: { good: ['สีเขียว', 'สีชมพู']}, saturday: { good: ['สีแดง', 'สีฟ้า']} };
+        const colorMap = { 'สีเขียว': ['green'], 'สีดำ': ['black'], 'สีส้ม': ['orange'], 'สีเทา': ['gray', 'grey', 'ash', 'silver'], 'สีฟ้า': ['blue'], 'สีขาว': ['white'], 'สีม่วง': ['purple', 'rose'], 'สีแดง': ['red'], 'สีชมพู': ['pink', 'rose'] };
+        const userAuspiciousThai = auspiciousColors[inputs.birthDay]?.good || [];
+        const userAuspiciousKeywords = userAuspiciousThai.flatMap(thaiColor => colorMap[thaiColor] || []);
+        let html = `<h2>ผลลัพธ์ที่ใช่สำหรับคุณ</h2>`;
+        cars.forEach((car, index) => {
+            const auspiciousMatches = car.colors.filter(c => userAuspiciousKeywords.some(keyword => c.name.toLowerCase().includes(keyword))).map(c => c.name);
+            html += `<div class="result-card"><h3>${index === 0 ? '✨ แนะนำอันดับ 1' : `✔️ ตัวเลือกที่น่าสนใจอันดับ ${index + 1}`}</h3><h2>${car.model} ${car.subModel}</h2><p><strong>ราคา:</strong> ${car.price.toLocaleString('th-TH')} บาท</p><p><strong>วิ่งได้ไกล:</strong> ${car.range} กม.</p><h4>ฟีเจอร์เด่น</h4><ul class="features-list">${car.features.map(f => `<li>${f}</li>`).join('')}</ul>${renderAvailableColors(car.colors, auspiciousMatches)}${ (index === 0 && isSpecialProfession) ? renderSpecialPrivilege() : '' }</div>`;
+        });
+        html += renderContactCard('สนใจสอบถามโปรโมชันและข้อมูลเพิ่มเติม');
+        resultsContainer.innerHTML = html;
+    }
+
+    function renderAvailableColors(colors, auspiciousMatches = []) {
+        const colorHtml = colors.map(c => {
+            const isAuspicious = auspiciousMatches.includes(c.name);
+            const auspiciousTag = isAuspicious ? '⭐ <span style="font-weight:bold;">(สีมงคล)</span>' : '';
+            const swatchClass = isAuspicious ? 'color-swatch auspicious' : 'color-swatch';
+            return `<div class="${swatchClass}"><span class="color-box" style="background-color:${c.hex}; border-color:${c.hex === '#FFFFFF' ? '#ddd' : c.hex};"></span> ${c.name} ${auspiciousTag}</div>`;
+        }).join('');
+        return `<div style="margin-top:15px; padding-top:15px; border-top: 1px solid #eee;"><h4>สีตัวถังที่มีให้เลือก</h4><div class="color-swatch-container">${colorHtml}</div></div>`;
+    }
+
+    function renderSpecialPrivilege() {
+        return `<div class="special-privilege"><strong>✨ สิทธิพิเศษสำหรับอาชีพของคุณ!</strong><p style="margin:5px 0 0 0;">คุณอาจได้รับอัตราดอกเบี้ยพิเศษ กรุณาติดต่อที่ปรึกษาการขายเพื่อสอบถามข้อมูลเพิ่มเติม</p></div>`;
+    }
 
     function setupComparisonView() {
         const compareOptionsContainer = document.getElementById('car-options-compare');
@@ -456,8 +518,32 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('compare-btn').addEventListener('click', handleComparison);
     }
 
-    function handleComparison() { /* Full function code is here */ }
-    function renderComparisonTable(cars, container) { /* Full function code is here */ }
+    function handleComparison() {
+        const resultsContainer = document.getElementById('comparison-results-container');
+        const selectedIds = Array.from(document.querySelectorAll('#car-options-compare input:checked')).map(cb => cb.value);
+        if (selectedIds.length < 2) { alert('กรุณาเลือกรุ่นรถยนต์อย่างน้อย 2 รุ่นเพื่อเปรียบเทียบ'); return; }
+        const selectedCars = carData.filter(car => selectedIds.includes(car.id));
+        renderComparisonTable(selectedCars, resultsContainer);
+        resultsContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function renderComparisonTable(cars, container) {
+        let tableHTML = `<h2>ตารางเปรียบเทียบ</h2><div id="comparison-table-container"><table>
+            <thead><tr><th>คุณสมบัติ</th>${cars.map(car => `<th>${car.model}<br><small>${car.subModel}</small></th>`).join('')}</tr></thead>
+            <tbody>
+                <tr><td>ราคา (บาท)</td>${cars.map(car => `<td>${car.price.toLocaleString('th-TH')}</td>`).join('')}</tr>
+                <tr><td>ระยะทางวิ่ง (กม.)</td>${cars.map(car => `<td>${car.range}</td>`).join('')}</tr>
+                <tr><td>กำลัง (แรงม้า)</td>${cars.map(car => `<td>${car.hp}</td>`).join('')}</tr>
+                <tr><td>อัตราเร่ง 0-100 กม./ชม.</td>${cars.map(car => `<td>${car.acceleration_0_100 ? `${car.acceleration_0_100} วินาที` : 'N/A'}</td>`).join('')}</tr>
+                <tr><td>ความจุแบตเตอรี่ (kWh)</td>${cars.map(car => `<td>${car.battery_kwh}</td>`).join('')}</tr>
+                <tr><td>ชาร์จเร็ว DC (30-80%)</td>${cars.map(car => `<td>${car.dc_charge_speed}</td>`).join('')}</tr>
+                <tr><td>ขนาดล้อ (นิ้ว)</td>${cars.map(car => `<td>${car.wheel_size}</td>`).join('')}</tr>
+                <tr><td>ขนาดตัวถัง (มม.)</td>${cars.map(car => `<td>${car.dimensions}</td>`).join('')}</tr>
+                <tr><td>ฟีเจอร์เด่น</td>${cars.map(car => `<td style="text-align:left;"><ul class="features-list">${car.features.map(f => `<li>${f}</li>`).join('')}</ul></td>`).join('')}</tr>
+            </tbody></table></div>`;
+        tableHTML += renderContactCard('สนใจสอบถามโปรโมชันและข้อมูลเพิ่มเติม');
+        container.innerHTML = tableHTML;
+    }
 
     function setupFinanceView() {
         const financeCarSelect = document.getElementById('finance-car-select');
@@ -646,7 +732,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (interestRate !== null && isSpecialProfession) {
             interestRate -= 0.20;
-            if (interestRate < 0) interestRate = 0; // Prevent negative interest rate
+            if (interestRate < 0) interestRate = 0;
         }
 
         document.getElementById('finance-interest-rate').textContent = interestRate !== null ? `${interestRate.toFixed(2)}%` : '-';
