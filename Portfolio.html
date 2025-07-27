@@ -2,18 +2,160 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portfolio | Tarza</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body { font-family: sans-serif; background: #f4f4f4; margin: 0; padding: 0; line-height: 1.6; }
-    header { background: #222; color: #fff; padding: 30px 20px; text-align: center; }
-    main { padding: 20px; max-width: 800px; margin: auto; background: #fff; }
-    h1, h2 { color: #222; }
-    a { color: #007acc; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .section { margin-bottom: 40px; }
-    .btn { display: inline-block; padding: 10px 15px; background: #007acc; color: white; border-radius: 4px; margin-top: 10px; }
-    .btn:hover { background: #005f99; }
+    :root {
+      --primary-color: #007bff; /* สีหลัก (ฟ้า) */
+      --primary-hover: #0056b3; /* สีหลักเมื่อเมาส์ชี้ */
+      --dark-bg: #121212;      /* พื้นหลังหลัก */
+      --card-bg: #1e1e1e;      /* พื้นหลังการ์ด/ส่วนย่อย */
+      --text-primary: #e0e0e0; /* สีตัวอักษรหลัก */
+      --text-secondary: #b3b3b3;/* สีตัวอักษรรอง */
+      --border-color: #333;   /* สีเส้นขอบ */
+    }
+
+    body {
+      font-family: 'Prompt', sans-serif;
+      background-color: var(--dark-bg);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 0;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    header {
+      background-color: var(--card-bg);
+      padding: 60px 20px;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    header h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin: 0 0 10px 0;
+      color: #ffffff;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    main {
+      padding: 40px 0;
+    }
+
+    .section {
+      background-color: var(--card-bg);
+      margin-bottom: 30px;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-top: 0;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid var(--primary-color);
+      display: inline-block;
+    }
+
+    p {
+      color: var(--text-secondary);
+      margin-bottom: 1em;
+    }
+
+    a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    a:hover {
+      color: var(--primary-hover);
+      text-decoration: underline;
+    }
+
+    /* Portfolio List Style */
+    .portfolio-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .portfolio-list li {
+      background-color: #282828;
+      padding: 20px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      border-left: 4px solid var(--primary-color);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .portfolio-list li:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+
+    .portfolio-list strong {
+      display: block;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    /* Contact Info Style */
+    .contact-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .contact-list li {
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+    }
+
+    /* Button Style */
+    .btn {
+      display: inline-block;
+      padding: 12px 25px;
+      background-color: var(--primary-color);
+      color: #ffffff;
+      border-radius: 5px;
+      text-transform: uppercase;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn:hover {
+      background-color: var(--primary-hover);
+      color: #ffffff;
+      text-decoration: none;
+      transform: translateY(-2px);
+    }
+    
+    .text-center {
+        text-align: center;
+    }
+
   </style>
 </head>
 <body>
@@ -22,56 +164,62 @@
     <p>Content Creator อิสระ | Creative & Digital Skills</p>
   </header>
 
-  <main>
-    <div class="section">
-      <h2>เกี่ยวกับฉัน</h2>
-<p>ฉันเป็น Content Creator อิสระมากกว่า 3 ปี มีประสบการณ์ทำคลิปในหลากหลายสาย เช่น อาหาร รถยนต์ และไลฟ์สไตล์  
-สามารถเขียนสคริปต์ วางโครงสร้างคอนเทนต์ ถ่ายทำ ตัดต่อเบื้องต้น และสร้างเอกลักษณ์ให้กับแบรนด์ตามโจทย์ที่ได้รับ</p>
+  <div class="container">
+    <main>
+      <div id="about" class="section">
+        <h2>เกี่ยวกับฉัน</h2>
+        <p>
+          ฉันเป็น Content Creator อิสระมากกว่า 3 ปี มีประสบการณ์ทำคลิปในหลากหลายสาย เช่น อาหาร รถยนต์ และไลฟ์สไตล์ 
+          สามารถเขียนสคริปต์ วางโครงสร้างคอนเทนต์ ถ่ายทำ ตัดต่อเบื้องต้น และสร้างเอกลักษณ์ให้กับแบรนด์ตามโจทย์ที่ได้รับ
+        </p>
+        <p>
+          มีความคุ้นเคยกับการใช้ AI มาช่วยสร้างคอนเทนต์วิดีโอ ทั้งในการเร่งกระบวนการผลิตและทดลองแนวทางใหม่ ๆ 
+          เข้าใจธรรมชาติของผู้ชมในแต่ละแพลตฟอร์ม ทั้ง YouTube, TikTok และเว็บไซต์ 
+          เป้าหมายของฉันคือต่อยอดประสบการณ์สู่การร่วมงานกับทีมที่ต้องการไอเดียสร้างสรรค์และพลังการเล่าเรื่อง
+        </p>
+      </div>
 
-<p>มีความคุ้นเคยกับการใช้ AI มาช่วยสร้างคอนเทนต์วิดีโอ ทั้งในการเร่งกระบวนการผลิตและทดลองแนวทางใหม่ ๆ  
-เข้าใจธรรมชาติของผู้ชมในแต่ละแพลตฟอร์ม ทั้ง YouTube, TikTok และเว็บไซต์  
-เป้าหมายของฉันคือต่อยอดประสบการณ์สู่การร่วมงานกับทีมที่ต้องการไอเดียสร้างสรรค์และพลังการเล่าเรื่อง</p>
-    </div>
+      <div id="portfolio" class="section">
+        <h2>ผลงาน</h2>
+        <ul class="portfolio-list">
+          <li>
+            <strong>🔧 เว็บคำนวณเลือกรถ AION (HTML/JS)</strong>
+            <a href="index.html" target="_blank">👉 เปิดหน้าเว็บ</a>
+          </li>
+          <li>
+            <strong>🎬 ช่อง YouTube: รีวิว & คอนเทนต์สร้างสรรค์</strong>
+            <a href="https://www.youtube.com/@Chim_Zap" target="_blank">👉 ชมผลงานบน YouTube</a>
+          </li>
+          <li>
+            <strong>📱 ช่อง TikTok (แนวอาหาร / ชีวิตประจำวัน)</strong>
+            <a href="tiktok.com/@chimzap" target="_blank">👉 ชมผลงาน @chimzap</a>
+          </li>
+          <li>
+            <strong>🚗 ช่อง TikTok โปรโมทรถยนต์</strong>
+            <a href="tiktok.com/@cbtales" target="_blank">👉 ชมผลงาน @cbtales</a>
+          </li>
+        </ul>
+      </div>
 
-    <div class="section">
-      <h2>ผลงาน</h2>
-      <ul>
-        <li>🔧 <strong>เว็บคำนวณเลือกรถ AION (HTML/JS)</strong><br>
-          👉 <a href="index.html" target="_blank">เปิดหน้าเว็บ</a>
-        </li><br>
+      <div id="resume" class="section">
+        <h2>เรซูเม่</h2>
+        <p>สามารถดูรายละเอียดประสบการณ์และทักษะทั้งหมดของฉันได้ในเรซูเม่ฉบับเต็ม</p>
+        <a href="resume.pdf" target="_blank" class="btn">ดาวน์โหลด Resume (PDF)</a>
+      </div>
 
-        <li>🎬 <strong>ช่อง YouTube: รีวิว & คอนเทนต์สร้างสรรค์</strong><br>
-          👉 <a href="https://www.youtube.com/@Chim_Zap" target="_blank">youtube.com/ตะลุยชิมแซ่บ</a>
-        </li><br>
+      <div id="contact" class="section">
+        <h2>ติดต่อ</h2>
+        <ul class="contact-list">
+          <li>📞 โทร: <a href="tel:08xxxxxxxx">08x-xxx-xxxx</a></li>
+          <li>📧 อีเมล: <a href="mailto:yourname@email.com">yourname@email.com</a></li>
+          <li>💼 LinkedIn: <a href="[ใส่ลิงก์ LINKEDIN ของคุณที่นี่]" target="_blank">ดูโปรไฟล์ LinkedIn</a></li>
+        </ul>
+      </div>
 
-        <li>📱 <strong>ช่อง TikTok (แนวอาหาร / ชีวิตประจำวัน)</strong><br>
-          👉 <a href="https://www.tiktok.com/@ชื่อช่อง_อาหาร" target="_blank">tiktok.com/@chimzap</a>
-        </li><br>
-
-        <li>🚗 <strong>ช่อง TikTok โปรโมทรถยนต์</strong><br>
-          👉 <a href="https://www.tiktok.com/@ชื่อช่อง_รถยนต์" target="_blank">tiktok.com/@cbtales</a>
-        </li>
-      </ul>
-    </div>
-
-    <div class="section">
-      <h2>เรซูเม่</h2>
-      <p>สามารถดาวน์โหลด Resume ได้ที่นี่:<br>
-        📄 <a href="resume.pdf" target="_blank">ดาวน์โหลด Resume (PDF)</a>
-      </p>
-    </div>
-
-    <div class="section">
-      <h2>ติดต่อ</h2>
-      <p>📞 โทร: 08x-xxx-xxxx<br>
-         📧 อีเมล: yourname@email.com<br>
-         💼 LinkedIn (ถ้ามี): <a href="#">คลิกดูโปรไฟล์</a>
-      </p>
-    </div>
-
-    <div class="section">
-      <a href="index.html" class="btn">← กลับไปหน้าเว็บคำนวณรถ</a>
-    </div>
-  </main>
+      <div class="section text-center">
+        <a href="index.html" class="btn">← กลับไปหน้าเว็บคำนวณรถ</a>
+      </div>
+    </main>
+  </div>
 </body>
 </html>
