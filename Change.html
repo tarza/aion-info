@@ -78,12 +78,11 @@
         
         <button onclick="searchStations()">ค้นหา</button>
         
-        <div id="results-container">
-             </div>
+        <div id="results-container"></div>
     </div>
 
     <script>
-        // ฐานข้อมูลสถานีชาร์จ (อัปเดตข้อมูลล่าสุด)
+        // ฐานข้อมูลสถานีชาร์จ (เวอร์ชันสมบูรณ์ที่สุดเท่าที่ทำได้ด้วยวิธี Manual)
         const stations = [
             // กรุงเทพมหานคร
             { name: "EV Station PluZ - PTT Station วิภาวดีรังสิต", province: "กรุงเทพมหานคร", address: "ริมถนนวิภาวดีรังสิต แขวงจตุจักร" },
@@ -96,48 +95,43 @@
             { name: "ReverSharger - พาราไดซ์ พาร์ค", province: "กรุงเทพมหานคร", address: "อาคารจอดรถ ชั้น 2" },
             { name: "Altervim - โรงพยาบาลวิมุต", province: "กรุงเทพมหานคร", address: "อาคารจอดรถ รพ.วิมุต พหลโยธิน" },
 
-            // นนทบุรี
+            // ปริมณฑล
             { name: "Evolt - เดอะมอลล์ไลฟ์สโตร์ งามวงศ์วาน", province: "นนทบุรี", address: "อาคารจอดรถชั้น B" },
-            { name: "PEA VOLTA - การไฟฟ้าบางใหญ่", province: "นนทบุรี", address: "อ.บางใหญ่" },
-            
-            // สมุทรปราการ
-            { name: "Evolt - บิ๊กซี สำโรง 2", province: "สมุทรปราการ", address: "ลานจอดรถด้านหน้า" },
             { name: "Tesla Supercharger - เมกาบางนา", province: "สมุทรปราการ", address: "ลานจอดรถโซน Mega Foodwalk" },
+            { name: "PEA VOLTA - รังสิต", province: "ปทุมธานี", address: "กฟภ. รังสิต" },
 
-            // เชียงใหม่
+            // ภาคเหนือ
             { name: "EV Station PluZ - PTT Station สารภี", province: "เชียงใหม่", address: "อ.สารภี จ.เชียงใหม่" },
             { name: "PEA VOLTA - เซ็นทรัล เชียงใหม่ แอร์พอร์ต", province: "เชียงใหม่", address: "ลานจอดรถชั้น G" },
-            { name: "Evolt - มหาวิทยาลัยเชียงใหม่", province: "เชียงใหม่", address: "อาคารจอดรถ S1" },
-            
-            // ขอนแก่น (จังหวัดใหม่)
-            { name: "EV Station PluZ - PTT Station เมืองพล", province: "ขอนแก่น", address: "อ.พล จ.ขอนแก่น" },
-            { name: "PEA VOLTA - เซ็นทรัล ขอนแก่น", province: "ขอนแก่น", address: "ลานจอดรถ ห้างเซ็นทรัล" },
+            { name: "PEA VOLTA - Lampang", province: "ลำปาง", address: "สำนักงาน กฟภ.จ.ลำปาง" },
+            { name: "Tesla Supercharger - Central Phitsanulok", province: "พิษณุโลก", address: "ลานจอดรถ ห้างเซ็นทรัล" },
+            { name: "EV Station PluZ - PTT Station ท่ารถใหม่", province: "นครสวรรค์", address: "อ.เมือง จ.นครสวรรค์" },
 
-            // ภูเก็ต
-            { name: "EV Station PluZ - PTT Station ท่าเรือ", province: "ภูเก็ต", address: "ถ.เทพกระษัตรี อ.ถลาง" },
-            { name: "PEA VOLTA - เซ็นทรัล ภูเก็ต ฟลอเรสต้า", province: "ภูเก็ต", address: "ชั้น G, โซนจอดรถ" },
 
-            // ชลบุรี
-            { name: "PEA VOLTA - พัทยาใต้", province: "ชลบุรี", address: "สถานีไฟฟ้าพัทยาใต้ 2 อ.บางละมุง" },
-            { name: "EV Station PluZ - PTT Station แหลมฉบัง", province: "ชลบุรี", address: "อ.ศรีราชา จ.ชลบุรี" },
-            { name: "Evolt - ฮอลิเดย์ อินน์ พัทยา", province: "ชลบุรี", address: "โรงแรมฮอลิเดย์ อินน์" },
-            { name: "Tesla Supercharger - เซ็นทรัล พัทยา", province: "ชลบุรี", address: "ลานจอดรถของห้างสรรพสินค้า" },
-
-            // สุราษฎร์ธานี (จังหวัดใหม่)
-            { name: "EV Station PluZ - PTT Station ท่าฉาง", province: "สุราษฎร์ธานี", address: "อ.ท่าฉาง จ.สุราษฎร์ธานี" },
-            { name: "PEA VOLTA - เซ็นทรัล สุราษฎร์ธานี", province: "สุราษฎร์ธานี", address: "ลานจอดรถของห้าง" },
-
-            // พระนครศรีอยุธยา
-            { name: "PEA VOLTA - พระนครศรีอยุธยา", province: "พระนครศรีอยุธยา", address: "สำนักงาน กฟภ.จ.พระนครศรีอยุธยา" },
-            { name: "EV Station PluZ - PTT Station ประตูชัย", province: "พระนครศรีอยุธยา", address: "อ.พระนครศรีอยุธยา" },
-
-            // นครราชสีมา
+            // ภาคตะวันออกเฉียงเหนือ
             { name: "EV Station PluZ - PTT Station ปากช่อง", province: "นครราชสีมา", address: "อ.ปากช่อง จ.นครราชสีมา" },
             { name: "PEA VOLTA - เดอะมอลล์ โคราช", province: "นครราชสีมา", address: "ลานจอดรถชั้น 1" },
-            
-            // สงขลา
-            { name: "EV Station PluZ - PTT Station หาดใหญ่ใน", province: "สงขลา", address: "อ.หาดใหญ่ จ.สงขลา" },
-            { name: "PEA VOLTA - หาดใหญ่", province: "สงขลา", address: "สถานีไฟฟ้าหาดใหญ่ 2" }
+            { name: "PEA VOLTA - เซ็นทรัล ขอนแก่น", province: "ขอนแก่น", address: "ลานจอดรถ ห้างเซ็นทรัล" },
+            { name: "EV Station PluZ - PTT Station เลี่ยงเมือง", province: "อุดรธานี", address: "ถนนเลี่ยงเมืองอุดรธานี" },
+            { name: "EV Station PluZ - PTT Station วารินชำราบ", province: "อุบลราชธานี", address: "อ.วารินชำราบ จ.อุบลราชธานี" },
+
+            // ภาคตะวันออก
+            { name: "PEA VOLTA - พัทยาใต้", province: "ชลบุรี", address: "สถานีไฟฟ้าพัทยาใต้ 2 อ.บางละมุง" },
+            { name: "Tesla Supercharger - เซ็นทรัล พัทยา", province: "ชลบุรี", address: "ลานจอดรถของห้างสรรพสินค้า" },
+            { name: "EV Station PluZ - PTT Station แหลมฉบัง", province: "ชลบุรี", address: "อ.ศรีราชา จ.ชลบุรี" },
+            { name: "EV Station PluZ - PTT Station เมืองระยอง", province: "ระยอง", address: "อ.เมือง จ.ระยอง" },
+
+            // ภาคใต้
+            { name: "EV Station PluZ - PTT Station ท่าเรือ", province: "ภูเก็ต", address: "ถ.เทพกระษัตรี อ.ถลาง" },
+            { name: "PEA VOLTA - เซ็นทรัล ภูเก็ต ฟลอเรสต้า", province: "ภูเก็ต", address: "ชั้น G, โซนจอดรถ" },
+            { name: "PEA VOLTA - เซ็นทรัล สุราษฎร์ธานี", province: "สุราษฎร์ธานี", address: "ลานจอดรถของห้าง" },
+            { name: "EV Station PluZ - PTT Station Sichon", province: "นครศรีธรรมราช", address: "อ.สิชล จ.นครศรีธรรมราช" },
+            { name: "PEA VOLTA - หาดใหญ่", province: "สงขลา", address: "สถานีไฟฟ้าหาดใหญ่ 2" },
+            { name: "EleX by EGAT - เขื่อนรัชชประภา", province: "สุราษฎร์ธานี", address: "อ.บ้านตาขุน จ.สุราษฎร์ธานี" },
+
+            // ภาคกลาง
+            { name: "PEA VOLTA - พระนครศรีอยุธยา", province: "พระนครศรีอยุธยา", address: "สำนักงาน กฟภ.จ.พระนครศรีอยุธยา" },
+            { name: "EV Station PluZ - PTT Station หัวหิน", province: "ประจวบคีรีขันธ์", address: "อ.หัวหิน (ขาเข้ากรุงเทพฯ)" }
         ];
 
         function populateProvinces() {
@@ -157,7 +151,6 @@
         function searchStations() {
             const selectedProvince = document.getElementById('province-select').value;
             const resultsContainer = document.getElementById('results-container');
-            
             resultsContainer.innerHTML = '';
 
             if (!selectedProvince) {
@@ -170,12 +163,7 @@
             if (foundStations.length > 0) {
                 let html = `<h3>ผลการค้นหาใน ${selectedProvince}: พบ ${foundStations.length} แห่ง</h3>`;
                 foundStations.forEach(station => {
-                    html += `
-                        <div class="station-item">
-                            <strong>${station.name}</strong><br>
-                            <span>${station.address}</span>
-                        </div>
-                    `;
+                    html += `<div class="station-item"><strong>${station.name}</strong><br><span>${station.address}</span></div>`;
                 });
                 resultsContainer.innerHTML = html;
             } else {
