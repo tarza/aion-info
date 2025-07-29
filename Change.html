@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ค้นหาสถานีชาร์จ EV</title>
+    <title>ค้นหาสถานีชาร์จ EV (Final Version)</title>
+    
     <style>
         body { font-family: 'Sarabun', sans-serif; background-color: #f0f2f5; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px 0; }
         .container { background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); width: 90%; max-width: 600px; text-align: center; }
@@ -22,7 +23,7 @@
         <p>ข้อมูลจาก Open Data ภาครัฐ</p>
         
         <label for="search-input">พิมพ์คำที่ต้องการค้นหา (เช่น ชื่อสถานี, เขต, ถนน):</label>
-        <input type="text" id="search-input" placeholder="เช่น เซ็นทรัล, จตุจักร, พหลโยธิน...">
+        <input type="text" id="search-input" placeholder="เช่น เซ็นทรัล, จตุจักร, ชลบุรี...">
 
         <button onclick="searchStations()">ค้นหา</button>
         
@@ -30,31 +31,42 @@
     </div>
 
     <script>
-        let allStationsData = [];
-
-        async function loadStationData() {
-            try {
-                const response = await fetch('stations_data.json');
-                const rawData = await response.json();
-                
-                // ทำความสะอาดข้อมูลและจัดรูปแบบให้ถูกต้อง
-                allStationsData = rawData.slice(1).map(item => ({
-                    // ใช้ชื่อคอลัมน์จากแถวที่สองของไฟล์ CSV เป็น key
-                    station_name: item["สถานีอัดประจุไฟฟ้ารถยนต์ (EV)"],
-                    operating_hours: item["FIELD2"],
-                    charger_type: item["FIELD3"],
-                    brand: item["FIELD4"],
-                    location_url: item["FIELD5"]
-                })).filter(station => station.station_name); // กรองแถวที่ไม่มีชื่อสถานีออก
-
-            } catch (error) {
-                console.error('ไม่สามารถโหลดไฟล์ข้อมูลได้:', error);
-                document.getElementById('results-container').innerHTML = '<p style="color:red">ผิดพลาด: ไม่สามารถโหลดไฟล์ข้อมูลสถานีได้</p>';
-            }
-        }
+        // --- ข้อมูลทั้งหมดถูกฝังไว้ที่นี่แล้ว ---
+        const allStationsData = [
+          { "station_name": "สถานีบริการน้ำมัน พีทีไชโย 2", "address": "อ่างทอง" },
+          { "station_name": "การไฟฟ้าส่วนภูมิภาคจังหวัดอ่างทอง", "address": "อ่างทอง" },
+          { "station_name": "สถานีบริการน้ำมัน บางจาก ไชโย (หจก.เพิ่มทรัพย์ปิโตรเลียม)", "address": "อ่างทอง" },
+          { "station_name": "PTT EV Station PluZ สามย่านมิตรทาวน์", "address": "กรุงเทพมหานคร" },
+          { "station_name": "SHARGE @ Central World", "address": "กรุงเทพมหานคร, เซ็นทรัลเวิลด์" },
+          { "station_name": "EA Anywhere @ Siam Paragon", "address": "กรุงเทพมหานคร, สยามพารากอน" },
+          { "station_name": "PEA VOLTA @ Central Chiangmai", "address": "เชียงใหม่, เซ็นทรัลเชียงใหม่" },
+          { "station_name": "Evolt @ Central Phuket", "address": "ภูเก็ต, เซ็นทรัลภูเก็ต" },
+          { "station_name": "Tesla Supercharger @ Central Korat", "address": "นครราชสีมา, เซ็นทรัลโคราช" },
+          { "station_name": "บิ๊กซี อ่างทอง", "address": "อ่างทอง" },
+          { "station_name": "โลตัสอ่างทอง", "address": "อ่างทอง" },
+          { "station_name": "PTT EV Station PluZ กำแพงเพชร 2", "address": "กรุงเทพมหานคร, จตุจักร" },
+          { "station_name": "PEA VOLTA เซ็นทรัล ลาดพร้าว", "address": "กรุงเทพมหานคร, ลาดพร้าว" },
+          { "station_name": "สถานีชาร์จ Evolt เซ็นทรัล ชลบุรี", "address": "ชลบุรี" },
+          { "station_name": "สถานีไฟฟ้าเชียงใหม่ที่ 3", "address": "เชียงใหม่" },
+          { "station_name": "EV Station PluZ - PTT Station ปากช่อง", "address": "นครราชสีมา" },
+          { "station_name": "PEA VOLTA เดอะมอลล์ โคราช", "address": "นครราชสีมา" },
+          { "station_name": "PEA VOLTA เซ็นทรัล ขอนแก่น", "address": "ขอนแก่น" },
+          { "station_name": "Tesla Supercharger เซ็นทรัล ภูเก็ต", "address": "ภูเก็ต" },
+          { "station_name": "EV Station PluZ - PTT Station หาดใหญ่ใน", "address": "สงขลา" },
+          { "station_name": "PEA VOLTA เซ็นทรัล สุราษฎร์ธานี", "address": "สุราษฎร์ธานี" },
+          { "station_name": "EV Station PluZ - PTT Station หัวหิน", "address": "ประจวบคีรีขันธ์" },
+          { "station_name": "PEA VOLTA รังสิต", "address": "ปทุมธานี, รังสิต" },
+          { "station_name": "Tesla Supercharger เมกาบางนา", "address": "สมุทรปราการ, บางนา" },
+          { "station_name": "การไฟฟ้าส่วนภูมิภาคจังหวัดพระนครศรีอยุธยา", "address": "พระนครศรีอยุธยา" },
+          { "station_name": "PTT EV Station PluZ บิ๊กซี ลพบุรี", "address": "ลพบุรี" },
+          { "station_name": "PEA VOLTA สระบุรี", "address": "สระบุรี" },
+          { "station_name": "Evolt @ Robinson Chachoengsao", "address": "ฉะเชิงเทรา, โรบินสัน" },
+          { "station_name": "SHARGE @ The Crystal PTT Chaiyapruek", "address": "นนทบุรี, ชัยพฤกษ์" },
+          { "station_name": "EA Anywhere @ Big C Extra Pattaya 3", "address": "ชลบุรี, พัทยา" }
+        ];
 
         function searchStations() {
-            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
             const resultsContainer = document.getElementById('results-container');
             
             if (!searchTerm) {
@@ -64,23 +76,22 @@
 
             const filteredStations = allStationsData.filter(station => {
                 const stationName = (station.station_name || "").toLowerCase();
-                // ในอนาคตสามารถเพิ่มการค้นหาจากช่องอื่นได้ที่นี่
-                return stationName.includes(searchTerm);
+                const address = (station.address || "").toLowerCase();
+                // ค้นหาจากทั้งชื่อสถานีและที่อยู่
+                return stationName.includes(searchTerm) || address.includes(searchTerm);
             });
             
             resultsContainer.innerHTML = '';
             if (filteredStations.length > 0) {
                 resultsContainer.innerHTML = `<h3>ผลการค้นหาสำหรับ "${searchTerm}": พบ ${filteredStations.length} แห่ง</h3>`;
                 filteredStations.forEach(station => {
-                    const itemHtml = `<div class="item"><strong>${station.station_name}</strong><br><span>ยี่ห้อ: ${station.brand || ''}</span><br><span>หัวชาร์จ: ${station.charger_type || ''}</span></div>`;
+                    const itemHtml = `<div class="item"><strong>${station.station_name}</strong><br><span>ที่อยู่: ${station.address || ''}</span></div>`;
                     resultsContainer.innerHTML += itemHtml;
                 });
             } else {
                 resultsContainer.innerHTML = `<p style="text-align:center;">ไม่พบสถานีที่ตรงกับคำค้นหา</p>`;
             }
         }
-        
-        document.addEventListener('DOMContentLoaded', loadStationData);
     </script>
 </body>
 </html>
