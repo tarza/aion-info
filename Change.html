@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ค้นหาสถานีชาร์จ EV</title>
+    <title>ค้นหาสถานีชาร์จ EV (Final Version)</title>
     
     <style>
         body {
@@ -83,15 +83,28 @@
 
         <button onclick="fetchData()">ค้นหา</button>
         
-        <div id="results-container">
-            </div>
+        <div id="results-container"></div>
     </div>
 
     <script>
-        const provinces = [
-            "กรุงเทพมหานคร", "นนทบุรี", "ปทุมธานี", "สมุทรปราการ",
-            "ชลบุรี", "ระยอง", "เชียงใหม่", "นครราชสีมา", "ขอนแก่น", "ภูเก็ต", "สงขลา", "สุราษฎร์ธานี", "ประจวบคีรีขันธ์"
-        ];
+        const provinces = ["กรุงเทพมหานคร", "นนทบุรี", "ปทุมธานี", "สมุทรปราการ", "ชลบุรี", "ระยอง", "เชียงใหม่", "นครราชสีมา", "ขอนแก่น", "ภูเก็ต", "สงขลา", "สุราษฎร์ธานี", "ประจวบคีรีขันธ์"];
+
+        // --- สร้าง 'พจนานุกรม' แปลงชื่อจังหวัด ---
+        const provinceMap = {
+            "กรุงเทพมหานคร": ["bangkok", "krung thep maha nakhon"],
+            "นนทบุรี": ["nonthaburi"],
+            "ปทุมธานี": ["pathum thani"],
+            "สมุทรปราการ": ["samut prakan"],
+            "ชลบุรี": ["chon buri", "chonburi"],
+            "ระยอง": ["rayong"],
+            "เชียงใหม่": ["chiang mai"],
+            "นครราชสีมา": ["nakhon ratchasima"],
+            "ขอนแก่น": ["khon kaen"],
+            "ภูเก็ต": ["phuket"],
+            "สงขลา": ["songkhla"],
+            "สุราษฎร์ธานี": ["surat thani"],
+            "ประจวบคีรีขันธ์": ["prachuap khiri khan"]
+        };
 
         function populateProvinces() {
             const provinceSelect = document.getElementById('province-select');
@@ -103,7 +116,6 @@
                 provinceSelect.appendChild(option);
             });
         }
-
         document.addEventListener('DOMContentLoaded', populateProvinces);
 
         function fetchData() {
@@ -116,34 +128,31 @@
             }
 
             resultsContainer.innerHTML = '<p style="text-align:center;">กำลังดึงข้อมูลสถานีทั้งหมด...</p>';
-
             const apiKey = '4123ae7f-6140-49e3-b00e-e242805f6e46'; 
-            const apiUrl = `https://api.openchargemap.io/v3/poi/?output=json&countrycode=TH&maxresults=500&key=${apiKey}`;
+            const apiUrl = `https://api.openchargemap.io/v3/poi/?output=json&countrycode=TH&maxresults=1000&key=${apiKey}`;
 
             fetch(apiUrl)
-                .then(response => {
-                    if (!response.ok) { throw new Error('เกิดข้อผิดพลาด: ' + response.status); }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(allStations => {
                     resultsContainer.innerHTML = '<p style="text-align:center;">กำลังกรองข้อมูลสำหรับจังหวัด ' + selectedProvince + '...</p>';
                     
+                    // --- ตรรกะการกรองที่แก้ไขใหม่ทั้งหมด ---
+                    const searchTerms = provinceMap[selectedProvince];
+                    if (!searchTerms) {
+                        resultsContainer.innerHTML = `<p style="text-align:center;">ไม่พบการตั้งค่าสำหรับจังหวัด ${selectedProvince}</p>`;
+                        return;
+                    }
+
                     const filteredStations = allStations.filter(station => {
-                        const stationProvince = station.AddressInfo.StateOrProvince; // แก้ไขเป็น StateOrProvince
-                        if (!stationProvince) {
-                            return false; 
-                        }
-
-                        // ถ้าเลือก "กรุงเทพมหานคร" ให้มองหาคำว่า "Bangkok"
-                        if (selectedProvince === "กรุงเทพมหานคร") {
-                            return stationProvince.toLowerCase() === "bangkok";
-                        } 
-                        // สำหรับจังหวัดอื่นๆ ให้เช็คแบบปกติ
-                        else {
-                            return stationProvince.includes(selectedProvince);
-                        }
+                        const stationProvince = station.AddressInfo.StateOrProvince;
+                        if (!stationProvince) return false; 
+                        
+                        const lowerCaseStationProvince = stationProvince.toLowerCase();
+                        
+                        // เช็คว่าชื่อจังหวัดใน API ตรงกับคำค้นหาใน 'พจนานุกรม' ของเราหรือไม่
+                        return searchTerms.some(term => lowerCaseStationProvince.includes(term));
                     });
-
+                    
                     resultsContainer.innerHTML = ''; 
                     
                     if (filteredStations.length > 0) {
@@ -152,22 +161,13 @@
                             const title = station.AddressInfo.Title || 'ไม่มีชื่อ';
                             const address = `${station.AddressInfo.AddressLine1 || ''}, ${station.AddressInfo.Town || ''}`;
                             const status = station.StatusType ? station.StatusType.Title : 'ไม่ระบุ';
-
-                            const itemHtml = `
-                                <div class="item">
-                                    <strong>${title}</strong><br>
-                                    <span>ที่อยู่: ${address}</span><br>
-                                    <span>สถานะ: ${status}</span>
-                                </div>
-                            `;
-                            resultsContainer.innerHTML += itemHtml;
+                            resultsContainer.innerHTML += `<div class="item"><strong>${title}</strong><br><span>ที่อยู่: ${address}</span><br><span>สถานะ: ${status}</span></div>`;
                         });
                     } else {
-                        resultsContainer.innerHTML = `<p style="text-align:center;">ไม่พบข้อมูลสถานีในจังหวัด ${selectedProvince} (ลองจังหวัดอื่น หรือข้อมูลอาจยังไม่มีในระบบ)</p>`;
+                        resultsContainer.innerHTML = `<p style="text-align:center;">ไม่พบข้อมูลสถานีในจังหวัด ${selectedProvince} (ข้อมูลอาจยังไม่มีในระบบ)</p>`;
                     }
                 })
                 .catch(error => {
-                    console.error('API Error:', error);
                     resultsContainer.innerHTML = `<p style="text-align:center; color: red;">เกิดข้อผิดพลาดในการดึงข้อมูล: ${error.message}</p>`;
                 });
         }
