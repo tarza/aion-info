@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ค้นหาสถานีชาร์จ EV (API Version)</title>
+    <title>ค้นหาสถานีชาร์จ EV (API + Filter)</title>
     
     <style>
         body {
@@ -30,16 +30,19 @@
             color: #0056b3;
             margin-bottom: 20px;
         }
-        button {
+        select, button {
             width: 100%;
             padding: 12px;
             margin-top: 10px;
             border-radius: 5px;
-            border: none;
-            font-size: 18px;
+            border: 1px solid #ccc;
+            font-size: 16px;
             font-family: 'Sarabun', sans-serif;
+        }
+        button {
             background-color: #1a73e8;
             color: white;
+            border: none;
             cursor: pointer;
             transition: background-color 0.3s;
         }
@@ -73,34 +76,72 @@
         <h1>⚡ ค้นหาสถานีชาร์จรถไฟฟ้าในไทย</h1>
         <p>ข้อมูลล่าสุดจาก OpenChargeMap</p>
         
-        <button onclick="fetchData()">กดเพื่อค้นหา 100 สถานีล่าสุด</button>
+        <label for="province-select">เลือกจังหวัด:</label>
+        <select id="province-select">
+            <option value="">-- กรุณาเลือกจังหวัด --</option>
+            </select>
+
+        <button onclick="fetchData()">ค้นหา</button>
         
         <div id="results-container">
             </div>
     </div>
 
     <script>
+        // รายชื่อจังหวัดหลักๆ สำหรับให้ผู้ใช้เลือก
+        const provinces = [
+            "กรุงเทพมหานคร", "นนทบุรี", "ปทุมธานี", "สมุทรปราการ",
+            "ชลบุรี", "ระยอง", "เชียงใหม่", "นครราชสีมา", "ขอนแก่น", "ภูเก็ต", "สงขลา", "สุราษฎร์ธานี", "ประจวบคีรีขันธ์"
+        ];
+
+        // ฟังก์ชันสำหรับสร้าง Dropdown จังหวัดเมื่อหน้าเว็บโหลด
+        function populateProvinces() {
+            const provinceSelect = document.getElementById('province-select');
+            provinces.sort((a, b) => a.localeCompare(b, 'th'));
+            provinces.forEach(province => {
+                const option = document.createElement('option');
+                option.value = province;
+                option.textContent = province;
+                provinceSelect.appendChild(option);
+            });
+        }
+
+        // เรียกใช้ฟังก์ชันนี้ทันทีที่หน้าเว็บพร้อมใช้งาน
+        document.addEventListener('DOMContentLoaded', populateProvinces);
+
+        // ฟังก์ชันหลักสำหรับดึงและกรองข้อมูล
         function fetchData() {
+            const selectedProvince = document.getElementById('province-select').value;
             const resultsContainer = document.getElementById('results-container');
-            resultsContainer.innerHTML = '<p style="text-align:center;">กำลังดึงข้อมูลจาก OpenChargeMap...</p>';
+            
+            if (!selectedProvince) {
+                resultsContainer.innerHTML = '<p style="text-align:center; color: red;">กรุณาเลือกจังหวัดก่อนค้นหา</p>';
+                return;
+            }
 
-            // API Key ของคุณจาก OpenChargeMap
+            resultsContainer.innerHTML = '<p style="text-align:center;">กำลังดึงข้อมูลสถานีทั้งหมด...</p>';
+
             const apiKey = '4123ae7f-6140-49e3-b00e-e242805f6e46'; 
-
-            // URL สำหรับดึงข้อมูล 100 สถานีแรกในประเทศไทย
-            const apiUrl = `https://api.openchargemap.io/v3/poi/?output=json&countrycode=TH&maxresults=100&key=${apiKey}`;
+            const apiUrl = `https://api.openchargemap.io/v3/poi/?output=json&countrycode=TH&maxresults=500&key=${apiKey}`;
 
             fetch(apiUrl)
                 .then(response => {
                     if (!response.ok) { throw new Error('เกิดข้อผิดพลาด: ' + response.status); }
                     return response.json();
                 })
-                .then(data => {
+                .then(allStations => {
+                    resultsContainer.innerHTML = '<p style="text-align:center;">กำลังกรองข้อมูลสำหรับจังหวัด ' + selectedProvince + '...</p>';
+                    
+                    // กรองข้อมูลให้เหลือเฉพาะจังหวัดที่เลือก
+                    const filteredStations = allStations.filter(station => 
+                        station.AddressInfo.StateProvince && station.AddressInfo.StateProvince.includes(selectedProvince)
+                    );
+
                     resultsContainer.innerHTML = ''; 
                     
-                    if (data && data.length > 0) {
-                        resultsContainer.innerHTML = `<h3>พบข้อมูล ${data.length} แห่ง (ล่าสุด)</h3>`;
-                        data.forEach(station => {
+                    if (filteredStations.length > 0) {
+                        resultsContainer.innerHTML = `<h3>ผลการค้นหาใน ${selectedProvince}: พบ ${filteredStations.length} แห่ง</h3>`;
+                        filteredStations.forEach(station => {
                             const title = station.AddressInfo.Title || 'ไม่มีชื่อ';
                             const address = `${station.AddressInfo.AddressLine1 || ''}, ${station.AddressInfo.Town || ''}`;
                             const status = station.StatusType ? station.StatusType.Title : 'ไม่ระบุ';
@@ -115,7 +156,7 @@
                             resultsContainer.innerHTML += itemHtml;
                         });
                     } else {
-                        resultsContainer.innerHTML = '<p style="text-align:center;">ไม่พบข้อมูลสถานี</p>';
+                        resultsContainer.innerHTML = `<p style="text-align:center;">ไม่พบข้อมูลสถานีในจังหวัด ${selectedProvince}</p>`;
                     }
                 })
                 .catch(error => {
