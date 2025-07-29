@@ -83,7 +83,7 @@
     </div>
 
     <script>
-        // ฐานข้อมูลสถานีชาร์จ (รวมข้อมูลตัวอย่างจากหลายค่าย)
+        // ฐานข้อมูลสถานีชาร์จ (อัปเดตข้อมูลล่าสุด)
         const stations = [
             // กรุงเทพมหานคร
             { name: "EV Station PluZ - PTT Station วิภาวดีรังสิต", province: "กรุงเทพมหานคร", address: "ริมถนนวิภาวดีรังสิต แขวงจตุจักร" },
@@ -91,8 +91,10 @@
             { name: "EA Anywhere - สยามพารากอน", province: "กรุงเทพมหานคร", address: "ลานจอดรถชั้น North Zone" },
             { name: "SHARGE - เซ็นทรัลเวิลด์", province: "กรุงเทพมหานคร", address: "ลานจอดรถ ชั้น B1" },
             { name: "Evolt - อาคาร 66 Tower (ออฟฟิศ)", province: "กรุงเทพมหานคร", address: "ซอยสุขุมวิท 66" },
-            { name: "Evolt - บิ๊กซี เอ็กซ์ตร้า พระราม 4", province: "กรุงเทพมหานคร", address: "ชั้น 1 อาคารจอดรถ" },
             { name: "Tesla Supercharger - เซ็นทรัล ลาดพร้าว", province: "กรุงเทพมหานคร", address: "ลานจอดรถ ชั้น 3" },
+            { name: "on-ion EVB - สามย่านมิตรทาวน์", province: "กรุงเทพมหานคร", address: "ชั้น B1, Samyan Mitrtown" },
+            { name: "ReverSharger - พาราไดซ์ พาร์ค", province: "กรุงเทพมหานคร", address: "อาคารจอดรถ ชั้น 2" },
+            { name: "Altervim - โรงพยาบาลวิมุต", province: "กรุงเทพมหานคร", address: "อาคารจอดรถ รพ.วิมุต พหลโยธิน" },
 
             // นนทบุรี
             { name: "Evolt - เดอะมอลล์ไลฟ์สโตร์ งามวงศ์วาน", province: "นนทบุรี", address: "อาคารจอดรถชั้น B" },
@@ -107,6 +109,10 @@
             { name: "PEA VOLTA - เซ็นทรัล เชียงใหม่ แอร์พอร์ต", province: "เชียงใหม่", address: "ลานจอดรถชั้น G" },
             { name: "Evolt - มหาวิทยาลัยเชียงใหม่", province: "เชียงใหม่", address: "อาคารจอดรถ S1" },
             
+            // ขอนแก่น (จังหวัดใหม่)
+            { name: "EV Station PluZ - PTT Station เมืองพล", province: "ขอนแก่น", address: "อ.พล จ.ขอนแก่น" },
+            { name: "PEA VOLTA - เซ็นทรัล ขอนแก่น", province: "ขอนแก่น", address: "ลานจอดรถ ห้างเซ็นทรัล" },
+
             // ภูเก็ต
             { name: "EV Station PluZ - PTT Station ท่าเรือ", province: "ภูเก็ต", address: "ถ.เทพกระษัตรี อ.ถลาง" },
             { name: "PEA VOLTA - เซ็นทรัล ภูเก็ต ฟลอเรสต้า", province: "ภูเก็ต", address: "ชั้น G, โซนจอดรถ" },
@@ -116,6 +122,10 @@
             { name: "EV Station PluZ - PTT Station แหลมฉบัง", province: "ชลบุรี", address: "อ.ศรีราชา จ.ชลบุรี" },
             { name: "Evolt - ฮอลิเดย์ อินน์ พัทยา", province: "ชลบุรี", address: "โรงแรมฮอลิเดย์ อินน์" },
             { name: "Tesla Supercharger - เซ็นทรัล พัทยา", province: "ชลบุรี", address: "ลานจอดรถของห้างสรรพสินค้า" },
+
+            // สุราษฎร์ธานี (จังหวัดใหม่)
+            { name: "EV Station PluZ - PTT Station ท่าฉาง", province: "สุราษฎร์ธานี", address: "อ.ท่าฉาง จ.สุราษฎร์ธานี" },
+            { name: "PEA VOLTA - เซ็นทรัล สุราษฎร์ธานี", province: "สุราษฎร์ธานี", address: "ลานจอดรถของห้าง" },
 
             // พระนครศรีอยุธยา
             { name: "PEA VOLTA - พระนครศรีอยุธยา", province: "พระนครศรีอยุธยา", address: "สำนักงาน กฟภ.จ.พระนครศรีอยุธยา" },
@@ -130,14 +140,10 @@
             { name: "PEA VOLTA - หาดใหญ่", province: "สงขลา", address: "สถานีไฟฟ้าหาดใหญ่ 2" }
         ];
 
-        // ฟังก์ชันสร้าง Dropdown จังหวัดอัตโนมัติ
         function populateProvinces() {
             const provinceSelect = document.getElementById('province-select');
-            // ดึงรายชื่อจังหวัดทั้งหมดจากข้อมูล stations (แบบไม่ซ้ำ)
             const provinces = [...new Set(stations.map(station => station.province))];
-            // จัดเรียงจังหวัดตามตัวอักษรไทย
             provinces.sort((a, b) => a.localeCompare(b, 'th')); 
-
             provinces.forEach(province => {
                 const option = document.createElement('option');
                 option.value = province;
@@ -146,10 +152,8 @@
             });
         }
         
-        // เรียกใช้ฟังก์ชันนี้เมื่อหน้าเว็บโหลดเสร็จ
         document.addEventListener('DOMContentLoaded', populateProvinces);
 
-        // ฟังก์ชันสำหรับค้นหาสถานี
         function searchStations() {
             const selectedProvince = document.getElementById('province-select').value;
             const resultsContainer = document.getElementById('results-container');
