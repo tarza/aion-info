@@ -79,7 +79,7 @@
         <label for="province-select">เลือกจังหวัด:</label>
         <select id="province-select">
             <option value="">-- กรุณาเลือกจังหวัด --</option>
-            </select>
+        </select>
 
         <button onclick="fetchData()">ค้นหา</button>
         
@@ -88,13 +88,11 @@
     </div>
 
     <script>
-        // รายชื่อจังหวัดหลักๆ สำหรับให้ผู้ใช้เลือก
         const provinces = [
             "กรุงเทพมหานคร", "นนทบุรี", "ปทุมธานี", "สมุทรปราการ",
             "ชลบุรี", "ระยอง", "เชียงใหม่", "นครราชสีมา", "ขอนแก่น", "ภูเก็ต", "สงขลา", "สุราษฎร์ธานี", "ประจวบคีรีขันธ์"
         ];
 
-        // ฟังก์ชันสำหรับสร้าง Dropdown จังหวัดเมื่อหน้าเว็บโหลด
         function populateProvinces() {
             const provinceSelect = document.getElementById('province-select');
             provinces.sort((a, b) => a.localeCompare(b, 'th'));
@@ -106,10 +104,8 @@
             });
         }
 
-        // เรียกใช้ฟังก์ชันนี้ทันทีที่หน้าเว็บพร้อมใช้งาน
         document.addEventListener('DOMContentLoaded', populateProvinces);
 
-        // ฟังก์ชันหลักสำหรับดึงและกรองข้อมูล
         function fetchData() {
             const selectedProvince = document.getElementById('province-select').value;
             const resultsContainer = document.getElementById('results-container');
@@ -132,10 +128,27 @@
                 .then(allStations => {
                     resultsContainer.innerHTML = '<p style="text-align:center;">กำลังกรองข้อมูลสำหรับจังหวัด ' + selectedProvince + '...</p>';
                     
-                    // กรองข้อมูลให้เหลือเฉพาะจังหวัดที่เลือก
-                    const filteredStations = allStations.filter(station => 
-                        station.AddressInfo.StateProvince && station.AddressInfo.StateProvince.includes(selectedProvince)
-                    );
+                    // ================================================================
+                    // ==    ↓↓↓ โค้ดส่วนที่อัปเกรดให้ฉลาดขึ้นอยู่ตรงนี้ ↓↓↓    ==
+                    // ================================================================
+                    const filteredStations = allStations.filter(station => {
+                        const stationProvince = station.AddressInfo.StateProvince;
+                        if (!stationProvince) {
+                            return false; // ถ้าไม่มีข้อมูลจังหวัด ให้ข้ามไป
+                        }
+
+                        // ถ้าจังหวัดที่เลือกคือกรุงเทพฯ ให้เช็คเผื่อหลายๆ คำ
+                        if (selectedProvince === "กรุงเทพมหานคร") {
+                            return stationProvince.includes("กรุงเทพมหานคร") || 
+                                   stationProvince.toLowerCase().includes("bangkok") ||
+                                   stationProvince.includes("กทม");
+                        } 
+                        // สำหรับจังหวัดอื่นๆ ให้เช็คแบบปกติ
+                        else {
+                            return stationProvince.includes(selectedProvince);
+                        }
+                    });
+                    // ================================================================
 
                     resultsContainer.innerHTML = ''; 
                     
@@ -156,7 +169,7 @@
                             resultsContainer.innerHTML += itemHtml;
                         });
                     } else {
-                        resultsContainer.innerHTML = `<p style="text-align:center;">ไม่พบข้อมูลสถานีในจังหวัด ${selectedProvince}</p>`;
+                        resultsContainer.innerHTML = `<p style="text-align:center;">ไม่พบข้อมูลสถานีในจังหวัด ${selectedProvince} (ลองจังหวัดอื่น หรือข้อมูลอาจยังไม่มีในระบบ)</p>`;
                     }
                 })
                 .catch(error => {
