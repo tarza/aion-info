@@ -1,5 +1,70 @@
 [
   {
+    "station_name_th": "สถานีบริการน้ำมัน พีทีไชโย 2",
+    "province_th": "อ่างทอง",
+    "address_th": "สถานีบริการน้ำมัน พีทีไชโย 2, อ่างทอง"
+  },
+  {
+    "station_name_th": "การไฟฟ้าส่วนภูมิภาคจังหวัดอ่างทอง",
+    "province_th": "อ่างทอง",
+    "address_th": "การไฟฟ้าส่วนภูมิภาคจังหวัดอ่างทอง"
+  },
+  {
+    "station_name_th": "สถานีบริการน้ำมัน บางจาก ไชโย (หจก.เพิ่มทรัพย์ปิโตรเลียม)",
+    "province_th": "อ่างทอง",
+    "address_th": "สถานีบริการน้ำมัน บางจาก ไชโย (หจก.เพิ่มทรัพย์ปิโตรเลียม)"
+  },
+  {
+    "station_name_th": "สถานีบริการน้ำมัน ปตท. หจก.ไชโย ปิโตรเลียม",
+    "province_th": "อ่างทอง",
+    "address_th": "สถานีบริการน้ำมัน ปตท. หจก.ไชโย ปิโตรเลียม"
+  },
+  {
+    "station_name_th": "สถานีบริการ ปตท. ไชโย เอ็นจีวี",
+    "province_th": "อ่างทอง",
+    "address_th": "สถานีบริการ ปตท. ไชโย เอ็นจีวี"
+  },
+  {
+    "station_name_th": "บิ๊กซี อ่างทอง",
+    "province_th": "อ่างทอง",
+    "address_th": "ห้างบิ๊กซี อ่างทอง"
+  },
+  {
+    "station_name_th": "โลตัสอ่างทอง",
+    "province_th": "อ่างทอง",
+    "address_th": "ห้างโลตัสอ่างทอง"
+  },
+  {
+    "station_name_th": "สถานีบริการน้ำมัน คาลเท็กซ์ สาขาประเสริฐไชโย",
+    "province_th": "อ่างทอง",
+    "address_th": "สถานีบริการน้ำมัน คาลเท็กซ์ สาขาประเสริฐไชโย"
+  },
+  {
+    "station_name_th": "สถานีบริการน้ำมัน บางจาก (ไอรดา ปิโตรเลียม)",
+    "province_th": "อ่างทอง",
+    "address_th": "สถานีบริการน้ำมัน บางจาก (ไอรดา ปิโตรเลียม)"
+  },
+  {
+    "station_name_th": "Smile Resort ต.ไผ่จำศีล อ.วิเศษชัยชาญ",
+    "province_th": "อ่างทอง",
+    "address_th": "Smile Resort ต.ไผ่จำศีล อ.วิเศษชัยชาญ"
+  },
+  {
+    "station_name_th": "Note Maison ต.หัวตะพาน อ.วิเศษชัยชาญ",
+    "province_th": "อ่างทอง",
+    "address_th": "Note Maison ต.หัวตะพาน อ.วิเศษชัยชาญ"
+  },
+  {
+    "station_name_th": "Rim Coffee ต.บางพลับ อ.โพธิ์ทอง",
+    "province_th": "อ่างทอง",
+    "address_th": "Rim Coffee ต.บางพลับ อ.โพธิ์ทอง"
+  },
+  {
+    "station_name_th": "ร้านป้าดำ ต.คอ. เมืองอ่างทอง",
+    "province_th": "อ่างทอง",
+    "address_th": "ร้านป้าดำ ต.คอ. เมืองอ่างทอง"
+  },
+  {
     "station_name_th": "PTT EV Station PluZ กำแพงเพชร 2",
     "province_th": "กรุงเทพมหานคร",
     "address_th": "ถนนกำแพงเพชร 2, เขตจตุจักร"
@@ -10,83 +75,13 @@
     "address_th": "ชั้น 2, อาคารจอดรถ ห้างสรรพสินค้าเซ็นทรัลลาดพร้าว"
   },
   {
-    "station_name_th": "EA Anywhere อาคารจอดรถ สยามพารากอน",
-    "province_th": "กรุงเทพมหานคร",
-    "address_th": "ชั้น 3A North Zone, อาคารจอดรถสยามพารากอน"
-  },
-  {
-    "station_name_th": "SHARGE เซ็นทรัลเวิลด์",
-    "province_th": "กรุงเทพมหานคร",
-    "address_th": "ลานจอดรถ ชั้น B1, โซน D30"
-  },
-  {
-    "station_name_th": "Evolt อาคาร เอ็มไพร์ ทาวเวอร์",
-    "province_th": "กรุงเทพมหานคร",
-    "address_th": "ชั้น B1, อาคาร เอ็มไพร์ ทาวเวอร์, สาทร"
-  },
-  {
     "station_name_th": "สถานีชาร์จ Evolt เซ็นทรัล ชลบุรี",
     "province_th": "ชลบุรี",
     "address_th": "ลานจอดรถชั้น G, ห้างสรรพสินค้าเซ็นทรัลพลาซา ชลบุรี"
   },
   {
-    "station_name_th": "Tesla Supercharger เซ็นทรัล พัทยา",
-    "province_th": "ชลบุรี",
-    "address_th": "ลานจอดรถของห้างสรรพสินค้า"
-  },
-  {
     "station_name_th": "สถานีไฟฟ้าเชียงใหม่ที่ 3",
     "province_th": "เชียงใหม่",
     "address_th": "การไฟฟ้าส่วนภูมิภาคเขต 1 (ภาคเหนือ) จังหวัดเชียงใหม่"
-  },
-  {
-    "station_name_th": "PEA VOLTA เซ็นทรัล เชียงใหม่ แอร์พอร์ต",
-    "province_th": "เชียงใหม่",
-    "address_th": "ลานจอดรถชั้น G"
-  },
-  {
-    "station_name_th": "EV Station PluZ - PTT Station ปากช่อง",
-    "province_th": "นครราชสีมา",
-    "address_th": "อ.ปากช่อง จ.นครราชสีมา"
-  },
-  {
-    "station_name_th": "PEA VOLTA เดอะมอลล์ โคราช",
-    "province_th": "นครราชสีมา",
-    "address_th": "ลานจอดรถชั้น 1"
-  },
-  {
-    "station_name_th": "PEA VOLTA เซ็นทรัล ขอนแก่น",
-    "province_th": "ขอนแก่น",
-    "address_th": "ลานจอดรถ ห้างเซ็นทรัล"
-  },
-  {
-    "station_name_th": "Tesla Supercharger เซ็นทรัล ภูเก็ต",
-    "province_th": "ภูเก็ต",
-    "address_th": "ลานจอดรถ เซ็นทรัล ภูเก็ต ฟลอเรสต้า"
-  },
-  {
-    "station_name_th": "EV Station PluZ - PTT Station หาดใหญ่ใน",
-    "province_th": "สงขลา",
-    "address_th": "อ.หาดใหญ่ จ.สงขลา"
-  },
-  {
-    "station_name_th": "PEA VOLTA เซ็นทรัล สุราษฎร์ธานี",
-    "province_th": "สุราษฎร์ธานี",
-    "address_th": "ลานจอดรถของห้าง"
-  },
-  {
-    "station_name_th": "EV Station PluZ - PTT Station หัวหิน",
-    "province_th": "ประจวบคีรีขันธ์",
-    "address_th": "อ.หัวหิน (ขาเข้ากรุงเทพฯ)"
-  },
-  {
-    "station_name_th": "PEA VOLTA รังสิต",
-    "province_th": "ปทุมธานี",
-    "address_th": "การไฟฟ้าส่วนภูมิภาคอำเภอรังสิต"
-  },
-  {
-    "station_name_th": "Tesla Supercharger เมกาบางนา",
-    "province_th": "สมุทรปราการ",
-    "address_th": "ลานจอดรถโซน Mega Foodwalk"
   }
 ]
