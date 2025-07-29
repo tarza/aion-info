@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ค้นหาสถานีชาร์จ EV (Local Data)</title>
+    <title>ค้นหาสถานีชาร์จ EV</title>
     <style>
-        /* ส่วน style เหมือนเดิมทั้งหมด ไม่ต้องแก้ไข */
         body { font-family: 'Sarabun', sans-serif; background-color: #f0f2f5; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px 0; }
         .container { background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); width: 90%; max-width: 600px; text-align: center; }
         h1 { color: #0056b3; margin-bottom: 20px; }
-        select, button { width: 100%; padding: 12px; margin-top: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; font-family: 'Sarabun', sans-serif; }
-        button { background-color: #1a73e8; color: white; border: none; cursor: pointer; transition: background-color 0.3s; }
+        input[type="text"] { width: calc(100% - 24px); padding: 12px; margin-top: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; font-family: 'Sarabun', sans-serif;}
+        button { width: 100%; padding: 12px; margin-top: 20px; border-radius: 5px; border: none; font-size: 18px; font-family: 'Sarabun', sans-serif; background-color: #1a73e8; color: white; cursor: pointer; transition: background-color 0.3s; }
         #results-container { margin-top: 25px; text-align: left; max-height: 40vh; overflow-y: auto; border-top: 1px solid #eee; padding-top: 15px; }
         .item { background-color: #f9f9f9; border: 1px solid #eee; padding: 15px; margin-bottom: 10px; border-radius: 5px; }
         .item strong { color: #0056b3; }
@@ -20,12 +19,10 @@
 <body>
     <div class="container">
         <h1>⚡ ค้นหาสถานีชาร์จรถไฟฟ้าในไทย</h1>
-        <p>ข้อมูลจาก: Open Data ภาครัฐ</p>
+        <p>ข้อมูลจาก Open Data ภาครัฐ</p>
         
-        <label for="province-select">เลือกจังหวัด:</label>
-        <select id="province-select">
-            <option value="">-- กรุณาเลือกจังหวัด --</option>
-        </select>
+        <label for="search-input">พิมพ์คำที่ต้องการค้นหา (เช่น ชื่อสถานี, เขต, ถนน):</label>
+        <input type="text" id="search-input" placeholder="เช่น เซ็นทรัล, จตุจักร, พหลโยธิน...">
 
         <button onclick="searchStations()">ค้นหา</button>
         
@@ -33,67 +30,57 @@
     </div>
 
     <script>
-        // เราจะเก็บข้อมูลทั้งหมดไว้ในตัวแปรนี้หลังจากโหลดไฟล์
         let allStationsData = [];
 
-        // ฟังก์ชันสำหรับโหลดข้อมูลจากไฟล์ JSON ของเรา
         async function loadStationData() {
             try {
-                // --- จุดที่เปลี่ยนแปลงสำคัญ ---
-                // เราเปลี่ยนจากการ fetch ข้อมูลจาก URL ภายนอก
-                // มาเป็นการ fetch จากไฟล์ในโปรเจกต์ของเราเอง
                 const response = await fetch('stations_data.json');
-                allStationsData = await response.json();
+                const rawData = await response.json();
                 
-                // เมื่อโหลดข้อมูลสำเร็จ ก็สร้าง Dropdown จังหวัด
-                populateProvinces();
+                // ทำความสะอาดข้อมูลและจัดรูปแบบให้ถูกต้อง
+                allStationsData = rawData.slice(1).map(item => ({
+                    // ใช้ชื่อคอลัมน์จากแถวที่สองของไฟล์ CSV เป็น key
+                    station_name: item["สถานีอัดประจุไฟฟ้ารถยนต์ (EV)"],
+                    operating_hours: item["FIELD2"],
+                    charger_type: item["FIELD3"],
+                    brand: item["FIELD4"],
+                    location_url: item["FIELD5"]
+                })).filter(station => station.station_name); // กรองแถวที่ไม่มีชื่อสถานีออก
+
             } catch (error) {
                 console.error('ไม่สามารถโหลดไฟล์ข้อมูลได้:', error);
-                document.getElementById('results-container').innerHTML = '<p style="color:red">เกิดข้อผิดพลาด: ไม่สามารถโหลดไฟล์ข้อมูลสถานีได้</p>';
+                document.getElementById('results-container').innerHTML = '<p style="color:red">ผิดพลาด: ไม่สามารถโหลดไฟล์ข้อมูลสถานีได้</p>';
             }
-        }
-
-        function populateProvinces() {
-            const provinceSelect = document.getElementById('province-select');
-            // สร้างรายชื่อจังหวัดจากข้อมูลที่โหลดมา (ตัดชื่อซ้ำออก)
-            const provinces = [...new Set(allStationsData.map(station => station.province_th))];
-            provinces.sort((a,b) => a.localeCompare(b, 'th'));
-            
-            provinces.forEach(province => {
-                const option = document.createElement('option');
-                option.value = province;
-                option.textContent = province;
-                provinceSelect.appendChild(option);
-            });
         }
 
         function searchStations() {
-            const selectedProvince = document.getElementById('province-select').value;
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
             const resultsContainer = document.getElementById('results-container');
             
-            if (!selectedProvince) {
-                resultsContainer.innerHTML = '<p style="text-align:center; color: red;">กรุณาเลือกจังหวัด</p>';
+            if (!searchTerm) {
+                resultsContainer.innerHTML = '<p style="text-align:center; color: red;">กรุณาพิมพ์คำที่ต้องการค้นหา</p>';
                 return;
             }
 
-            // กรองข้อมูลจากตัวแปร allStationsData ที่เราโหลดมาเก็บไว้
-            const filteredStations = allStationsData.filter(station => station.province_th === selectedProvince);
+            const filteredStations = allStationsData.filter(station => {
+                const stationName = (station.station_name || "").toLowerCase();
+                // ในอนาคตสามารถเพิ่มการค้นหาจากช่องอื่นได้ที่นี่
+                return stationName.includes(searchTerm);
+            });
             
             resultsContainer.innerHTML = '';
             if (filteredStations.length > 0) {
-                resultsContainer.innerHTML = `<h3>ผลการค้นหาใน ${selectedProvince}: พบ ${filteredStations.length} แห่ง</h3>`;
+                resultsContainer.innerHTML = `<h3>ผลการค้นหาสำหรับ "${searchTerm}": พบ ${filteredStations.length} แห่ง</h3>`;
                 filteredStations.forEach(station => {
-                    const itemHtml = `<div class="item"><strong>${station.station_name_th}</strong><br><span>ที่อยู่: ${station.address_th || ''}</span></div>`;
+                    const itemHtml = `<div class="item"><strong>${station.station_name}</strong><br><span>ยี่ห้อ: ${station.brand || ''}</span><br><span>หัวชาร์จ: ${station.charger_type || ''}</span></div>`;
                     resultsContainer.innerHTML += itemHtml;
                 });
             } else {
-                resultsContainer.innerHTML = `<p style="text-align:center;">ไม่พบข้อมูลในจังหวัด ${selectedProvince}</p>`;
+                resultsContainer.innerHTML = `<p style="text-align:center;">ไม่พบสถานีที่ตรงกับคำค้นหา</p>`;
             }
         }
         
-        // เริ่มต้นโหลดข้อมูลทันทีที่หน้าเว็บพร้อมใช้งาน
         document.addEventListener('DOMContentLoaded', loadStationData);
     </script>
-
 </body>
 </html>
