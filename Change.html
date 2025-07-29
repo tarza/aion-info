@@ -3,72 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เครื่องมือวิเคราะห์ข้อมูล API</title>
-    
+    <title>ค้นหาสถานีชาร์จ EV (Local Data)</title>
     <style>
+        /* ส่วน style เหมือนเดิมทั้งหมด ไม่ต้องแก้ไข */
         body { font-family: 'Sarabun', sans-serif; background-color: #f0f2f5; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px 0; }
         .container { background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); width: 90%; max-width: 600px; text-align: center; }
         h1 { color: #0056b3; margin-bottom: 20px; }
-        button { width: 100%; padding: 12px; margin-top: 10px; border-radius: 5px; border: none; font-size: 18px; font-family: 'Sarabun', sans-serif; background-color: #1a73e8; color: white; cursor: pointer; transition: background-color 0.3s; }
-        button:hover { background-color: #0056b3; }
-        #results-container { margin-top: 25px; text-align: left; max-height: 50vh; overflow-y: auto; border-top: 1px solid #eee; padding-top: 15px; }
-        .item { border-bottom: 1px solid #eee; padding: 8px 0; }
+        select, button { width: 100%; padding: 12px; margin-top: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px; font-family: 'Sarabun', sans-serif; }
+        button { background-color: #1a73e8; color: white; border: none; cursor: pointer; transition: background-color 0.3s; }
+        #results-container { margin-top: 25px; text-align: left; max-height: 40vh; overflow-y: auto; border-top: 1px solid #eee; padding-top: 15px; }
+        .item { background-color: #f9f9f9; border: 1px solid #eee; padding: 15px; margin-bottom: 10px; border-radius: 5px; }
         .item strong { color: #0056b3; }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
     <div class="container">
-        <h1>เครื่องมือวิเคราะห์ข้อมูล API</h1>
-        <p>กดเพื่อดูสรุปข้อมูลจังหวัดจาก OpenChargeMap</p>
+        <h1>⚡ ค้นหาสถานีชาร์จรถไฟฟ้าในไทย</h1>
+        <p>ข้อมูลจาก: Open Data ภาครัฐ</p>
         
-        <button onclick="analyzeData()">เริ่มวิเคราะห์ข้อมูล 1,000 สถานี</button>
+        <label for="province-select">เลือกจังหวัด:</label>
+        <select id="province-select">
+            <option value="">-- กรุณาเลือกจังหวัด --</option>
+        </select>
+
+        <button onclick="searchStations()">ค้นหา</button>
         
         <div id="results-container"></div>
     </div>
 
     <script>
-        function analyzeData() {
-            const resultsContainer = document.getElementById('results-container');
-            resultsContainer.innerHTML = '<p style="text-align:center;">กำลังดึงและวิเคราะห์ข้อมูล...</p>';
+        // เราจะเก็บข้อมูลทั้งหมดไว้ในตัวแปรนี้หลังจากโหลดไฟล์
+        let allStationsData = [];
 
-            const apiKey = '4123ae7f-6140-49e3-b00e-e242805f6e46'; 
-            const apiUrl = `https://api.openchargemap.io/v3/poi/?output=json&countrycode=TH&maxresults=1000&key=${apiKey}`;
-
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(allStations => {
-                    // สร้าง object ว่างๆเพื่อนับจำนวนสถานีในแต่ละจังหวัด
-                    const provinceCounts = {};
-
-                    allStations.forEach(station => {
-                        // ดึงชื่อจังหวัดออกมา ถ้าไม่มีให้ใช้คำว่า 'ไม่ระบุ'
-                        const province = station.AddressInfo.StateOrProvince || 'ไม่ระบุ';
-
-                        // ถ้ายังไม่เคยนับจังหวัดนี้ ให้เริ่มที่ 1
-                        if (!provinceCounts[province]) {
-                            provinceCounts[province] = 1;
-                        } 
-                        // ถ้านับแล้ว ให้บวกเพิ่มไป 1
-                        else {
-                            provinceCounts[province]++;
-                        }
-                    });
-
-                    resultsContainer.innerHTML = `<h3>รายงานสรุปจาก ${allStations.length} สถานี:</h3>`;
-                    
-                    // นำผลการนับมาแสดงผล
-                    for (const province in provinceCounts) {
-                        const count = provinceCounts[province];
-                        const itemHtml = `<div class="item"><strong>${province}:</strong> ${count} แห่ง</div>`;
-                        resultsContainer.innerHTML += itemHtml;
-                    }
-                })
-                .catch(error => {
-                    resultsContainer.innerHTML = `<p style="text-align:center; color: red;">เกิดข้อผิดพลาด: ${error.message}</p>`;
-                });
+        // ฟังก์ชันสำหรับโหลดข้อมูลจากไฟล์ JSON ของเรา
+        async function loadStationData() {
+            try {
+                // --- จุดที่เปลี่ยนแปลงสำคัญ ---
+                // เราเปลี่ยนจากการ fetch ข้อมูลจาก URL ภายนอก
+                // มาเป็นการ fetch จากไฟล์ในโปรเจกต์ของเราเอง
+                const response = await fetch('stations_data.json');
+                allStationsData = await response.json();
+                
+                // เมื่อโหลดข้อมูลสำเร็จ ก็สร้าง Dropdown จังหวัด
+                populateProvinces();
+            } catch (error) {
+                console.error('ไม่สามารถโหลดไฟล์ข้อมูลได้:', error);
+                document.getElementById('results-container').innerHTML = '<p style="color:red">เกิดข้อผิดพลาด: ไม่สามารถโหลดไฟล์ข้อมูลสถานีได้</p>';
+            }
         }
+
+        function populateProvinces() {
+            const provinceSelect = document.getElementById('province-select');
+            // สร้างรายชื่อจังหวัดจากข้อมูลที่โหลดมา (ตัดชื่อซ้ำออก)
+            const provinces = [...new Set(allStationsData.map(station => station.province_th))];
+            provinces.sort((a,b) => a.localeCompare(b, 'th'));
+            
+            provinces.forEach(province => {
+                const option = document.createElement('option');
+                option.value = province;
+                option.textContent = province;
+                provinceSelect.appendChild(option);
+            });
+        }
+
+        function searchStations() {
+            const selectedProvince = document.getElementById('province-select').value;
+            const resultsContainer = document.getElementById('results-container');
+            
+            if (!selectedProvince) {
+                resultsContainer.innerHTML = '<p style="text-align:center; color: red;">กรุณาเลือกจังหวัด</p>';
+                return;
+            }
+
+            // กรองข้อมูลจากตัวแปร allStationsData ที่เราโหลดมาเก็บไว้
+            const filteredStations = allStationsData.filter(station => station.province_th === selectedProvince);
+            
+            resultsContainer.innerHTML = '';
+            if (filteredStations.length > 0) {
+                resultsContainer.innerHTML = `<h3>ผลการค้นหาใน ${selectedProvince}: พบ ${filteredStations.length} แห่ง</h3>`;
+                filteredStations.forEach(station => {
+                    const itemHtml = `<div class="item"><strong>${station.station_name_th}</strong><br><span>ที่อยู่: ${station.address_th || ''}</span></div>`;
+                    resultsContainer.innerHTML += itemHtml;
+                });
+            } else {
+                resultsContainer.innerHTML = `<p style="text-align:center;">ไม่พบข้อมูลในจังหวัด ${selectedProvince}</p>`;
+            }
+        }
+        
+        // เริ่มต้นโหลดข้อมูลทันทีที่หน้าเว็บพร้อมใช้งาน
+        document.addEventListener('DOMContentLoaded', loadStationData);
     </script>
 
 </body>
