@@ -21,7 +21,7 @@
             background-color: #ffffff;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 4px B12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 90%;
             max-width: 500px;
             text-align: center;
@@ -79,56 +79,64 @@
         <button onclick="searchStations()">ค้นหา</button>
         
         <div id="results-container">
-            </div>
+             </div>
     </div>
 
     <script>
-        // ฐานข้อมูลสถานีชาร์จ (ข้อมูลตัวอย่าง ณ ปี 2025)
+        // ฐานข้อมูลสถานีชาร์จ (รวมข้อมูลตัวอย่างจากหลายค่าย)
         const stations = [
             // กรุงเทพมหานคร
             { name: "EV Station PluZ - PTT Station วิภาวดีรังสิต", province: "กรุงเทพมหานคร", address: "ริมถนนวิภาวดีรังสิต แขวงจตุจักร" },
-            { name: "PEA VOLTA - สำนักงานใหญ่ การไฟฟ้าส่วนภูมิภาค", province: "กรุงเทพมหานคร", address: "ถ.งามวงศ์วาน แขวงลาดยาว เขตจตุจักร" },
+            { name: "PEA VOLTA - สำนักงานใหญ่ การไฟฟ้าส่วนภูมิภาค", province: "กรุงเทพมหานคร", address: "ถ.งามวงศ์วาน แขวงลาดยาว" },
             { name: "EA Anywhere - สยามพารากอน", province: "กรุงเทพมหานคร", address: "ลานจอดรถชั้น North Zone" },
             { name: "SHARGE - เซ็นทรัลเวิลด์", province: "กรุงเทพมหานคร", address: "ลานจอดรถ ชั้น B1" },
-            { name: "EleX by EGAT - สำนักงานใหญ่ กฟผ.", province: "กรุงเทพมหานคร", address: "อ.บางกรวย (ติดเขตกรุงเทพฯ)" },
+            { name: "Evolt - อาคาร 66 Tower (ออฟฟิศ)", province: "กรุงเทพมหานคร", address: "ซอยสุขุมวิท 66" },
+            { name: "Evolt - บิ๊กซี เอ็กซ์ตร้า พระราม 4", province: "กรุงเทพมหานคร", address: "ชั้น 1 อาคารจอดรถ" },
+            { name: "Tesla Supercharger - เซ็นทรัล ลาดพร้าว", province: "กรุงเทพมหานคร", address: "ลานจอดรถ ชั้น 3" },
+
+            // นนทบุรี
+            { name: "Evolt - เดอะมอลล์ไลฟ์สโตร์ งามวงศ์วาน", province: "นนทบุรี", address: "อาคารจอดรถชั้น B" },
+            { name: "PEA VOLTA - การไฟฟ้าบางใหญ่", province: "นนทบุรี", address: "อ.บางใหญ่" },
+            
+            // สมุทรปราการ
+            { name: "Evolt - บิ๊กซี สำโรง 2", province: "สมุทรปราการ", address: "ลานจอดรถด้านหน้า" },
+            { name: "Tesla Supercharger - เมกาบางนา", province: "สมุทรปราการ", address: "ลานจอดรถโซน Mega Foodwalk" },
 
             // เชียงใหม่
             { name: "EV Station PluZ - PTT Station สารภี", province: "เชียงใหม่", address: "อ.สารภี จ.เชียงใหม่" },
             { name: "PEA VOLTA - เซ็นทรัล เชียงใหม่ แอร์พอร์ต", province: "เชียงใหม่", address: "ลานจอดรถชั้น G" },
-            { name: "EA Anywhere - มีโชคพลาซ่า", province: "เชียงใหม่", address: "อ.เมืองเชียงใหม่" },
+            { name: "Evolt - มหาวิทยาลัยเชียงใหม่", province: "เชียงใหม่", address: "อาคารจอดรถ S1" },
             
             // ภูเก็ต
             { name: "EV Station PluZ - PTT Station ท่าเรือ", province: "ภูเก็ต", address: "ถ.เทพกระษัตรี อ.ถลาง" },
             { name: "PEA VOLTA - เซ็นทรัล ภูเก็ต ฟลอเรสต้า", province: "ภูเก็ต", address: "ชั้น G, โซนจอดรถ" },
-            { name: "SHARGE - บลูทรี ภูเก็ต", province: "ภูเก็ต", address: "อ.ถลาง จ.ภูเก็ต" },
 
             // ชลบุรี
             { name: "PEA VOLTA - พัทยาใต้", province: "ชลบุรี", address: "สถานีไฟฟ้าพัทยาใต้ 2 อ.บางละมุง" },
             { name: "EV Station PluZ - PTT Station แหลมฉบัง", province: "ชลบุรี", address: "อ.ศรีราชา จ.ชลบุรี" },
-            { name: "EA Anywhere - เซ็นทรัล ศรีราชา", province: "ชลบุรี", address: "ลานจอดรถชั้น G" },
+            { name: "Evolt - ฮอลิเดย์ อินน์ พัทยา", province: "ชลบุรี", address: "โรงแรมฮอลิเดย์ อินน์" },
             { name: "Tesla Supercharger - เซ็นทรัล พัทยา", province: "ชลบุรี", address: "ลานจอดรถของห้างสรรพสินค้า" },
 
             // พระนครศรีอยุธยา
             { name: "PEA VOLTA - พระนครศรีอยุธยา", province: "พระนครศรีอยุธยา", address: "สำนักงาน กฟภ.จ.พระนครศรีอยุธยา" },
             { name: "EV Station PluZ - PTT Station ประตูชัย", province: "พระนครศรีอยุธยา", address: "อ.พระนครศรีอยุธยา" },
-            { name: "EleX by EGAT - สถานีไฟฟ้าแรงสูงอยุธยา 3", province: "พระนครศรีอยุธยา", address: "ใกล้กับนิคมอุตสาหกรรมโรจนะ" },
 
             // นครราชสีมา
             { name: "EV Station PluZ - PTT Station ปากช่อง", province: "นครราชสีมา", address: "อ.ปากช่อง จ.นครราชสีมา" },
             { name: "PEA VOLTA - เดอะมอลล์ โคราช", province: "นครราชสีมา", address: "ลานจอดรถชั้น 1" },
-            { name: "EleX by EGAT - เขื่อนลำตะคอง", province: "นครราชสีมา", address: "อ.สีคิ้ว จ.นครราชสีมา" },
             
             // สงขลา
             { name: "EV Station PluZ - PTT Station หาดใหญ่ใน", province: "สงขลา", address: "อ.หาดใหญ่ จ.สงขลา" },
-            { name: "PEA VOLTA - หาดใหญ่", province: "สงขลา", address: "สถานีไฟฟ้าหาดใหญ่ 2" },
-            { name: "SHARGE - เซ็นทรัล หาดใหญ่", province: "สงขลา", address: "ลานจอดรถของห้างสรรพสินค้า" }
+            { name: "PEA VOLTA - หาดใหญ่", province: "สงขลา", address: "สถานีไฟฟ้าหาดใหญ่ 2" }
         ];
 
         // ฟังก์ชันสร้าง Dropdown จังหวัดอัตโนมัติ
         function populateProvinces() {
             const provinceSelect = document.getElementById('province-select');
+            // ดึงรายชื่อจังหวัดทั้งหมดจากข้อมูล stations (แบบไม่ซ้ำ)
             const provinces = [...new Set(stations.map(station => station.province))];
-            provinces.sort((a, b) => a.localeCompare(b, 'th')); // จัดเรียงตามตัวอักษรไทย
+            // จัดเรียงจังหวัดตามตัวอักษรไทย
+            provinces.sort((a, b) => a.localeCompare(b, 'th')); 
 
             provinces.forEach(province => {
                 const option = document.createElement('option');
