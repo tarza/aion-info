@@ -1,0 +1,27 @@
+[
+  {
+    "station_name_th": "PTT EV Station PluZ กำแพงเพชร 2",
+    "province_th": "กรุงเทพมหานคร",
+    "address_th": "ถนนกำแพงเพชร 2, เขตจตุจักร"
+  },
+  {
+    "station_name_th": "PEA VOLTA เซ็นทรัล ลาดพร้าว",
+    "province_th": "กรุงเทพมหานคร",
+    "address_th": "ชั้น 2, อาคารจอดรถ ห้างสรรพสินค้าเซ็นทรัลลาดพร้าว"
+  },
+  {
+    "station_name_th": "สถานีชาร์จ Evolt เซ็นทรัล ชลบุรี",
+    "province_th": "ชลบุรี",
+    "address_th": "ลานจอดรถชั้น G, ห้างสรรพสินค้าเซ็นทรัลพลาซา ชลบุรี"
+  },
+  {
+    "station_name_th": "สถานีไฟฟ้าเชียงใหม่ที่ 3",
+    "province_th": "เชียงใหม่",
+    "address_th": "การไฟฟ้าส่วนภูมิภาคเขต 1 (ภาคเหนือ) จังหวัดเชียงใหม่"
+  },
+  {
+    "station_name_th": "EV Station PluZ - PTT Station ปากช่อง",
+    "province_th": "นครราชสีมา",
+    "address_th": "อ.ปากช่อง จ.นครราชสีมา"
+  }
+]
