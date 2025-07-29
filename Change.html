@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ค้นหาสถานีชาร์จ EV</title>
+    <title>ค้นหาสถานีชาร์จ EV (API Version)</title>
     
     <style>
         body {
@@ -23,26 +23,23 @@
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
             text-align: center;
         }
         h1 {
             color: #0056b3;
             margin-bottom: 20px;
         }
-        select, button {
+        button {
             width: 100%;
             padding: 12px;
             margin-top: 10px;
             border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-            font-family: 'Sarabun', sans-serif;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
             border: none;
+            font-size: 18px;
+            font-family: 'Sarabun', sans-serif;
+            background-color: #1a73e8;
+            color: white;
             cursor: pointer;
             transition: background-color 0.3s;
         }
@@ -52,16 +49,20 @@
         #results-container {
             margin-top: 25px;
             text-align: left;
+            max-height: 40vh;
+            overflow-y: auto;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
         }
-        .station-item {
+        .item {
             background-color: #f9f9f9;
             border: 1px solid #eee;
             padding: 15px;
             margin-bottom: 10px;
             border-radius: 5px;
         }
-        .station-item strong {
-            color: #007bff;
+        .item strong {
+            color: #0056b3;
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
@@ -69,104 +70,58 @@
 <body>
 
     <div class="container">
-        <h1>⚡ ค้นหาสถานีชาร์จรถไฟฟ้า</h1>
+        <h1>⚡ ค้นหาสถานีชาร์จรถไฟฟ้าในไทย</h1>
+        <p>ข้อมูลล่าสุดจาก OpenChargeMap</p>
         
-        <label for="province-select">เลือกจังหวัด:</label>
-        <select id="province-select">
-            <option value="">-- กรุณาเลือกจังหวัด --</option>
-        </select>
+        <button onclick="fetchData()">กดเพื่อค้นหา 100 สถานีล่าสุด</button>
         
-        <button onclick="searchStations()">ค้นหา</button>
-        
-        <div id="results-container"></div>
+        <div id="results-container">
+            </div>
     </div>
 
     <script>
-        const stations = [
-            // กรุงเทพมหานคร
-            { name: "EV Station PluZ - PTT Station วิภาวดีรังสิต", province: "กรุงเทพมหานคร", address: "ริมถนนวิภาวดีรังสิต แขวงจตุจักร" },
-            { name: "PEA VOLTA - สำนักงานใหญ่ การไฟฟ้าส่วนภูมิภาค", province: "กรุงเทพมหานคร", address: "ถ.งามวงศ์วาน แขวงลาดยาว" },
-            { name: "EA Anywhere - สยามพารากอน", province: "กรุงเทพมหานคร", address: "ลานจอดรถชั้น North Zone" },
-            { name: "SHARGE - เซ็นทรัลเวิลด์", province: "กรุงเทพมหานคร", address: "ลานจอดรถ ชั้น B1" },
-            { name: "Evolt - อาคาร 66 Tower (ออฟฟิศ)", province: "กรุงเทพมหานคร", address: "ซอยสุขุมวิท 66" },
-            { name: "Tesla Supercharger - เซ็นทรัล ลาดพร้าว", province: "กรุงเทพมหานคร", address: "ลานจอดรถ ชั้น 3" },
-            { name: "on-ion EVB - สามย่านมิตรทาวน์", province: "กรุงเทพมหานคร", address: "ชั้น B1, Samyan Mitrtown" },
-            { name: "ReverSharger - พาราไดซ์ พาร์ค", province: "กรุงเทพมหานคร", address: "อาคารจอดรถ ชั้น 2" },
-            { name: "Altervim - โรงพยาบาลวิมุต", province: "กรุงเทพมหานคร", address: "อาคารจอดรถ รพ.วิมุต พหลโยธิน" },
-
-            // ปริมณฑล
-            { name: "Evolt - เดอะมอลล์ไลฟ์สโตร์ งามวงศ์วาน", province: "นนทบุรี", address: "อาคารจอดรถชั้น B" },
-            { name: "Tesla Supercharger - เมกาบางนา", province: "สมุทรปราการ", address: "ลานจอดรถโซน Mega Foodwalk" },
-            { name: "PEA VOLTA - รังสิต", province: "ปทุมธานี", address: "กฟภ. รังสิต" },
-
-            // ภาคเหนือ
-            { name: "EV Station PluZ - PTT Station สารภี", province: "เชียงใหม่", address: "อ.สารภี จ.เชียงใหม่" },
-            { name: "PEA VOLTA - เซ็นทรัล เชียงใหม่ แอร์พอร์ต", province: "เชียงใหม่", address: "ลานจอดรถชั้น G" },
-            { name: "PEA VOLTA - Lampang", province: "ลำปาง", address: "สำนักงาน กฟภ.จ.ลำปาง" },
-            { name: "Tesla Supercharger - Central Phitsanulok", province: "พิษณุโลก", address: "ลานจอดรถ ห้างเซ็นทรัล" },
-            { name: "EV Station PluZ - PTT Station ท่ารถใหม่", province: "นครสวรรค์", address: "อ.เมือง จ.นครสวรรค์" },
-
-            // ภาคตะวันออกเฉียงเหนือ
-            { name: "EV Station PluZ - PTT Station ปากช่อง", province: "นครราชสีมา", address: "อ.ปากช่อง จ.นครราชสีมา" },
-            { name: "PEA VOLTA - เดอะมอลล์ โคราช", province: "นครราชสีมา", address: "ลานจอดรถชั้น 1" },
-            { name: "PEA VOLTA - เซ็นทรัล ขอนแก่น", province: "ขอนแก่น", address: "ลานจอดรถ ห้างเซ็นทรัล" },
-            { name: "EV Station PluZ - PTT Station เลี่ยงเมือง", province: "อุดรธานี", address: "ถนนเลี่ยงเมืองอุดรธานี" },
-            { name: "EV Station PluZ - PTT Station วารินชำราบ", province: "อุบลราชธานี", address: "อ.วารินชำราบ จ.อุบลราชธานี" },
-
-            // ภาคตะวันออก
-            { name: "PEA VOLTA - พัทยาใต้", province: "ชลบุรี", address: "สถานีไฟฟ้าพัทยาใต้ 2 อ.บางละมุง" },
-            { name: "Tesla Supercharger - เซ็นทรัล พัทยา", province: "ชลบุรี", address: "ลานจอดรถของห้างสรรพสินค้า" },
-            { name: "EV Station PluZ - PTT Station แหลมฉบัง", province: "ชลบุรี", address: "อ.ศรีราชา จ.ชลบุรี" },
-            { name: "EV Station PluZ - PTT Station เมืองระยอง", province: "ระยอง", address: "อ.เมือง จ.ระยอง" },
-
-            // ภาคใต้
-            { name: "EV Station PluZ - PTT Station ท่าเรือ", province: "ภูเก็ต", address: "ถ.เทพกระษัตรี อ.ถลาง" },
-            { name: "PEA VOLTA - เซ็นทรัล ภูเก็ต ฟลอเรสต้า", province: "ภูเก็ต", address: "ชั้น G, โซนจอดรถ" },
-            { name: "PEA VOLTA - เซ็นทรัล สุราษฎร์ธานี", province: "สุราษฎร์ธานี", address: "ลานจอดรถของห้าง" },
-            { name: "EV Station PluZ - PTT Station Sichon", province: "นครศรีธรรมราช", address: "อ.สิชล จ.นครศรีธรรมราช" },
-            { name: "PEA VOLTA - หาดใหญ่", province: "สงขลา", address: "สถานีไฟฟ้าหาดใหญ่ 2" },
-            { name: "EleX by EGAT - เขื่อนรัชชประภา", province: "สุราษฎร์ธานี", address: "อ.บ้านตาขุน จ.สุราษฎร์ธานี" },
-
-            // ภาคกลาง
-            { name: "PEA VOLTA - พระนครศรีอยุธยา", province: "พระนครศรีอยุธยา", address: "สำนักงาน กฟภ.จ.พระนครศรีอยุธยา" },
-            { name: "EV Station PluZ - PTT Station หัวหิน", province: "ประจวบคีรีขันธ์", address: "อ.หัวหิน (ขาเข้ากรุงเทพฯ)" }
-        ];
-
-        function populateProvinces() {
-            const provinceSelect = document.getElementById('province-select');
-            const provinces = [...new Set(stations.map(station => station.province))];
-            provinces.sort((a, b) => a.localeCompare(b, 'th')); 
-            provinces.forEach(province => {
-                const option = document.createElement('option');
-                option.value = province;
-                option.textContent = province;
-                provinceSelect.appendChild(option);
-            });
-        }
-        
-        document.addEventListener('DOMContentLoaded', populateProvinces);
-
-        function searchStations() {
-            const selectedProvince = document.getElementById('province-select').value;
+        function fetchData() {
             const resultsContainer = document.getElementById('results-container');
-            resultsContainer.innerHTML = '';
+            resultsContainer.innerHTML = '<p style="text-align:center;">กำลังดึงข้อมูลจาก OpenChargeMap...</p>';
 
-            if (!selectedProvince) {
-                resultsContainer.innerHTML = '<p style="text-align: center;">กรุณาเลือกจังหวัดที่ต้องการค้นหา</p>';
-                return;
-            }
+            // API Key ของคุณจาก OpenChargeMap
+            const apiKey = '4123ae7f-6140-49e3-b00e-e242805f6e46'; 
 
-            const foundStations = stations.filter(station => station.province === selectedProvince);
+            // URL สำหรับดึงข้อมูล 100 สถานีแรกในประเทศไทย
+            const apiUrl = `https://api.openchargemap.io/v3/poi/?output=json&countrycode=TH&maxresults=100&key=${apiKey}`;
 
-            if (foundStations.length > 0) {
-                let html = `<h3>ผลการค้นหาใน ${selectedProvince}: พบ ${foundStations.length} แห่ง</h3>`;
-                foundStations.forEach(station => {
-                    html += `<div class="station-item"><strong>${station.name}</strong><br><span>${station.address}</span></div>`;
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) { throw new Error('เกิดข้อผิดพลาด: ' + response.status); }
+                    return response.json();
+                })
+                .then(data => {
+                    resultsContainer.innerHTML = ''; 
+                    
+                    if (data && data.length > 0) {
+                        resultsContainer.innerHTML = `<h3>พบข้อมูล ${data.length} แห่ง (ล่าสุด)</h3>`;
+                        data.forEach(station => {
+                            const title = station.AddressInfo.Title || 'ไม่มีชื่อ';
+                            const address = `${station.AddressInfo.AddressLine1 || ''}, ${station.AddressInfo.Town || ''}`;
+                            const status = station.StatusType ? station.StatusType.Title : 'ไม่ระบุ';
+
+                            const itemHtml = `
+                                <div class="item">
+                                    <strong>${title}</strong><br>
+                                    <span>ที่อยู่: ${address}</span><br>
+                                    <span>สถานะ: ${status}</span>
+                                </div>
+                            `;
+                            resultsContainer.innerHTML += itemHtml;
+                        });
+                    } else {
+                        resultsContainer.innerHTML = '<p style="text-align:center;">ไม่พบข้อมูลสถานี</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('API Error:', error);
+                    resultsContainer.innerHTML = `<p style="text-align:center; color: red;">เกิดข้อผิดพลาดในการดึงข้อมูล: ${error.message}</p>`;
                 });
-                resultsContainer.innerHTML = html;
-            } else {
-                resultsContainer.innerHTML = `<p style="text-align: center;">ไม่พบสถานีในจังหวัด ${selectedProvince}</p>`;
-            }
         }
     </script>
 
