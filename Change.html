@@ -89,9 +89,8 @@
     <script>
         const provinces = ["กรุงเทพมหานคร", "นนทบุรี", "ปทุมธานี", "สมุทรปราการ", "ชลบุรี", "ระยอง", "เชียงใหม่", "นครราชสีมา", "ขอนแก่น", "ภูเก็ต", "สงขลา", "สุราษฎร์ธานี", "ประจวบคีรีขันธ์"];
 
-        // --- สร้าง 'พจนานุกรม' แปลงชื่อจังหวัด ---
         const provinceMap = {
-            "กรุงเทพมหานคร": ["bangkok", "krung thep maha nakhon"],
+            "กรุงเทพมหานคร": ["bangkok", "krung thep maha nakhon", "กทม"],
             "นนทบุรี": ["nonthaburi"],
             "ปทุมธานี": ["pathum thani"],
             "สมุทรปราการ": ["samut prakan"],
@@ -136,21 +135,27 @@
                 .then(allStations => {
                     resultsContainer.innerHTML = '<p style="text-align:center;">กำลังกรองข้อมูลสำหรับจังหวัด ' + selectedProvince + '...</p>';
                     
-                    // --- ตรรกะการกรองที่แก้ไขใหม่ทั้งหมด ---
                     const searchTerms = provinceMap[selectedProvince];
                     if (!searchTerms) {
                         resultsContainer.innerHTML = `<p style="text-align:center;">ไม่พบการตั้งค่าสำหรับจังหวัด ${selectedProvince}</p>`;
                         return;
                     }
 
+                    // --- ตรรกะการกรองที่ฉลาดและยืดหยุ่นที่สุด ---
                     const filteredStations = allStations.filter(station => {
-                        const stationProvince = station.AddressInfo.StateOrProvince;
-                        if (!stationProvince) return false; 
-                        
-                        const lowerCaseStationProvince = stationProvince.toLowerCase();
-                        
-                        // เช็คว่าชื่อจังหวัดใน API ตรงกับคำค้นหาใน 'พจนานุกรม' ของเราหรือไม่
-                        return searchTerms.some(term => lowerCaseStationProvince.includes(term));
+                        if (!station.AddressInfo) return false;
+
+                        // ดึงข้อมูลจากทุกช่องทางที่เป็นไปได้ และแปลงเป็นตัวพิมพ์เล็ก
+                        const province = (station.AddressInfo.StateOrProvince || "").toLowerCase();
+                        const town = (station.AddressInfo.Town || "").toLowerCase();
+                        const address1 = (station.AddressInfo.AddressLine1 || "").toLowerCase();
+
+                        // เช็คว่ามีคำค้นหาอยู่ในช่องไหนบ้างหรือไม่
+                        return searchTerms.some(term => 
+                            province.includes(term) || 
+                            town.includes(term) ||
+                            address1.includes(term)
+                        );
                     });
                     
                     resultsContainer.innerHTML = ''; 
