@@ -10,9 +10,29 @@
     "address_th": "ชั้น 2, อาคารจอดรถ ห้างสรรพสินค้าเซ็นทรัลลาดพร้าว"
   },
   {
+    "station_name_th": "EA Anywhere อาคารจอดรถ สยามพารากอน",
+    "province_th": "กรุงเทพมหานคร",
+    "address_th": "ชั้น 3A North Zone, อาคารจอดรถสยามพารากอน"
+  },
+  {
+    "station_name_th": "SHARGE เซ็นทรัลเวิลด์",
+    "province_th": "กรุงเทพมหานคร",
+    "address_th": "ลานจอดรถ ชั้น B1, โซน D30"
+  },
+  {
+    "station_name_th": "Evolt อาคาร เอ็มไพร์ ทาวเวอร์",
+    "province_th": "กรุงเทพมหานคร",
+    "address_th": "ชั้น B1, อาคาร เอ็มไพร์ ทาวเวอร์, สาทร"
+  },
+  {
     "station_name_th": "สถานีชาร์จ Evolt เซ็นทรัล ชลบุรี",
     "province_th": "ชลบุรี",
     "address_th": "ลานจอดรถชั้น G, ห้างสรรพสินค้าเซ็นทรัลพลาซา ชลบุรี"
+  },
+  {
+    "station_name_th": "Tesla Supercharger เซ็นทรัล พัทยา",
+    "province_th": "ชลบุรี",
+    "address_th": "ลานจอดรถของห้างสรรพสินค้า"
   },
   {
     "station_name_th": "สถานีไฟฟ้าเชียงใหม่ที่ 3",
@@ -20,8 +40,53 @@
     "address_th": "การไฟฟ้าส่วนภูมิภาคเขต 1 (ภาคเหนือ) จังหวัดเชียงใหม่"
   },
   {
+    "station_name_th": "PEA VOLTA เซ็นทรัล เชียงใหม่ แอร์พอร์ต",
+    "province_th": "เชียงใหม่",
+    "address_th": "ลานจอดรถชั้น G"
+  },
+  {
     "station_name_th": "EV Station PluZ - PTT Station ปากช่อง",
     "province_th": "นครราชสีมา",
     "address_th": "อ.ปากช่อง จ.นครราชสีมา"
+  },
+  {
+    "station_name_th": "PEA VOLTA เดอะมอลล์ โคราช",
+    "province_th": "นครราชสีมา",
+    "address_th": "ลานจอดรถชั้น 1"
+  },
+  {
+    "station_name_th": "PEA VOLTA เซ็นทรัล ขอนแก่น",
+    "province_th": "ขอนแก่น",
+    "address_th": "ลานจอดรถ ห้างเซ็นทรัล"
+  },
+  {
+    "station_name_th": "Tesla Supercharger เซ็นทรัล ภูเก็ต",
+    "province_th": "ภูเก็ต",
+    "address_th": "ลานจอดรถ เซ็นทรัล ภูเก็ต ฟลอเรสต้า"
+  },
+  {
+    "station_name_th": "EV Station PluZ - PTT Station หาดใหญ่ใน",
+    "province_th": "สงขลา",
+    "address_th": "อ.หาดใหญ่ จ.สงขลา"
+  },
+  {
+    "station_name_th": "PEA VOLTA เซ็นทรัล สุราษฎร์ธานี",
+    "province_th": "สุราษฎร์ธานี",
+    "address_th": "ลานจอดรถของห้าง"
+  },
+  {
+    "station_name_th": "EV Station PluZ - PTT Station หัวหิน",
+    "province_th": "ประจวบคีรีขันธ์",
+    "address_th": "อ.หัวหิน (ขาเข้ากรุงเทพฯ)"
+  },
+  {
+    "station_name_th": "PEA VOLTA รังสิต",
+    "province_th": "ปทุมธานี",
+    "address_th": "การไฟฟ้าส่วนภูมิภาคอำเภอรังสิต"
+  },
+  {
+    "station_name_th": "Tesla Supercharger เมกาบางนา",
+    "province_th": "สมุทรปราการ",
+    "address_th": "ลานจอดรถโซน Mega Foodwalk"
   }
 ]
